@@ -330,7 +330,7 @@ app.get("/get-product", (req, res) => {
         name: { $regex: req.query.search }
       });
     }
-    var perPage = 5;
+    var perPage = 9;
     var page = req.query.page || 1;
     product.find(query, { date: 1, name: 1, id: 1, desc: 1, price: 1, discount: 1, image: 1 })
       .skip((perPage * page) - perPage).limit(perPage)
