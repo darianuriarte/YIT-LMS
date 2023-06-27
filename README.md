@@ -32,6 +32,9 @@ Clone or download this repository
 3. `cd Registration-and-Login-using-MERN-stack/frontend`
 4. `npm install`
 
+5. cd into backend, `npm install mongoose` and `npm install dotenv`
+6. create environment variable (.env file) and we have the link
+
 ### To Run
 To run node server
 1. `cd Registration-and-Login-using-MERN-stack/backend`
