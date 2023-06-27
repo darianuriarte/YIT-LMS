@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import swal from "sweetalert";
 import { Button, TextField, Link } from "@material-ui/core";
 import { withRouter } from "./utils";
-const axios = require("axios");
-const bcrypt = require("bcryptjs");
+import axios from "axios";
+import bcrypt from "bcryptjs";
+import logo from './logo.png';  // Importing the logo
+
 var salt = bcrypt.genSaltSync(10);
 
 class Login extends React.Component {
@@ -26,7 +28,6 @@ class Login extends React.Component {
     }).then((res) => {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user_id', res.data.id);
-      // this.props.history.push('/dashboard');
       this.props.navigate("/dashboard");
     }).catch((err) => {
       if (err.response && err.response.data && err.response.data.errorMessage) {
@@ -43,6 +44,7 @@ class Login extends React.Component {
     return (
       <div style={{ marginTop: '200px' }}>
         <div>
+          <img src={logo} alt="Logo" style={{ width: '100px', height: '100px' }} /> {/* Updated logo image tag */}
           <h2>Login</h2>
         </div>
 
@@ -74,15 +76,14 @@ class Login extends React.Component {
             variant="contained"
             color="primary"
             size="small"
-            disabled={this.state.username == '' && this.state.password == ''}
+            disabled={this.state.username === '' || this.state.password === ''}
             onClick={this.login}
           >
             Login
           </Button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <Link
-            // href="/register"
             component="button"
-            style={{ fontFamily: "inherit", fontSize: "inherit" }}
+            style={{ fontFamily: "inherit", fontSize: "inherit", color: '#07EBB8'}}
             onClick={() => {
               this.props.navigate("/register");
             }}

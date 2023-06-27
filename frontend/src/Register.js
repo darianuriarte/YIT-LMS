@@ -92,7 +92,7 @@ class Register extends React.Component {
           <Link
             // href="/"
             component="button"
-            style={{ fontFamily: "inherit", fontSize: "inherit" }}
+            style={{ fontFamily: "inherit", fontSize: "inherit", color: '#07EBB8' }}
             onClick={() => {
               this.props.navigate("/");
             }}
