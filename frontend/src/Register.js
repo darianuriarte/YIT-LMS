@@ -13,7 +13,7 @@ class Register extends React.Component {
       confirm_password: '',
       role: '',
       fullName: '',
-      project: ''  // added project state
+      project: ''  // added project state, have to add to database
     };
   }
 
