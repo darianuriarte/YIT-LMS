@@ -13,7 +13,8 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} /> //to be changed to admin dashboard or something, 
+                                                          //remove dashboard.js file and use the ones inside the role folder
     </Routes>
   </BrowserRouter>,
   document.getElementById("root")
