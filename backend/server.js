@@ -124,7 +124,11 @@ app.post("/register", (req, res) => {
 
           let User = new user({
             username: req.body.username,
-            password: req.body.password
+            password: req.body.password,
+            role: req.body.role,
+	          fullName: req.body.fullName,
+            project: req.body.project
+
           });
           User.save((err, data) => {
             if (err) {
