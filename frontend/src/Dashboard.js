@@ -14,8 +14,8 @@ class Dashboard extends Component {
     super();
     this.state = {
       token: '',
-      openProductModal: false,
-      openProductEditModal: false,
+      openSessionModal: false,
+      openSessionEditModal: false,
       id: '',
       name: '',
       desc: '',
@@ -38,12 +38,12 @@ class Dashboard extends Component {
       this.props.navigate("/login");
     } else {
       this.setState({ token: token }, () => {
-        this.getProduct();
+        this.getSession();
       });
     }
   }
 
-  getProduct = () => {
+  getSession = () => {
     
     this.setState({ loading: true });
 
@@ -68,7 +68,7 @@ class Dashboard extends Component {
     });
   }
 
-  deleteProduct = (id) => {
+  deleteSession = (id) => {
     axios.post('http://localhost:2000/delete-product', {
       id: id
     }, {
@@ -98,7 +98,7 @@ class Dashboard extends Component {
 
   pageChange = (e, page) => {
     this.setState({ page: page }, () => {
-      this.getProduct();
+      this.getSession();
     });
   }
 
@@ -115,12 +115,12 @@ class Dashboard extends Component {
     this.setState({ [e.target.name]: e.target.value }, () => { });
     if (e.target.name == 'search') {
       this.setState({ page: 1 }, () => {
-        this.getProduct();
+        this.getSession();
       });
     }
   };
 
-  addProduct = () => {
+  addSession = () => {
     const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
     file.append('file', fileInput.files[0]);
@@ -142,9 +142,9 @@ class Dashboard extends Component {
         type: "success"
       });
 
-      this.handleProductClose();
+      this.handleSessionClose();
       this.setState({ name: '', desc: '', discount: '', price: '', file: null, page: 1 }, () => {
-        this.getProduct();
+        this.getSession();
       });
     }).catch((err) => {
       swal({
@@ -152,12 +152,12 @@ class Dashboard extends Component {
         icon: "error",
         type: "error"
       });
-      this.handleProductClose();
+      this.handleSessionClose();
     });
 
   }
 
-  updateProduct = () => {
+  updateSession = () => {
     const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
     file.append('id', this.state.id);
@@ -180,9 +180,9 @@ class Dashboard extends Component {
         type: "success"
       });
 
-      this.handleProductEditClose();
+      this.handleSessionEditClose();
       this.setState({ name: '', desc: '', discount: '', price: '', file: null }, () => {
-        this.getProduct();
+        this.getSession();
       });
     }).catch((err) => {
       swal({
@@ -190,14 +190,14 @@ class Dashboard extends Component {
         icon: "error",
         type: "error"
       });
-      this.handleProductEditClose();
+      this.handleSessionEditClose();
     });
 
   }
 
-  handleProductOpen = () => {
+  handleSessionOpen = () => {
     this.setState({
-      openProductModal: true,
+      openSessionModal: true,
       id: '',
       name: '',
       desc: '',
@@ -207,13 +207,13 @@ class Dashboard extends Component {
     });
   };
 
-  handleProductClose = () => {
-    this.setState({ openProductModal: false });
+  handleSessionClose = () => {
+    this.setState({ openSessionModal: false });
   };
 
-  handleProductEditOpen = (data) => {
+  handleSessionEditOpen = (data) => {
     this.setState({
-      openProductEditModal: true,
+      openSessionEditModal: true,
       id: data._id,
       name: data.name,
       desc: data.desc,
@@ -223,8 +223,8 @@ class Dashboard extends Component {
     });
   };
 
-  handleProductEditClose = () => {
-    this.setState({ openProductEditModal: false });
+  handleSessionEditClose = () => {
+    this.setState({ openSessionEditModal: false });
   };
 
   render() {
@@ -238,9 +238,9 @@ class Dashboard extends Component {
             variant="contained"
             color="primary"
             size="small"
-            onClick={this.handleProductOpen}
+            onClick={this.handleSessionOpen}
           >
-            Add Product
+            Add Session
           </Button>
           <Button
             className="button_style"
@@ -252,14 +252,14 @@ class Dashboard extends Component {
           </Button>
         </div>
 
-        {/* Edit Product */}
+        {/* Edit Session */}
         <Dialog
-          open={this.state.openProductEditModal}
-          onClose={this.handleProductClose}
+          open={this.state.openSessionEditModal}
+          onClose={this.handleSessionClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">Edit Product</DialogTitle>
+          <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
             <TextField
               id="standard-basic"
@@ -268,7 +268,7 @@ class Dashboard extends Component {
               name="name"
               value={this.state.name}
               onChange={this.onChange}
-              placeholder="Product Name"
+              placeholder="Session Name"
               required
             /><br />
             <TextField
@@ -320,25 +320,25 @@ class Dashboard extends Component {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={this.handleProductEditClose} color="primary">
+            <Button onClick={this.handleSessionEditClose} color="primary">
               Cancel
             </Button>
             <Button
               disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == ''}
-              onClick={(e) => this.updateProduct()} color="primary" autoFocus>
-              Edit Product
+              onClick={(e) => this.updateSession()} color="primary" autoFocus>
+              Edit Session
             </Button>
           </DialogActions>
         </Dialog>
 
-        {/* Add Product */}
+        {/* Add Session */}
         <Dialog
-          open={this.state.openProductModal}
-          onClose={this.handleProductClose}
+          open={this.state.openSessionModal}
+          onClose={this.handleSessionClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">Add Product</DialogTitle>
+          <DialogTitle id="alert-dialog-title">Add Session</DialogTitle>
           <DialogContent>
             <TextField
               id="standard-basic"
@@ -347,7 +347,7 @@ class Dashboard extends Component {
               name="name"
               value={this.state.name}
               onChange={this.onChange}
-              placeholder="Product Name"
+              placeholder="Student Name"
               required
             /><br />
             <TextField
@@ -400,13 +400,13 @@ class Dashboard extends Component {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={this.handleProductClose} color="primary">
+            <Button onClick={this.handleSessionClose} color="primary">
               Cancel
             </Button>
             <Button
               disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == '' || this.state.file == null}
-              onClick={(e) => this.addProduct()} color="primary" autoFocus>
-              Add Product
+              onClick={(e) => this.addSession()} color="primary" autoFocus>
+              Add Session
             </Button>
           </DialogActions>
         </Dialog>
@@ -421,7 +421,7 @@ class Dashboard extends Component {
             name="search"
             value={this.state.search}
             onChange={this.onChange}
-            placeholder="Search by product name"
+            placeholder="Search by student name"
             required
           />
           <Table aria-label="simple table">
@@ -451,7 +451,7 @@ class Dashboard extends Component {
                       variant="outlined"
                       color="primary"
                       size="small"
-                      onClick={(e) => this.handleProductEditOpen(row)}
+                      onClick={(e) => this.handleSessionEditOpen(row)}
                     >
                       Edit
                   </Button>
@@ -460,7 +460,7 @@ class Dashboard extends Component {
                       variant="outlined"
                       color="secondary"
                       size="small"
-                      onClick={(e) => this.deleteProduct(row._id)}
+                      onClick={(e) => this.deleteSession(row._id)}
                     >
                       Delete
                   </Button>
