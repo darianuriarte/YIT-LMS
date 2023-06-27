@@ -428,10 +428,10 @@ class Dashboard extends Component {
             <TableHead>
               <TableRow>
                 <TableCell align="center">Name</TableCell>
-                <TableCell align="center">Image</TableCell>
-                <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Price</TableCell>
-                <TableCell align="center">Discount</TableCell>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Comments</TableCell>
+                <TableCell align="center">Hours</TableCell>
+                <TableCell align="center">Subject</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
