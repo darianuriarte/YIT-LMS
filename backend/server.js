@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require("express");
 var app = express();
 const bcrypt = require('bcrypt');
@@ -7,15 +8,7 @@ var multer = require('multer'),
   bodyParser = require('body-parser'),
   path = require('path');
 var mongoose = require("mongoose");
-const mongoURI = 'mongodb+srv://darianuriarte99:CapeTown2023@yitcluster.ssfpftb.mongodb.net/?retryWrites=true&w=majority';
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.log('Error connecting to MongoDB:', err));
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 var fs = require('fs');
 var product = require("./model/product.js");
 var user = require("./model/user.js");
