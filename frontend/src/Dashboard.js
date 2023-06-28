@@ -121,9 +121,7 @@ class Dashboard extends Component {
   };
 
   addSession = () => {
-    const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
-    file.append('file', fileInput.files[0]);
     file.append('name', this.state.name);
     file.append('desc', this.state.desc);
     file.append('discount', this.state.discount);
@@ -158,10 +156,8 @@ class Dashboard extends Component {
   }
 
   updateSession = () => {
-    const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
     file.append('id', this.state.id);
-    file.append('file', fileInput.files[0]);
     file.append('name', this.state.name);
     file.append('desc', this.state.desc);
     file.append('discount', this.state.discount);
@@ -219,7 +215,6 @@ class Dashboard extends Component {
       desc: data.desc,
       price: data.price,
       discount: data.discount,
-      fileName: data.image
     });
   };
 
@@ -301,22 +296,7 @@ class Dashboard extends Component {
               placeholder="Discount"
               required
             /><br /><br />
-            <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                type="file"
-                accept="image/*"
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-              />
-            </Button>&nbsp;
-            {this.state.fileName}
+            
           </DialogContent>
 
           <DialogActions>
@@ -380,23 +360,7 @@ class Dashboard extends Component {
               placeholder="Discount"
               required
             /><br /><br />
-            <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                type="file"
-                accept="image/*"
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-                required
-              />
-            </Button>&nbsp;
-            {this.state.fileName}
+            
           </DialogContent>
 
           <DialogActions>
@@ -404,7 +368,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == '' || this.state.file == null}
+              disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == '' }
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>
