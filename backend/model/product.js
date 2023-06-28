@@ -5,6 +5,7 @@ productSchema = new Schema( {
 	name: String,
 	comments: String,
 	price: Number,
+	subject: String,
 	discount: Number,
 	user_id: Schema.ObjectId,
 	is_delete: { type: Boolean, default: false },

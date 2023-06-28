@@ -21,6 +21,7 @@ class Dashboard extends Component {
       comments: '',
       price: '',
       discount: '',
+      subject: '',
       file: '',
       fileName: '',
       page: 1,
@@ -126,6 +127,7 @@ class Dashboard extends Component {
     file.append('comments', this.state.comments);
     file.append('discount', this.state.discount);
     file.append('price', this.state.price);
+    file.append('subject', this.state.subject);
 
     axios.post('http://localhost:2000/add-product', file, {
       headers: {
@@ -141,7 +143,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionClose();
-      this.setState({ name: '', comments: '', discount: '', price: '', file: null, page: 1 }, () => {
+      this.setState({ name: '', comments: '', discount: '', price: '', subject: '', file: null, page: 1 }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -162,6 +164,7 @@ class Dashboard extends Component {
     file.append('comments', this.state.comments);
     file.append('discount', this.state.discount);
     file.append('price', this.state.price);
+    file.append('subject', this.state.subject);
 
     axios.post('http://localhost:2000/update-product', file, {
       headers: {
@@ -177,7 +180,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionEditClose();
-      this.setState({ name: '', comments: '', discount: '', price: '', file: null }, () => {
+      this.setState({ name: '', comments: '', discount: '', subject: '', price: '', file: null }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -199,6 +202,7 @@ class Dashboard extends Component {
       comments: '',
       price: '',
       discount: '',
+      subject: '',
       fileName: ''
     });
   };
@@ -215,6 +219,7 @@ class Dashboard extends Component {
       comments: data.comments,
       price: data.price,
       discount: data.discount,
+      subject: data.subject,
     });
   };
 
@@ -277,6 +282,18 @@ class Dashboard extends Component {
               placeholder="Price"
               required
             /><br />
+
+            <TextField
+              id="standard-basic"
+              type="text"
+              autoComplete="off"
+              name="subject"
+              value={this.state.subject}
+              onChange={this.onChange}
+              placeholder="Subject"
+              required
+            /><br /> 
+
             <TextField
               id="standard-basic"
               type="number"
@@ -345,6 +362,16 @@ class Dashboard extends Component {
             /><br />
             <TextField
               id="standard-basic"
+              type="text"
+              autoComplete="off"
+              name="subject"
+              value={this.state.subject}
+              onChange={this.onChange}
+              placeholder="Subject"
+              required
+            /><br /> 
+            <TextField
+              id="standard-basic"
               type="number"
               autoComplete="off"
               name="discount"
@@ -372,7 +399,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' || this.state.discount == '' || this.state.price == '' }
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.discount == '' || this.state.price == ''|| this.state.subject == '' }
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>
@@ -410,7 +437,7 @@ class Dashboard extends Component {
                     {row.name}
                   </TableCell>
                   <TableCell align="center">{row.price}</TableCell>
-                  <TableCell align="center">{row.price}</TableCell>
+                  <TableCell align="center">{row.subject}</TableCell>
                   <TableCell align="center">{row.discount}</TableCell>
                   <TableCell align="center">{row.comments}</TableCell>
                   <TableCell align="center">
