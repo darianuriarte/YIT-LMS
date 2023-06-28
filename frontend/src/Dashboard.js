@@ -18,7 +18,7 @@ class Dashboard extends Component {
       openSessionEditModal: false,
       id: '',
       name: '',
-      desc: '',
+      comments: '',
       price: '',
       discount: '',
       file: '',
@@ -123,7 +123,7 @@ class Dashboard extends Component {
   addSession = () => {
     const file = new FormData();
     file.append('name', this.state.name);
-    file.append('desc', this.state.desc);
+    file.append('comments', this.state.comments);
     file.append('discount', this.state.discount);
     file.append('price', this.state.price);
 
@@ -141,7 +141,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionClose();
-      this.setState({ name: '', desc: '', discount: '', price: '', file: null, page: 1 }, () => {
+      this.setState({ name: '', comments: '', discount: '', price: '', file: null, page: 1 }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -159,7 +159,7 @@ class Dashboard extends Component {
     const file = new FormData();
     file.append('id', this.state.id);
     file.append('name', this.state.name);
-    file.append('desc', this.state.desc);
+    file.append('comments', this.state.comments);
     file.append('discount', this.state.discount);
     file.append('price', this.state.price);
 
@@ -177,7 +177,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionEditClose();
-      this.setState({ name: '', desc: '', discount: '', price: '', file: null }, () => {
+      this.setState({ name: '', comments: '', discount: '', price: '', file: null }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -196,7 +196,7 @@ class Dashboard extends Component {
       openSessionModal: true,
       id: '',
       name: '',
-      desc: '',
+      comments: '',
       price: '',
       discount: '',
       fileName: ''
@@ -212,7 +212,7 @@ class Dashboard extends Component {
       openSessionEditModal: true,
       id: data._id,
       name: data.name,
-      desc: data.desc,
+      comments: data.comments,
       price: data.price,
       discount: data.discount,
     });
@@ -266,16 +266,7 @@ class Dashboard extends Component {
               placeholder="Session Name"
               required
             /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="desc"
-              value={this.state.desc}
-              onChange={this.onChange}
-              placeholder="Description"
-              required
-            /><br />
+
             <TextField
               id="standard-basic"
               type="number"
@@ -295,6 +286,17 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Discount"
               required
+            /><br />
+            <TextField
+              id="standard-basic"
+              multiline
+              rows={4}
+              autoComplete="off"
+              name="comments"
+              value={this.state.comments}
+              onChange={this.onChange}
+              placeholder="Comments"
+              required
             /><br /><br />
             
           </DialogContent>
@@ -304,7 +306,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == ''}
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.discount == '' || this.state.price == ''}
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
@@ -330,16 +332,7 @@ class Dashboard extends Component {
               placeholder="Student Name"
               required
             /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="desc"
-              value={this.state.desc}
-              onChange={this.onChange}
-              placeholder="Description"
-              required
-            /><br />
+        
             <TextField
               id="standard-basic"
               type="number"
@@ -359,6 +352,17 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Discount"
               required
+            /><br />
+            <TextField
+              id="standard-basic"
+              multiline
+              rows={4}
+              autoComplete="off"
+              name="comments"
+              value={this.state.comments}
+              onChange={this.onChange}
+              placeholder="Comments"
+              required
             /><br /><br />
             
           </DialogContent>
@@ -368,7 +372,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == '' }
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.discount == '' || this.state.price == '' }
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>
@@ -408,7 +412,7 @@ class Dashboard extends Component {
                   <TableCell align="center">{row.price}</TableCell>
                   <TableCell align="center">{row.price}</TableCell>
                   <TableCell align="center">{row.discount}</TableCell>
-                  <TableCell align="center">{row.desc}</TableCell>
+                  <TableCell align="center">{row.comments}</TableCell>
                   <TableCell align="center">
                     <Button
                       className="button_style"
