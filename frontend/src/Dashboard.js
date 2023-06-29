@@ -259,6 +259,7 @@ class Dashboard extends Component {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           
+
         >
           <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
