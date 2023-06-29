@@ -184,17 +184,17 @@ function checkUserAndGenerateToken(data, req, res) {
   });
 }
 
-/* Api to add Product */
+/* Api to add Session */
 app.post("/add-product", upload.any(), (req, res) => {
+  
   try {
-    if (req.files && req.body && req.body.name && req.body.desc && req.body.price &&
+    if (req.files && req.body && req.body.name && req.body.comments && req.body.price && req.body.subject &&
       req.body.discount) {
-
       let new_product = new product();
       new_product.name = req.body.name;
-      new_product.desc = req.body.desc;
+      new_product.comments = req.body.comments;
       new_product.price = req.body.price;
-      new_product.image = req.files[0].filename;
+      new_product.subject = req.body.subject;
       new_product.discount = req.body.discount;
       new_product.user_id = req.user.id;
       new_product.save((err, data) => {
@@ -228,16 +228,10 @@ app.post("/add-product", upload.any(), (req, res) => {
 /* Api to update Product */
 app.post("/update-product", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.name && req.body.desc && req.body.price &&
+    if (req.files && req.body && req.body.name && req.body.comments && req.body.price && req.body.subject &&
       req.body.id && req.body.discount) {
 
       product.findById(req.body.id, (err, new_product) => {
-
-        // if file already exist than remove it
-        if (req.files && req.files[0] && req.files[0].filename && new_product.image) {
-          var path = `./uploads/${new_product.image}`;
-          fs.unlinkSync(path);
-        }
 
         if (req.files && req.files[0] && req.files[0].filename) {
           new_product.image = req.files[0].filename;
@@ -245,11 +239,14 @@ app.post("/update-product", upload.any(), (req, res) => {
         if (req.body.name) {
           new_product.name = req.body.name;
         }
-        if (req.body.desc) {
-          new_product.desc = req.body.desc;
+        if (req.body.comments) {
+          new_product.comments = req.body.comments;
         }
         if (req.body.price) {
           new_product.price = req.body.price;
+        }
+        if (req.body.subject) {
+          new_product.subject = req.body.subject;
         }
         if (req.body.discount) {
           new_product.discount = req.body.discount;
@@ -330,9 +327,9 @@ app.get("/get-product", (req, res) => {
         name: { $regex: req.query.search }
       });
     }
-    var perPage = 5;
+    var perPage = 9;
     var page = req.query.page || 1;
-    product.find(query, { date: 1, name: 1, id: 1, desc: 1, price: 1, discount: 1, image: 1 })
+    product.find(query, { date: 1, name: 1, id: 1, comments: 1, price: 1, subject: 1, discount: 1, image: 1 })
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
         product.find(query).count()

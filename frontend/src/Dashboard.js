@@ -18,9 +18,10 @@ class Dashboard extends Component {
       openSessionEditModal: false,
       id: '',
       name: '',
-      desc: '',
+      comments: '',
       price: '',
       discount: '',
+      subject: '',
       file: '',
       fileName: '',
       page: 1,
@@ -121,13 +122,12 @@ class Dashboard extends Component {
   };
 
   addSession = () => {
-    const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
-    file.append('file', fileInput.files[0]);
     file.append('name', this.state.name);
-    file.append('desc', this.state.desc);
+    file.append('comments', this.state.comments);
     file.append('discount', this.state.discount);
     file.append('price', this.state.price);
+    file.append('subject', this.state.subject);
 
     axios.post('http://localhost:2000/add-product', file, {
       headers: {
@@ -143,7 +143,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionClose();
-      this.setState({ name: '', desc: '', discount: '', price: '', file: null, page: 1 }, () => {
+      this.setState({ name: '', comments: '', discount: '', price: '', subject: '', file: null, page: 1 }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -158,14 +158,13 @@ class Dashboard extends Component {
   }
 
   updateSession = () => {
-    const fileInput = document.querySelector("#fileInput");
     const file = new FormData();
     file.append('id', this.state.id);
-    file.append('file', fileInput.files[0]);
     file.append('name', this.state.name);
-    file.append('desc', this.state.desc);
+    file.append('comments', this.state.comments);
     file.append('discount', this.state.discount);
     file.append('price', this.state.price);
+    file.append('subject', this.state.subject);
 
     axios.post('http://localhost:2000/update-product', file, {
       headers: {
@@ -181,7 +180,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionEditClose();
-      this.setState({ name: '', desc: '', discount: '', price: '', file: null }, () => {
+      this.setState({ name: '', comments: '', discount: '', subject: '', price: '', file: null }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -200,9 +199,10 @@ class Dashboard extends Component {
       openSessionModal: true,
       id: '',
       name: '',
-      desc: '',
+      comments: '',
       price: '',
       discount: '',
+      subject: '',
       fileName: ''
     });
   };
@@ -216,10 +216,10 @@ class Dashboard extends Component {
       openSessionEditModal: true,
       id: data._id,
       name: data.name,
-      desc: data.desc,
+      comments: data.comments,
       price: data.price,
       discount: data.discount,
-      fileName: data.image
+      subject: data.subject,
     });
   };
 
@@ -258,6 +258,8 @@ class Dashboard extends Component {
           onClose={this.handleSessionClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          
+
         >
           <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
@@ -271,16 +273,7 @@ class Dashboard extends Component {
               placeholder="Session Name"
               required
             /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="desc"
-              value={this.state.desc}
-              onChange={this.onChange}
-              placeholder="Description"
-              required
-            /><br />
+
             <TextField
               id="standard-basic"
               type="number"
@@ -291,6 +284,18 @@ class Dashboard extends Component {
               placeholder="Price"
               required
             /><br />
+
+            <TextField
+              id="standard-basic"
+              type="text"
+              autoComplete="off"
+              name="subject"
+              value={this.state.subject}
+              onChange={this.onChange}
+              placeholder="Subject"
+              required
+            /><br /> 
+
             <TextField
               id="standard-basic"
               type="number"
@@ -300,23 +305,19 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Discount"
               required
+            /><br />
+            <TextField
+              id="standard-basic"
+              multiline
+              rows={4}
+              autoComplete="off"
+              name="comments"
+              value={this.state.comments}
+              onChange={this.onChange}
+              placeholder="Comments"
+              required
             /><br /><br />
-            <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                type="file"
-                accept="image/*"
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-              />
-            </Button>&nbsp;
-            {this.state.fileName}
+            
           </DialogContent>
 
           <DialogActions>
@@ -324,7 +325,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == ''}
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.discount == '' || this.state.price == ''}
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
@@ -350,16 +351,7 @@ class Dashboard extends Component {
               placeholder="Student Name"
               required
             /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="desc"
-              value={this.state.desc}
-              onChange={this.onChange}
-              placeholder="Description"
-              required
-            /><br />
+        
             <TextField
               id="standard-basic"
               type="number"
@@ -372,6 +364,16 @@ class Dashboard extends Component {
             /><br />
             <TextField
               id="standard-basic"
+              type="text"
+              autoComplete="off"
+              name="subject"
+              value={this.state.subject}
+              onChange={this.onChange}
+              placeholder="Subject"
+              required
+            /><br /> 
+            <TextField
+              id="standard-basic"
               type="number"
               autoComplete="off"
               name="discount"
@@ -379,24 +381,19 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Discount"
               required
+            /><br />
+            <TextField
+              id="standard-basic"
+              multiline
+              rows={4}
+              autoComplete="off"
+              name="comments"
+              value={this.state.comments}
+              onChange={this.onChange}
+              placeholder="Comments"
+              required
             /><br /><br />
-            <Button
-              variant="contained"
-              component="label"
-            > Upload
-            <input
-                type="file"
-                accept="image/*"
-                name="file"
-                value={this.state.file}
-                onChange={this.onChange}
-                id="fileInput"
-                placeholder="File"
-                hidden
-                required
-              />
-            </Button>&nbsp;
-            {this.state.fileName}
+            
           </DialogContent>
 
           <DialogActions>
@@ -404,7 +401,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.desc == '' || this.state.discount == '' || this.state.price == '' || this.state.file == null}
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.discount == '' || this.state.price == ''|| this.state.subject == '' }
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>
@@ -428,10 +425,10 @@ class Dashboard extends Component {
             <TableHead>
               <TableRow>
                 <TableCell align="center">Name</TableCell>
-                <TableCell align="center">Image</TableCell>
-                <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Price</TableCell>
-                <TableCell align="center">Discount</TableCell>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Subject</TableCell>
+                <TableCell align="center">Hours</TableCell>
+                <TableCell align="center">Comments</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
@@ -441,10 +438,10 @@ class Dashboard extends Component {
                   <TableCell align="center" component="th" scope="row">
                     {row.name}
                   </TableCell>
-                  <TableCell align="center"><img src={`http://localhost:2000/${row.image}`} width="70" height="70" /></TableCell>
-                  <TableCell align="center">{row.desc}</TableCell>
                   <TableCell align="center">{row.price}</TableCell>
+                  <TableCell align="center">{row.subject}</TableCell>
                   <TableCell align="center">{row.discount}</TableCell>
+                  <TableCell align="center">{row.comments}</TableCell>
                   <TableCell align="center">
                     <Button
                       className="button_style"
