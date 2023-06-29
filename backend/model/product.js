@@ -6,7 +6,7 @@ productSchema = new Schema( {
 	comments: String,
 	price: Number,
 	subject: String,
-	discount: Number,
+	hours: Number,
 	user_id: Schema.ObjectId,
 	is_delete: { type: Boolean, default: false },
 	date : { type : Date, default: Date.now }
