@@ -228,16 +228,13 @@ app.post("/add-product", upload.any(), (req, res) => {
 /* Api to update Product */
 app.post("/update-product", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.name && req.body.comments && req.body.price && req.body.subject &&
+    if (req.files && req.body && req.body.comments && req.body.price && req.body.subject &&
       req.body.id && req.body.hours) {
 
       product.findById(req.body.id, (err, new_product) => {
 
         if (req.files && req.files[0] && req.files[0].filename) {
           new_product.image = req.files[0].filename;
-        }
-        if (req.body.name) {
-          new_product.name = req.body.name;
         }
         if (req.body.comments) {
           new_product.comments = req.body.comments;
@@ -312,6 +309,41 @@ app.post("/delete-product", (req, res) => {
     });
   }
 });
+
+/* Api to get all students sorted by full name */
+app.get("/get-students", (req, res) => {
+  
+  try {
+    user.find({ role: "student" }).sort({fullName: 1}).exec((err, students) => {
+      if (err) {
+        return res.status(400).json({
+          errorMessage: 'Something went wrong!',
+          status: false
+        });
+      }
+
+      if (!students || students.length === 0) {
+        return res.status(404).json({
+          errorMessage: 'No students found!',
+          status: false
+        });
+      }
+      console.log(students);
+      return res.status(200).json({
+        status: true,
+        students: students
+      });
+
+    })
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+
 
 /*Api to get and search product with pagination and search by name*/
 app.get("/get-product", (req, res) => {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Button, TextField, Dialog, DialogActions, LinearProgress,
   DialogTitle, DialogContent, TableBody, Table,
-  TableContainer, TableHead, TableRow, TableCell
+  TableContainer, TableHead, TableRow, TableCell,InputLabel, Select, MenuItem
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
@@ -18,6 +18,7 @@ class Dashboard extends Component {
       openSessionEditModal: false,
       id: '',
       name: '',
+      students: [],
       comments: '',
       price: '',
       hours: '',
@@ -28,7 +29,8 @@ class Dashboard extends Component {
       search: '',
       products: [],
       pages: 0,
-      loading: false
+      loading: false,
+      displayStudents: false
     };
   }
 
@@ -43,7 +45,26 @@ class Dashboard extends Component {
       });
     }
   }
-
+  getAllStudents = () => {
+    this.setState({ loading: true });
+  
+    axios.get('http://localhost:2000/get-students', { // The URL should be the one to get all students.
+      headers: {
+        'token': this.state.token
+      }
+    }).then((res) => {
+      this.setState({ loading: false, students: res.data.students.map(student => student.fullName) }); // I'm assuming the server will return an object with a 'students' property. If not, adjust accordingly.
+    }).catch((err) => {
+      swal({
+        text: err.response.data.errorMessage,
+        icon: "error",
+        type: "error"
+      });
+      this.setState({ loading: false, students: [] });
+    });
+  }
+  
+  
   getSession = () => {
     
     this.setState({ loading: true });
@@ -160,7 +181,6 @@ class Dashboard extends Component {
   updateSession = () => {
     const file = new FormData();
     file.append('id', this.state.id);
-    file.append('name', this.state.name);
     file.append('comments', this.state.comments);
     file.append('hours', this.state.hours);
     file.append('price', this.state.price);
@@ -195,6 +215,7 @@ class Dashboard extends Component {
   }
 
   handleSessionOpen = () => {
+    this.getAllStudents();
     this.setState({
       openSessionModal: true,
       id: '',
@@ -250,6 +271,9 @@ class Dashboard extends Component {
           >
             Log Out
           </Button>
+
+          
+      
         </div>
 
         {/* Edit Session */}
@@ -263,17 +287,7 @@ class Dashboard extends Component {
         >
           <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="name"
-              value={this.state.name}
-              onChange={this.onChange}
-              placeholder="Session Name"
-              required
-            /><br />
-
+            
             <TextField
               id="standard-basic"
               type="number"
@@ -338,20 +352,33 @@ class Dashboard extends Component {
           onClose={this.handleSessionClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          
         >
           <DialogTitle id="alert-dialog-title">Add Session</DialogTitle>
           <DialogContent>
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="name"
-              value={this.state.name}
-              onChange={this.onChange}
-              placeholder="Student Name"
-              required
-            /><br />
-        
+            <InputLabel>
+           {this.state.name ? this.state.name : "Select a Student"}
+            </InputLabel>
+           <Select
+            style={{ minWidth: '200px' }}
+             value={this.state.name}
+             onChange={this.onChange}
+             inputProps={{
+             name: 'name',
+             
+             }}
+            >
+              <MenuItem value="" disabled>
+             Student Name
+             </MenuItem>
+              {this.state.students.map((student, index) => (
+              <MenuItem key={index} value={student}>
+              {student}
+           </MenuItem>
+            ))}
+            </Select> 
+            <br />
+
             <TextField
               id="standard-basic"
               type="number"
