@@ -249,6 +249,7 @@ class Dashboard extends Component {
   };
 
   render() {
+    
     return (
       <div>
         {this.state.loading && <LinearProgress size={40} />}

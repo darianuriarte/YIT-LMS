@@ -312,7 +312,6 @@ app.post("/delete-product", (req, res) => {
 
 /* Api to get all students sorted by full name */
 app.get("/get-students", (req, res) => {
-  
   try {
     user.find({ role: "student" }).sort({fullName: 1}).exec((err, students) => {
       if (err) {
@@ -328,7 +327,6 @@ app.get("/get-students", (req, res) => {
           status: false
         });
       }
-      console.log(students);
       return res.status(200).json({
         status: true,
         students: students
