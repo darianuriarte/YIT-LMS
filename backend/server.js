@@ -188,12 +188,12 @@ function checkUserAndGenerateToken(data, req, res) {
 app.post("/add-product", upload.any(), (req, res) => {
   
   try {
-    if (req.files && req.body && req.body.name && req.body.comments && req.body.price && req.body.subject &&
+    if (req.files && req.body && req.body.name && req.body.comments && req.body.sessionDate && req.body.subject &&
       req.body.hours) {
       let new_product = new product();
       new_product.name = req.body.name;
       new_product.comments = req.body.comments;
-      new_product.price = req.body.price;
+      new_product.sessionDate = req.body.sessionDate;
       new_product.subject = req.body.subject;
       new_product.hours = req.body.hours;
       new_product.user_id = req.user.id;
@@ -228,7 +228,7 @@ app.post("/add-product", upload.any(), (req, res) => {
 /* Api to update Product */
 app.post("/update-product", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.comments && req.body.price && req.body.subject &&
+    if (req.files && req.body && req.body.comments && req.body.sessionDate && req.body.subject &&
       req.body.id && req.body.hours) {
 
       product.findById(req.body.id, (err, new_product) => {
@@ -239,8 +239,8 @@ app.post("/update-product", upload.any(), (req, res) => {
         if (req.body.comments) {
           new_product.comments = req.body.comments;
         }
-        if (req.body.price) {
-          new_product.price = req.body.price;
+        if (req.body.sessionDate) {
+          new_product.sessionDate = req.body.sessionDate;
         }
         if (req.body.subject) {
           new_product.subject = req.body.subject;
@@ -359,7 +359,7 @@ app.get("/get-product", (req, res) => {
     }
     var perPage = 9;
     var page = req.query.page || 1;
-    product.find(query, { date: 1, name: 1, id: 1, comments: 1, price: 1, subject: 1, hours: 1, image: 1 })
+    product.find(query, { date: 1, name: 1, id: 1, comments: 1, sessionDate: 1, subject: 1, hours: 1, image: 1 })
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
         product.find(query).count()

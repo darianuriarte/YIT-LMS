@@ -20,7 +20,7 @@ class Dashboard extends Component {
       name: '',
       students: [],
       comments: '',
-      price: '',
+      sessionDate: '',
       hours: '',
       subject: '',
       file: '',
@@ -147,7 +147,7 @@ class Dashboard extends Component {
     file.append('name', this.state.name);
     file.append('comments', this.state.comments);
     file.append('hours', this.state.hours);
-    file.append('price', this.state.price);
+    file.append('sessionDate', this.state.sessionDate);
     file.append('subject', this.state.subject);
 
     axios.post('http://localhost:2000/add-product', file, {
@@ -164,7 +164,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionClose();
-      this.setState({ name: '', comments: '', hours: '', price: '', subject: '', file: null, page: 1 }, () => {
+      this.setState({ name: '', comments: '', hours: '', sessionDate: '', subject: '', file: null, page: 1 }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -183,7 +183,7 @@ class Dashboard extends Component {
     file.append('id', this.state.id);
     file.append('comments', this.state.comments);
     file.append('hours', this.state.hours);
-    file.append('price', this.state.price);
+    file.append('sessionDate', this.state.sessionDate);
     file.append('subject', this.state.subject);
 
     axios.post('http://localhost:2000/update-product', file, {
@@ -200,7 +200,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionEditClose();
-      this.setState({ name: '', comments: '', hours: '', subject: '', price: '', file: null }, () => {
+      this.setState({ name: '', comments: '', hours: '', subject: '', sessionDate: '', file: null }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -221,7 +221,7 @@ class Dashboard extends Component {
       id: '',
       name: '',
       comments: '',
-      price: '',
+      sessionDate: '',
       hours: '',
       subject: '',
       fileName: ''
@@ -238,7 +238,7 @@ class Dashboard extends Component {
       id: data._id,
       name: data.name,
       comments: data.comments,
-      price: data.price,
+      sessionDate: data.sessionDate,
       hours: data.hours,
       subject: data.subject,
     });
@@ -293,10 +293,10 @@ class Dashboard extends Component {
               id="standard-basic"
               type="number"
               autoComplete="off"
-              name="price"
-              value={this.state.price}
+              name="sessionDate"
+              value={this.state.sessionDate}
               onChange={this.onChange}
-              placeholder="Price"
+              placeholder="Session Date"
               required
             /><br />
 
@@ -340,7 +340,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' || this.state.hours == '' || this.state.price == ''}
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.hours == '' || this.state.sessionDate == ''}
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
@@ -384,10 +384,10 @@ class Dashboard extends Component {
               id="standard-basic"
               type="number"
               autoComplete="off"
-              name="price"
-              value={this.state.price}
+              name="sessionDate"
+              value={this.state.sessionDate}
               onChange={this.onChange}
-              placeholder="Price"
+              placeholder="Session Date"
               required
             /><br />
             <TextField
@@ -429,7 +429,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' || this.state.hours == '' || this.state.price == ''|| this.state.subject == '' }
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.hours == '' || this.state.sessionDate == ''|| this.state.subject == '' }
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>
@@ -466,7 +466,7 @@ class Dashboard extends Component {
                   <TableCell align="center" component="th" scope="row">
                     {row.name}
                   </TableCell>
-                  <TableCell align="center">{row.price}</TableCell>
+                  <TableCell align="center">{row.sessionDate}</TableCell>
                   <TableCell align="center">{row.subject}</TableCell>
                   <TableCell align="center">{row.hours}</TableCell>
                   <TableCell align="center">{row.comments}</TableCell>
