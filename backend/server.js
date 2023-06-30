@@ -184,6 +184,10 @@ function checkUserAndGenerateToken(data, req, res) {
   });
 }
 
+
+
+
+
 /* Api to add Session */
 app.post("/add-product", upload.any(), (req, res) => {
   
@@ -397,6 +401,142 @@ app.get("/get-product", (req, res) => {
   }
 
 });
+
+
+
+/*Api to get and search users with pagination and search by username*/
+app.get("/get-users", (req, res) => {
+  try {
+    var query = {};
+    if (req.query && req.query.search) {
+      query["fullName"] = { $regex: req.query.search };
+    }
+    var perPage = 8;
+    var page = req.query.page || 1;
+    user.find(query, { username: 1, fullName: 1, role: 1,password: 1, project: 1 })
+      .skip((perPage * page) - perPage).limit(perPage)
+      .then((data) => {
+        user.countDocuments(query)
+          .then((count) => {
+
+            if (data && data.length > 0) {
+              res.status(200).json({
+                status: true,
+                title: 'User retrieved.',
+                users: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: 'No users found!',
+                status: false
+              });
+            }
+
+          });
+
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+
+});
+
+/* Api to delete User */
+app.post("/delete-users", (req, res) => {
+  try {
+    if (req.body && req.body.id) {
+      user.findByIdAndRemove(req.body.id, (err, data) => {
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error deleting user.',
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'User deleted successfully.'
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the user ID.',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+/* Api to update users */
+app.post("/update-users", (req, res) => {
+  
+  try {
+    if (req.body && req.body.id) {
+      console.log("Got Here")
+      var update = {};
+
+      if(req.body.username) {
+        update.username = req.body.username;
+      }
+      if(req.body.fullName) {
+        update.fullName = req.body.fullName;
+      }
+      if(req.body.role) {
+        update.role = req.body.role;
+      }
+      if(req.body.password) {
+        update.password = req.body.password;
+      }
+      if(req.body.project) {
+        update.project = req.body.project;
+      }
+
+      user.findByIdAndUpdate(req.body.id, update, { new: true }, (err, data) => {
+        
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error updating user.',
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'User updated successfully.',
+            user: data
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the user ID and details to update.',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+
 
 app.listen(2000, () => {
   console.log("Server is Runing On port 2000");

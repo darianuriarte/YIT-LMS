@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import Dashboard from "./Dashboard";
+import ManageProfiles from "./ManageProfiles";
 import "./Login.css";
 
 ReactDOM.render(
@@ -14,6 +15,7 @@ ReactDOM.render(
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} /> //to be changed to admin dashboard or something, 
+      <Route path="/profiles" element={<ManageProfiles />} /> 
                                                           //remove dashboard.js file and use the ones inside the role folder
     </Routes>
   </BrowserRouter>,
