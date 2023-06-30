@@ -1,13 +1,78 @@
 import React, { Component } from 'react';
 import {
-  Button, TextField, Dialog, DialogActions, LinearProgress,
-  DialogTitle, DialogContent, TableBody, Table,
-  TableContainer, TableHead, TableRow, TableCell,InputLabel, Select, MenuItem
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  LinearProgress,
+  DialogTitle,
+  DialogContent,
+  TableBody,
+  Table,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  InputLabel,
+  makeStyles,
+  createStyles,
+  Select,
+  MenuItem,
+  withStyles,
+  Paper,
+  Typography,
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 import { withRouter } from './utils';
-const axios = require('axios');
+import axios from 'axios';
+import logo from './logo2.png';
+
+const styles = createStyles({
+  container: {
+    padding: '20px',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+  },
+  logo: {
+    height: '80px',
+  },
+  title: {
+    color: '#07EBB8',
+    margin: '0',
+  },
+  buttonContainer: {
+    display: 'flex',
+    gap: '10px',
+  },
+  button: {
+    textTransform: 'none',
+  },
+  tableContainer: {
+    marginTop: '20px',
+  },
+  searchField: {
+    marginBottom: '20px',
+  },
+  pagination: {
+    marginTop: '20px',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  dialogTitle: {
+    background: '#07EBB8',
+    color: '#fff',
+  },
+  dialogContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+  },
+});
 
 class Dashboard extends Component {
   constructor() {
@@ -25,23 +90,21 @@ class Dashboard extends Component {
       users: [],
       pages: 0,
       loading: false,
-      displayStudents: false
     };
   }
 
   componentDidMount = () => {
     let token = localStorage.getItem('token');
     if (!token) {
-      // this.props.history.push('/login');
-      this.props.navigate("/login");
+      this.props.navigate('/login');
     } else {
       this.setState({ token: token }, () => {
         this.getSession();
       });
     }
-  }  
+  };
+
   getSession = () => {
-    
     this.setState({ loading: true });
 
     let data = '?';
@@ -49,75 +112,81 @@ class Dashboard extends Component {
     if (this.state.search) {
       data = `${data}&search=${this.state.search}`;
     }
-    axios.get(`http://localhost:2000/get-users${data}`, {
-      headers: {
-        'token': this.state.token
-      }
-    }).then((res) => {
-      this.setState({ loading: false, users: res.data.users, pages: res.data.pages });
-    }).catch((err) => {
-      swal({
-        text: err.response.data.errorMessage,
-        icon: "error",
-        type: "error"
+    axios
+      .get(`http://localhost:2000/get-users${data}`, {
+        headers: {
+          token: this.state.token,
+        },
+      })
+      .then((res) => {
+        this.setState({ loading: false, users: res.data.users, pages: res.data.pages });
+      })
+      .catch((err) => {
+        swal({
+          text: err.response.data.errorMessage,
+          icon: 'error',
+          type: 'error',
+        });
+        this.setState({ loading: false, users: [], pages: 0 });
       });
-      this.setState({ loading: false, users: [], pages: 0 },()=>{});
-    });
-  }
+  };
 
   deleteSession = (id) => {
-    axios.post('http://localhost:2000/delete-users', {
-      id: id
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'token': this.state.token
-      }
-    }).then((res) => {
+    axios
+      .post(
+        'http://localhost:2000/delete-users',
+        {
+          id: id,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            token: this.state.token,
+          },
+        }
+      )
+      .then((res) => {
+        swal({
+          text: res.data.title,
+          icon: 'success',
+          type: 'success',
+        });
 
-      swal({
-        text: res.data.title,
-        icon: "success",
-        type: "success"
+        this.setState({ page: 1 }, () => {
+          this.pageChange(null, 1);
+        });
+      })
+      .catch((err) => {
+        swal({
+          text: err.response.data.errorMessage,
+          icon: 'error',
+          type: 'error',
+        });
       });
-
-      this.setState({ page: 1 }, () => {
-        this.pageChange(null, 1);
-      });
-    }).catch((err) => {
-      swal({
-        text: err.response.data.errorMessage,
-        icon: "error",
-        type: "error"
-      });
-    });
-  }
+  };
 
   pageChange = (e, page) => {
     this.setState({ page: page }, () => {
       this.getSession();
     });
-  }
+  };
 
   logOut = () => {
     localStorage.setItem('token', null);
-    // this.props.history.push('/');
-    this.props.navigate("/");
-  }
+    this.props.navigate('/');
+  };
 
   onChange = (e) => {
     if (e.target.files && e.target.files[0] && e.target.files[0].name) {
-      this.setState({ fileName: e.target.files[0].name }, () => { });
+      this.setState({ fileName: e.target.files[0].name });
     }
-    this.setState({ [e.target.name]: e.target.value }, () => { });
-    if (e.target.name == 'search') {
+    this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name === 'search') {
       this.setState({ page: 1 }, () => {
         this.getSession();
       });
     }
   };
-
-  
 
   updateSession = () => {
     const userData = {
@@ -126,36 +195,47 @@ class Dashboard extends Component {
       project: this.state.project,
       password: this.state.password,
       fullName: this.state.fullName,
-      role: this.state.role
+      role: this.state.role,
     };
-    
-    axios.post('http://localhost:2000/update-users', userData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'token': this.state.token
-      }
-    }).then((res) => {
 
-      swal({
-        text: res.data.title,
-        icon: "success",
-        type: "success"
-      });
+    axios
+      .post('http://localhost:2000/update-users', userData, {
+        headers: {
+          'Content-Type': 'application/json',
+          token: this.state.token,
+        },
+      })
+      .then((res) => {
+        swal({
+          text: res.data.title,
+          icon: 'success',
+          type: 'success',
+        });
 
-      this.handleSessionEditClose();
-      this.setState({ username: '', project: '', password: '', role: '', fullName: '', file: null }, () => {
-        this.getSession();
+        this.handleSessionEditClose();
+        this.setState(
+          {
+            username: '',
+            project: '',
+            password: '',
+            role: '',
+            fullName: '',
+            file: null,
+          },
+          () => {
+            this.getSession();
+          }
+        );
+      })
+      .catch((err) => {
+        swal({
+          text: err.response.data.errorMessage,
+          icon: 'error',
+          type: 'error',
+        });
+        this.handleSessionEditClose();
       });
-    }).catch((err) => {
-      swal({
-        text: err.response.data.errorMessage,
-        icon: "error",
-        type: "error"
-      });
-      this.handleSessionEditClose();
-    });
-
-  }
+  };
 
   handleSessionEditOpen = (data) => {
     this.setState({
@@ -174,45 +254,47 @@ class Dashboard extends Component {
   };
 
   render() {
-    
+    const { classes } = this.props;
+
     return (
-      <div>
+      <div className={classes.container}>
         {this.state.loading && <LinearProgress size={40} />}
-        <div>
-        <h1 style={{ color: '#07EBB8' }}>Profile Management</h1>
-         
-          <Button
-            className="button_style"
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={() => this.props.navigate("/register")} // Assuming navigate method is used to change routes
-          >
-          Register
-          </Button>
+        <div className={classes.header}>
+          <img src={logo} alt="Logo" className={classes.logo} />
+          <Typography variant="h4" className={classes.title}>
+            Profile Management
+          </Typography>
+          <div className={classes.buttonContainer}>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => this.props.navigate('/register')}
+            >
+              Register
+            </Button>
 
-          <Button
-            className="button_style"
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={() => this.props.navigate("/dashboard")} // Assuming navigate method is used to change routes
-          >
-          Dashboard
-          </Button>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => this.props.navigate('/dashboard')}
+            >
+              Dashboard
+            </Button>
 
-          <Button
-            className="button_style"
-            variant="contained"
-            color="secondary"
-            size="small"
-            onClick={this.logOut}
-          >
-            Log Out
-          </Button>
-
-          
-      
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="secondary"
+              size="small"
+              onClick={this.logOut}
+            >
+              Log Out
+            </Button>
+          </div>
         </div>
 
         {/* Edit Session */}
@@ -221,13 +303,12 @@ class Dashboard extends Component {
           onClose={this.handleSessionClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
-          
-
         >
-          <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
-          <DialogContent>
-            
-          <TextField
+          <DialogTitle className={classes.dialogTitle} id="alert-dialog-title">
+            Edit Session
+          </DialogTitle>
+          <DialogContent className={classes.dialogContent}>
+            <TextField
               id="standard-basic"
               type="text"
               autoComplete="off"
@@ -236,8 +317,7 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Username"
               required
-            /><br />
-
+            />
 
             <TextField
               id="standard-basic"
@@ -248,18 +328,20 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Full Name"
               required
-            /><br />
+            />
 
-            <TextField
+            <Select
               id="standard-basic"
-              type="text"
-              autoComplete="off"
               name="role"
               value={this.state.role}
               onChange={this.onChange}
-              placeholder="Role"
               required
-            /><br /> 
+              placeholder="Role"
+            >
+              <MenuItem value="Student">Student</MenuItem>
+              <MenuItem value="Admin">Admin</MenuItem>
+              <MenuItem value="Tutor">Tutor</MenuItem>
+            </Select>
 
             <TextField
               id="standard-basic"
@@ -270,19 +352,20 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Password"
               required
-            /><br />
-            <TextField
+            />
+
+            <Select
               id="standard-basic"
-              multiline
-              rows={4}
-              autoComplete="off"
               name="project"
               value={this.state.project}
               onChange={this.onChange}
-              placeholder="Project"
               required
-            /><br /><br />
-            
+              placeholder="Project"
+            >
+              <MenuItem value="Steam+">Steam+</MenuItem>
+              <MenuItem value="Butterfly">Butterfly</MenuItem>
+              <MenuItem value="Total_Acess">Total Access</MenuItem>
+            </Select>
           </DialogContent>
 
           <DialogActions>
@@ -290,8 +373,16 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.project == '' || this.state.password == '' || this.state.fullName == ''}
-              onClick={(e) => this.updateSession()} color="primary" autoFocus>
+              disabled={
+                this.state.name === '' ||
+                this.state.project === '' ||
+                this.state.password === '' ||
+                this.state.fullName === ''
+              }
+              onClick={(e) => this.updateSession()}
+              color="primary"
+              autoFocus
+            >
               Edit Session
             </Button>
           </DialogActions>
@@ -299,7 +390,7 @@ class Dashboard extends Component {
 
         <br />
 
-        <TableContainer>
+        <Paper className={classes.tableContainer}>
           <TextField
             id="standard-basic"
             type="search"
@@ -309,6 +400,7 @@ class Dashboard extends Component {
             onChange={this.onChange}
             placeholder="Search by Full Name"
             required
+            className={classes.searchField}
           />
           <Table aria-label="simple table">
             <TableHead>
@@ -333,35 +425,40 @@ class Dashboard extends Component {
                   <TableCell align="center">{row.project}</TableCell>
                   <TableCell align="center">
                     <Button
-                      className="button_style"
+                      className={classes.button}
                       variant="outlined"
                       color="primary"
                       size="small"
                       onClick={(e) => this.handleSessionEditOpen(row)}
                     >
                       Edit
-                  </Button>
+                    </Button>
                     <Button
-                      className="button_style"
+                      className={classes.button}
                       variant="outlined"
                       color="secondary"
                       size="small"
                       onClick={(e) => this.deleteSession(row._id)}
                     >
                       Delete
-                  </Button>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
           <br />
-          <Pagination count={this.state.pages} page={this.state.page} onChange={this.pageChange} color="primary" />
-        </TableContainer>
-
+          <Pagination
+            className={classes.pagination}
+            count={this.state.pages}
+            page={this.state.page}
+            onChange={this.pageChange}
+            color="primary"
+          />
+        </Paper>
       </div>
     );
   }
 }
 
-export default withRouter(Dashboard);
+export default withStyles(styles)(withRouter(Dashboard));

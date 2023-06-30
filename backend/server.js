@@ -317,7 +317,7 @@ app.post("/delete-product", (req, res) => {
 /* Api to get all students sorted by full name */
 app.get("/get-students", (req, res) => {
   try {
-    user.find({ role: "student" }).sort({fullName: 1}).exec((err, students) => {
+    user.find({ role: "Student" }).sort({fullName: 1}).exec((err, students) => {
       if (err) {
         return res.status(400).json({
           errorMessage: 'Something went wrong!',
@@ -488,7 +488,6 @@ app.post("/update-users", (req, res) => {
   
   try {
     if (req.body && req.body.id) {
-      console.log("Got Here")
       var update = {};
 
       if(req.body.username) {
