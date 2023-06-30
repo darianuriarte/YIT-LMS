@@ -22,6 +22,7 @@ class Dashboard extends Component {
       comments: '',
       sessionDate: '',
       hours: '',
+      attendance: '',
       subject: '',
       file: '',
       fileName: '',
@@ -149,6 +150,7 @@ class Dashboard extends Component {
     file.append('hours', this.state.hours);
     file.append('sessionDate', this.state.sessionDate);
     file.append('subject', this.state.subject);
+    file.append('attendance', this.state.attendance);
 
     axios.post('http://localhost:2000/add-product', file, {
       headers: {
@@ -164,7 +166,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionClose();
-      this.setState({ name: '', comments: '', hours: '', sessionDate: '', subject: '', file: null, page: 1 }, () => {
+      this.setState({ name: '', comments: '', hours: '', sessionDate: '', subject: '', attendance: '', file: null, page: 1 }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -185,6 +187,7 @@ class Dashboard extends Component {
     file.append('hours', this.state.hours);
     file.append('sessionDate', this.state.sessionDate);
     file.append('subject', this.state.subject);
+    file.append('attendance', this.state.attendance);
 
     axios.post('http://localhost:2000/update-product', file, {
       headers: {
@@ -200,7 +203,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionEditClose();
-      this.setState({ name: '', comments: '', hours: '', subject: '', sessionDate: '', file: null }, () => {
+      this.setState({ name: '', comments: '', hours: '', subject: '', attendance: '', sessionDate: '', file: null }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -224,6 +227,7 @@ class Dashboard extends Component {
       sessionDate: '',
       hours: '',
       subject: '',
+      attendance: '',
       fileName: ''
     });
   };
@@ -241,6 +245,7 @@ class Dashboard extends Component {
       sessionDate: data.sessionDate,
       hours: data.hours,
       subject: data.subject,
+      attendance: data.attendance,
     });
   };
 
@@ -333,6 +338,25 @@ class Dashboard extends Component {
               required
             /><br /> 
 
+<Select
+            style={{ minWidth: '200px' }}
+            value={this.state.attendance}
+            onChange={this.onChange}
+            inputProps={{
+            name: 'attendance',
+             }}
+           >
+            
+            <MenuItem value="Present">
+    <span style={{ marginRight: '10px' }}></span>
+    Present
+  </MenuItem>
+  <MenuItem value="Absent">
+    <span style={{ marginRight: '10px' }}></span>
+    Absent
+  </MenuItem>
+    </Select>
+    <br />
             <TextField
               id="standard-basic"
               type="number"
@@ -401,7 +425,21 @@ class Dashboard extends Component {
             ))}
             </Select> 
             <br />
+            <br /> 
+            <InputLabel>Attendance</InputLabel>
+           <Select
+            style={{ minWidth: '200px' }}
+            value={this.state.attendance}
+            onChange={this.onChange}
+            inputProps={{
+            name: 'attendance',
+             }}
+           >
+      <MenuItem value="Present">Present</MenuItem>
+      <MenuItem value="Absent">Absent</MenuItem>
+    </Select>
 
+    <br /> 
             <TextField
               id="standard-basic"
               type="number"
@@ -422,6 +460,8 @@ class Dashboard extends Component {
               placeholder="Subject"
               required
             /><br /> 
+            
+
             <TextField
               id="standard-basic"
               type="number"
@@ -451,7 +491,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' || this.state.hours == '' || this.state.sessionDate == ''|| this.state.subject == '' }
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.hours == '' || this.state.sessionDate == ''|| this.state.subject == '' || this.state.attendance == '' }
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>

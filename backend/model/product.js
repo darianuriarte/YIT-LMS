@@ -6,6 +6,7 @@ productSchema = new Schema( {
 	comments: String,
 	sessionDate: Number,
 	subject: String,
+	attendance: String,
 	hours: Number,
 	user_id: Schema.ObjectId,
 	is_delete: { type: Boolean, default: false },
