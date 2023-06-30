@@ -357,7 +357,7 @@ app.get("/get-product", (req, res) => {
         name: { $regex: req.query.search }
       });
     }
-    var perPage = 9;
+    var perPage = 8;
     var page = req.query.page || 1;
     product.find(query, { date: 1, name: 1, id: 1, comments: 1, sessionDate: 1, subject: 1, hours: 1, image: 1 })
       .skip((perPage * page) - perPage).limit(perPage)

@@ -254,7 +254,7 @@ class Dashboard extends Component {
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-          <h2>Dashboard</h2>
+        <h1 style={{ color: '#07EBB8' }}>Administrator Dashboard</h1>
           <Button
             className="button_style"
             variant="contained"
@@ -264,9 +264,21 @@ class Dashboard extends Component {
           >
             Add Session
           </Button>
+
           <Button
             className="button_style"
             variant="contained"
+            color="primary"
+            size="small"
+            onClick={() => this.props.navigate("/register")} // Assuming navigate method is used to change routes
+          >
+          Register
+          </Button>
+
+          <Button
+            className="button_style"
+            variant="contained"
+            color="secondary"
             size="small"
             onClick={this.logOut}
           >

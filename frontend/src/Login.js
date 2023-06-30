@@ -74,22 +74,13 @@ class Login extends React.Component {
           <Button
             className="button_style"
             variant="contained"
-            color="primary"
+            style={{ backgroundColor: '#07EBB8', color: 'white' }}
             size="small"
             disabled={this.state.username === '' || this.state.password === ''}
             onClick={this.login}
           >
             Login
           </Button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <Link
-            component="button"
-            style={{ fontFamily: "inherit", fontSize: "inherit", color: '#07EBB8'}}
-            onClick={() => {
-              this.props.navigate("/register");
-            }}
-          >
-            Register
-          </Link>
         </div>
       </div>
     );
