@@ -31,7 +31,10 @@ class Dashboard extends Component {
       products: [],
       pages: 0,
       loading: false,
-      displayStudents: false
+      displayStudents: false,
+      sessionDay: '', // added
+      sessionMonth: '', // added
+      sessionYear: '', // added
     };
   }
 
@@ -149,7 +152,9 @@ class Dashboard extends Component {
     file.append('comments', this.state.comments);
     file.append('taskAssignment', this.state.taskAssignment);
     file.append('hours', this.state.hours);
-    file.append('sessionDate', this.state.sessionDate);
+    file.append('sessionDay', this.state.sessionDay);
+    file.append('sessionMonth', this.state.sessionMonth);
+    file.append('sessionYear', this.state.sessionYear);
     file.append('subject', this.state.subject);
     file.append('attendance', this.state.attendance);
 
@@ -167,7 +172,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionClose();
-      this.setState({ name: '', comments: '', taskAssignment: '',hours: '', sessionDate: '', subject: '', attendance: '', file: null, page: 1 }, () => {
+      this.setState({ name: '', comments: '', taskAssignment: '',hours: '', sessionYear: '',sessionYear: '',sessionDay: '', subject: '', attendance: '', file: null, page: 1 }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -187,7 +192,9 @@ class Dashboard extends Component {
     file.append('comments', this.state.comments);
     file.append('taskAssignment', this.state.taskAssignment);
     file.append('hours', this.state.hours);
-    file.append('sessionDate', this.state.sessionDate);
+    file.append('sessionDay', this.state.sessionDay);
+    file.append('sessionMonth', this.state.sessionMonth);
+    file.append('sessionYear', this.state.sessionYear);
     file.append('subject', this.state.subject);
     file.append('attendance', this.state.attendance);
 
@@ -205,7 +212,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionEditClose();
-      this.setState({ name: '', comments: '', taskAssignment: '',hours: '', subject: '', attendance: '', sessionDate: '', file: null }, () => {
+      this.setState({ name: '', comments: '', taskAssignment: '',hours: '', subject: '', attendance: '', sessionDay: '', sessionMonth: '',sessionYear: '',file: null }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -227,7 +234,9 @@ class Dashboard extends Component {
       name: '',
       comments: '',
       taskAssignment: '',
-      sessionDate: '',
+      sessionDay: '',
+      sessionMonth: '',
+      sessionYear: '',
       hours: '',
       subject: '',
       attendance: '',
@@ -246,7 +255,9 @@ class Dashboard extends Component {
       name: data.name,
       comments: data.comments,
       taskAssignment: data.taskAssignment,
-      sessionDate: data.sessionDate,
+      sessionDay: data.sessionDay,
+      sessionMonth: data.sessionMonth,
+      sessionYear: data.sessionYear,
       hours: data.hours,
       subject: data.subject,
       attendance: data.attendance,
@@ -258,7 +269,9 @@ class Dashboard extends Component {
   };
 
   render() {
-    
+    const days = Array.from({length: 31}, (_, i) => i + 1);
+    const months = Array.from({length: 12}, (_, i) => i + 1);
+    const years = Array.from({length: 5}, (_, i) => i + 2023);
     return (
       <div>
         {this.state.loading && <LinearProgress size={40} />}
@@ -348,8 +361,38 @@ class Dashboard extends Component {
     Absent
   </MenuItem>
     </Select>
-    <br />
-            <br /> 
+    <br /> 
+    <br /> 
+    <InputLabel>Session Date DD-MM-YYYY</InputLabel>
+    <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
+      <Select
+        id="day-select"
+        name="sessionDay"
+        value={this.state.sessionDay}
+        onChange={this.onChange}
+      >
+        {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
+      </Select>
+      
+      <Select
+        id="month-select"
+        name="sessionMonth"
+        value={this.state.sessionMonth}
+        onChange={this.onChange}
+      >
+        {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+      </Select>
+      
+      <Select
+        id="year-select"
+        name="sessionYear"
+        value={this.state.sessionYear}
+        onChange={this.onChange}
+      >
+        {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
+      </Select>
+    </div>
+          <br />
             <InputLabel>Select Subject</InputLabel>
            <Select
             style={{ minWidth: '200px' }}
@@ -365,17 +408,7 @@ class Dashboard extends Component {
 
     <br /> 
     <br /> 
-    <InputLabel>Session Date</InputLabel>
-            <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="sessionDate"
-              value={this.state.sessionDate}
-              onChange={this.onChange}
-              required
-            /><br />
-            <br /> 
+   
     <InputLabel>Hours Worked</InputLabel>
             <TextField
               id="standard-basic"
@@ -418,7 +451,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' || this.state.taskAssignment == '' ||this.state.hours == '' || this.state.sessionDate == ''}
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.taskAssignment == '' ||this.state.hours == '' || this.state.sessionDay == ''|| this.state.sessionMonth == ''|| this.state.sessionYear == ''}
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
@@ -485,20 +518,38 @@ class Dashboard extends Component {
       <MenuItem value="Math">Math</MenuItem>
       <MenuItem value="Physics">Physics</MenuItem>
     </Select>
-
     <br /> 
     <br /> 
-    <InputLabel>Session Date</InputLabel>
-            <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="sessionDate"
-              value={this.state.sessionDate}
-              onChange={this.onChange}
-              required
-            /><br />
-            <br /> 
+    <InputLabel>Session Date DD-MM-YYYY</InputLabel>
+    <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
+      <Select
+        id="day-select"
+        name="sessionDay"
+        value={this.state.sessionDay}
+        onChange={this.onChange}
+      >
+        {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
+      </Select>
+      
+      <Select
+        id="month-select"
+        name="sessionMonth"
+        value={this.state.sessionMonth}
+        onChange={this.onChange}
+      >
+        {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+      </Select>
+      
+      <Select
+        id="year-select"
+        name="sessionYear"
+        value={this.state.sessionYear}
+        onChange={this.onChange}
+      >
+        {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
+      </Select>
+    </div>
+          <br />
     <InputLabel>Hours Worked</InputLabel>
             <TextField
               id="standard-basic"
@@ -541,7 +592,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' ||this.state.taskAssignment == '' || this.state.hours == '' || this.state.sessionDate == ''|| this.state.subject == '' || this.state.attendance == '' }
+              disabled={this.state.name == '' || this.state.comments == '' ||this.state.taskAssignment == '' || this.state.hours == '' ||  this.state.subject == '' || this.state.attendance == '' }
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>
@@ -578,7 +629,7 @@ class Dashboard extends Component {
                   <TableCell align="center" component="th" scope="row">
                     {row.name}
                   </TableCell>
-                  <TableCell align="center">{row.sessionDate}</TableCell>
+                  <TableCell align="center">{`${row.sessionDay}-${row.sessionMonth}-${row.sessionYear}`}</TableCell>
                   <TableCell align="center">{row.subject}</TableCell>
                   <TableCell align="center">{row.hours}</TableCell>
                   <TableCell align="center">{row.comments}</TableCell>
