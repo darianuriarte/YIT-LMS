@@ -7,6 +7,7 @@ import Login from "./Login";
 import Register from "./Register";
 import Dashboard from "./Dashboard";
 import ManageProfiles from "./ManageProfiles";
+import WelcomePage from "./WelcomePage";
 import "./Login.css";
 
 ReactDOM.render(
@@ -16,6 +17,7 @@ ReactDOM.render(
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} /> //to be changed to admin dashboard or something, 
       <Route path="/profiles" element={<ManageProfiles />} /> 
+      <Route path="/WelcomePage" element={<WelcomePage />} /> 
                                                           //remove dashboard.js file and use the ones inside the role folder
     </Routes>
   </BrowserRouter>,

@@ -297,6 +297,16 @@ class Dashboard extends Component {
           <Button
             className="button_style"
             variant="contained"
+            color="primary"
+            size="small"
+            onClick={() => this.props.navigate("/WelcomePage")} // Assuming navigate method is used to change routes
+          >
+          Welcome Page
+          </Button>
+
+          <Button
+            className="button_style"
+            variant="contained"
             color="secondary"
             size="small"
             onClick={this.logOut}
