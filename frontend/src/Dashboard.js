@@ -364,7 +364,7 @@ class Dashboard extends Component {
               name="hours"
               value={this.state.hours}
               onChange={this.onChange}
-              placeholder="Hours"
+              placeholder="Hours Worked"
               required
             /><br />
             <TextField
@@ -426,7 +426,7 @@ class Dashboard extends Component {
             </Select> 
             <br />
             <br /> 
-            <InputLabel>Attendance</InputLabel>
+            <InputLabel>Student Attendance</InputLabel>
            <Select
             style={{ minWidth: '200px' }}
             value={this.state.attendance}
@@ -469,7 +469,7 @@ class Dashboard extends Component {
               name="hours"
               value={this.state.hours}
               onChange={this.onChange}
-              placeholder="Hours"
+              placeholder="Hours Worked"
               required
             /><br />
             <TextField
@@ -517,7 +517,7 @@ class Dashboard extends Component {
                 <TableCell align="center">Name</TableCell>
                 <TableCell align="center">Date</TableCell>
                 <TableCell align="center">Subject</TableCell>
-                <TableCell align="center">Hours</TableCell>
+                <TableCell align="center">Hours Worked</TableCell>
                 <TableCell align="center">Comments</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
