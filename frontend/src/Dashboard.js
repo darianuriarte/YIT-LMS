@@ -20,7 +20,7 @@ class Dashboard extends Component {
       name: '',
       students: [],
       comments: '',
-      sessionDate: '',
+      taskAssignment: '',
       hours: '',
       attendance: '',
       subject: '',
@@ -147,6 +147,7 @@ class Dashboard extends Component {
     const file = new FormData();
     file.append('name', this.state.name);
     file.append('comments', this.state.comments);
+    file.append('taskAssignment', this.state.taskAssignment);
     file.append('hours', this.state.hours);
     file.append('sessionDate', this.state.sessionDate);
     file.append('subject', this.state.subject);
@@ -166,7 +167,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionClose();
-      this.setState({ name: '', comments: '', hours: '', sessionDate: '', subject: '', attendance: '', file: null, page: 1 }, () => {
+      this.setState({ name: '', comments: '', taskAssignment: '',hours: '', sessionDate: '', subject: '', attendance: '', file: null, page: 1 }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -184,6 +185,7 @@ class Dashboard extends Component {
     const file = new FormData();
     file.append('id', this.state.id);
     file.append('comments', this.state.comments);
+    file.append('taskAssignment', this.state.taskAssignment);
     file.append('hours', this.state.hours);
     file.append('sessionDate', this.state.sessionDate);
     file.append('subject', this.state.subject);
@@ -203,7 +205,7 @@ class Dashboard extends Component {
       });
 
       this.handleSessionEditClose();
-      this.setState({ name: '', comments: '', hours: '', subject: '', attendance: '', sessionDate: '', file: null }, () => {
+      this.setState({ name: '', comments: '', taskAssignment: '',hours: '', subject: '', attendance: '', sessionDate: '', file: null }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -224,6 +226,7 @@ class Dashboard extends Component {
       id: '',
       name: '',
       comments: '',
+      taskAssignment: '',
       sessionDate: '',
       hours: '',
       subject: '',
@@ -242,6 +245,7 @@ class Dashboard extends Component {
       id: data._id,
       name: data.name,
       comments: data.comments,
+      taskAssignment: data.taskAssignment,
       sessionDate: data.sessionDate,
       hours: data.hours,
       subject: data.subject,
@@ -377,6 +381,17 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Comments"
               required
+            /><br />
+            <TextField
+              id="standard-basic"
+              multiline
+              rows={3}
+              autoComplete="off"
+              name="taskAssignment"
+              value={this.state.taskAssignment}
+              onChange={this.onChange}
+              placeholder="Task Assignment"
+              required
             /><br /><br />
             
           </DialogContent>
@@ -386,7 +401,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' || this.state.hours == '' || this.state.sessionDate == ''}
+              disabled={this.state.name == '' || this.state.comments == '' || this.state.taskAssignment == '' ||this.state.hours == '' || this.state.sessionDate == ''}
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
@@ -482,7 +497,18 @@ class Dashboard extends Component {
               onChange={this.onChange}
               placeholder="Comments"
               required
-            /><br /><br />
+            /><br />
+            <TextField
+            id="standard-basic"
+            multiline
+            rows={3}
+            autoComplete="off"
+            name="taskAssignment"
+            value={this.state.taskAssignment}
+            onChange={this.onChange}
+            placeholder="Task Assignment"
+            required
+          /><br /><br />
             
           </DialogContent>
 
@@ -491,7 +517,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' || this.state.hours == '' || this.state.sessionDate == ''|| this.state.subject == '' || this.state.attendance == '' }
+              disabled={this.state.name == '' || this.state.comments == '' ||this.state.taskAssignment == '' || this.state.hours == '' || this.state.sessionDate == ''|| this.state.subject == '' || this.state.attendance == '' }
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>
