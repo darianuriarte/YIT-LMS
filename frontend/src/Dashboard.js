@@ -319,30 +319,8 @@ class Dashboard extends Component {
         >
           <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
-            
-            <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="sessionDate"
-              value={this.state.sessionDate}
-              onChange={this.onChange}
-              placeholder="Session Date"
-              required
-            /><br />
-
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="subject"
-              value={this.state.subject}
-              onChange={this.onChange}
-              placeholder="Subject"
-              required
-            /><br /> 
-
-<Select
+          <InputLabel>Record Attendance</InputLabel>
+          <Select
             style={{ minWidth: '200px' }}
             value={this.state.attendance}
             onChange={this.onChange}
@@ -361,6 +339,34 @@ class Dashboard extends Component {
   </MenuItem>
     </Select>
     <br />
+            <br /> 
+            <InputLabel>Select Subject</InputLabel>
+           <Select
+            style={{ minWidth: '200px' }}
+            value={this.state.subject}
+            onChange={this.onChange}
+            inputProps={{
+            name: 'subject',
+             }}
+           >
+      <MenuItem value="Math">Math</MenuItem>
+      <MenuItem value="Physics">Physics</MenuItem>
+    </Select>
+
+    <br /> 
+    <br /> 
+    <InputLabel>Session Date</InputLabel>
+            <TextField
+              id="standard-basic"
+              type="number"
+              autoComplete="off"
+              name="sessionDate"
+              value={this.state.sessionDate}
+              onChange={this.onChange}
+              required
+            /><br />
+            <br /> 
+    <InputLabel>Hours Worked</InputLabel>
             <TextField
               id="standard-basic"
               type="number"
@@ -368,31 +374,32 @@ class Dashboard extends Component {
               name="hours"
               value={this.state.hours}
               onChange={this.onChange}
-              placeholder="Hours Worked"
               required
             /><br />
-            <TextField
-              id="standard-basic"
-              multiline
-              rows={4}
-              autoComplete="off"
-              name="comments"
-              value={this.state.comments}
-              onChange={this.onChange}
-              placeholder="Comments"
-              required
-            /><br />
+            <br /> 
+    <InputLabel>Comments</InputLabel>
             <TextField
               id="standard-basic"
               multiline
               rows={3}
               autoComplete="off"
-              name="taskAssignment"
-              value={this.state.taskAssignment}
+              name="comments"
+              value={this.state.comments}
               onChange={this.onChange}
-              placeholder="Task Assignment"
               required
-            /><br /><br />
+            /><br />
+            <br /> 
+    <InputLabel>Task Assignment</InputLabel>
+            <TextField
+            id="standard-basic"
+            multiline
+            rows={3}
+            autoComplete="off"
+            name="taskAssignment"
+            value={this.state.taskAssignment}
+            onChange={this.onChange}
+            required
+          /><br /><br />
             
           </DialogContent>
 
@@ -441,7 +448,7 @@ class Dashboard extends Component {
             </Select> 
             <br />
             <br /> 
-            <InputLabel>Student Attendance</InputLabel>
+            <InputLabel>Record Attendance</InputLabel>
            <Select
             style={{ minWidth: '200px' }}
             value={this.state.attendance}
@@ -454,7 +461,24 @@ class Dashboard extends Component {
       <MenuItem value="Absent">Absent</MenuItem>
     </Select>
 
+            <br />
+            <br /> 
+            <InputLabel>Select Subject</InputLabel>
+           <Select
+            style={{ minWidth: '200px' }}
+            value={this.state.subject}
+            onChange={this.onChange}
+            inputProps={{
+            name: 'subject',
+             }}
+           >
+      <MenuItem value="Math">Math</MenuItem>
+      <MenuItem value="Physics">Physics</MenuItem>
+    </Select>
+
     <br /> 
+    <br /> 
+    <InputLabel>Session Date</InputLabel>
             <TextField
               id="standard-basic"
               type="number"
@@ -462,21 +486,10 @@ class Dashboard extends Component {
               name="sessionDate"
               value={this.state.sessionDate}
               onChange={this.onChange}
-              placeholder="Session Date"
               required
             /><br />
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="subject"
-              value={this.state.subject}
-              onChange={this.onChange}
-              placeholder="Subject"
-              required
-            /><br /> 
-            
-
+            <br /> 
+    <InputLabel>Hours Worked</InputLabel>
             <TextField
               id="standard-basic"
               type="number"
@@ -484,20 +497,22 @@ class Dashboard extends Component {
               name="hours"
               value={this.state.hours}
               onChange={this.onChange}
-              placeholder="Hours Worked"
               required
             /><br />
+            <br /> 
+    <InputLabel>Comments</InputLabel>
             <TextField
               id="standard-basic"
               multiline
-              rows={4}
+              rows={3}
               autoComplete="off"
               name="comments"
               value={this.state.comments}
               onChange={this.onChange}
-              placeholder="Comments"
               required
             /><br />
+            <br /> 
+    <InputLabel>Task Assignment</InputLabel>
             <TextField
             id="standard-basic"
             multiline
@@ -506,7 +521,6 @@ class Dashboard extends Component {
             name="taskAssignment"
             value={this.state.taskAssignment}
             onChange={this.onChange}
-            placeholder="Task Assignment"
             required
           /><br /><br />
             
