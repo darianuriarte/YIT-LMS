@@ -403,6 +403,7 @@ class Dashboard extends Component {
              }}
            >
       <MenuItem value="Math">Math</MenuItem>
+      <MenuItem value="Reading">Reading</MenuItem>
       <MenuItem value="Physics">Physics</MenuItem>
     </Select>
 
@@ -516,6 +517,7 @@ class Dashboard extends Component {
              }}
            >
       <MenuItem value="Math">Math</MenuItem>
+      <MenuItem value="Reading">Reading</MenuItem>
       <MenuItem value="Physics">Physics</MenuItem>
     </Select>
     <br /> 
