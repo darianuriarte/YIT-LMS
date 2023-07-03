@@ -184,18 +184,26 @@ function checkUserAndGenerateToken(data, req, res) {
   });
 }
 
+
+
+
+
 /* Api to add Session */
 app.post("/add-product", upload.any(), (req, res) => {
   
   try {
-    if (req.files && req.body && req.body.name && req.body.comments && req.body.price && req.body.subject &&
-      req.body.discount) {
+    if (req.files && req.body && req.body.name && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear &&req.body.attendance && req.body.subject &&
+      req.body.hours) {
       let new_product = new product();
       new_product.name = req.body.name;
       new_product.comments = req.body.comments;
-      new_product.price = req.body.price;
+      new_product.taskAssignment = req.body.taskAssignment;
+      new_product.sessionDay = req.body.sessionDay;
+      new_product.sessionMonth = req.body.sessionMonth;
+      new_product.sessionYear = req.body.sessionYear;
       new_product.subject = req.body.subject;
-      new_product.discount = req.body.discount;
+      new_product.attendance = req.body.attendance;
+      new_product.hours = req.body.hours;
       new_product.user_id = req.user.id;
       new_product.save((err, data) => {
         if (err) {
@@ -228,28 +236,37 @@ app.post("/add-product", upload.any(), (req, res) => {
 /* Api to update Product */
 app.post("/update-product", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.name && req.body.comments && req.body.price && req.body.subject &&
-      req.body.id && req.body.discount) {
+    if (req.files && req.body && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear &&req.body.subject && req.body.attendance &&
+      req.body.id && req.body.hours) {
 
       product.findById(req.body.id, (err, new_product) => {
 
         if (req.files && req.files[0] && req.files[0].filename) {
           new_product.image = req.files[0].filename;
         }
-        if (req.body.name) {
-          new_product.name = req.body.name;
-        }
         if (req.body.comments) {
           new_product.comments = req.body.comments;
         }
-        if (req.body.price) {
-          new_product.price = req.body.price;
+        if (req.body.taskAssignment) {
+          new_product.taskAssignment = req.body.taskAssignment;
+        }
+        if (req.body.sessionDay) {
+          new_product.sessionDay = req.body.sessionDay;
+        }
+        if (req.body.sessionMonth) {
+          new_product.sessionMonth = req.body.sessionMonth;
+        }
+        if (req.body.sessionYear) {
+          new_product.sessionYear = req.body.sessionYear;
         }
         if (req.body.subject) {
           new_product.subject = req.body.subject;
         }
-        if (req.body.discount) {
-          new_product.discount = req.body.discount;
+        if (req.body.attendance) {
+          new_product.attendance = req.body.attendance;
+        }
+        if (req.body.hours) {
+          new_product.hours = req.body.hours;
         }
 
         new_product.save((err, data) => {
@@ -313,6 +330,39 @@ app.post("/delete-product", (req, res) => {
   }
 });
 
+/* Api to get all students sorted by full name */
+app.get("/get-students", (req, res) => {
+  try {
+    user.find({ role: "Student" }).sort({fullName: 1}).exec((err, students) => {
+      if (err) {
+        return res.status(400).json({
+          errorMessage: 'Something went wrong!',
+          status: false
+        });
+      }
+
+      if (!students || students.length === 0) {
+        return res.status(404).json({
+          errorMessage: 'No students found!',
+          status: false
+        });
+      }
+      return res.status(200).json({
+        status: true,
+        students: students
+      });
+
+    })
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+
+
 /*Api to get and search product with pagination and search by name*/
 app.get("/get-product", (req, res) => {
   try {
@@ -327,9 +377,9 @@ app.get("/get-product", (req, res) => {
         name: { $regex: req.query.search }
       });
     }
-    var perPage = 9;
+    var perPage = 8;
     var page = req.query.page || 1;
-    product.find(query, { date: 1, name: 1, id: 1, comments: 1, price: 1, subject: 1, discount: 1, image: 1 })
+    product.find(query, { date: 1, name: 1, id: 1, comments: 1, taskAssignment: 1,sessionDay: 1,sessionYear: 1,sessionMonth: 1, subject: 1, attendance: 1, hours: 1, image: 1 })
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
         product.find(query).count()
@@ -367,6 +417,141 @@ app.get("/get-product", (req, res) => {
   }
 
 });
+
+
+
+/*Api to get and search users with pagination and search by username*/
+app.get("/get-users", (req, res) => {
+  try {
+    var query = {};
+    if (req.query && req.query.search) {
+      query["fullName"] = { $regex: req.query.search };
+    }
+    var perPage = 8;
+    var page = req.query.page || 1;
+    user.find(query, { username: 1, fullName: 1, role: 1,password: 1, project: 1 })
+      .skip((perPage * page) - perPage).limit(perPage)
+      .then((data) => {
+        user.countDocuments(query)
+          .then((count) => {
+
+            if (data && data.length > 0) {
+              res.status(200).json({
+                status: true,
+                title: 'User retrieved.',
+                users: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: 'No users found!',
+                status: false
+              });
+            }
+
+          });
+
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+
+});
+
+/* Api to delete User */
+app.post("/delete-users", (req, res) => {
+  try {
+    if (req.body && req.body.id) {
+      user.findByIdAndRemove(req.body.id, (err, data) => {
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error deleting user.',
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'User deleted successfully.'
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the user ID.',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+/* Api to update users */
+app.post("/update-users", (req, res) => {
+  
+  try {
+    if (req.body && req.body.id) {
+      var update = {};
+
+      if(req.body.username) {
+        update.username = req.body.username;
+      }
+      if(req.body.fullName) {
+        update.fullName = req.body.fullName;
+      }
+      if(req.body.role) {
+        update.role = req.body.role;
+      }
+      if(req.body.password) {
+        update.password = req.body.password;
+      }
+      if(req.body.project) {
+        update.project = req.body.project;
+      }
+
+      user.findByIdAndUpdate(req.body.id, update, { new: true }, (err, data) => {
+        
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error updating user.',
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'User updated successfully.',
+            user: data
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the user ID and details to update.',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+
 
 app.listen(2000, () => {
   console.log("Server is Runing On port 2000");

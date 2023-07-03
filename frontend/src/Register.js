@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import swal from "sweetalert";
-import { Button, TextField, Link } from "@material-ui/core";
+import { Button, Select, MenuItem, TextField, Link } from "@material-ui/core";
 import { withRouter } from "./utils";
 const axios = require("axios");
 
@@ -8,44 +8,50 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
-      confirm_password: '',
-      role: '',
-      fullName: '',
-      project: ''  // added project state, have to add to database
+      username: "",
+      password: "",
+      confirm_password: "",
+      role: "",
+      fullName: "",
+      project: "", // added project state, have to add to database
     };
   }
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   register = () => {
-
-    axios.post('http://localhost:2000/register', {
-      username: this.state.username,
-      password: this.state.password,
-      role: this.state.role,
-      fullName: this.state.fullName,
-      project: this.state.project  // added project
-    }).then((res) => {
-      swal({
-        text: res.data.title,
-        icon: "success",
-        type: "success"
+    axios
+      .post("http://localhost:2000/register", {
+        username: this.state.username,
+        password: this.state.password,
+        role: this.state.role,
+        fullName: this.state.fullName,
+        project: this.state.project, // added project
+      })
+      .then((res) => {
+        swal({
+          text: res.data.title,
+          icon: "success",
+          type: "success",
+        });
+        this.props.navigate("/dashboard");
+      })
+      .catch((err) => {
+        swal({
+          text: err.response.data.errorMessage,
+          icon: "error",
+          type: "error",
+        });
       });
-      this.props.navigate("/");
-    }).catch((err) => {
-      swal({
-        text: err.response.data.errorMessage,
-        icon: "error",
-        type: "error"
-      });
-    });
-  }
+  };
 
   render() {
+    const labelStyles = {
+      color: "rgba(0, 0, 0, 0.54)",
+    };
+
     return (
-      <div style={{ marginTop: '200px' }}>
+      <div style={{ marginTop: "200px" }}>
         <div>
           <h2>Register</h2>
         </div>
@@ -61,7 +67,8 @@ class Register extends React.Component {
             placeholder="User Name"
             required
           />
-          <br /><br />
+          <br />
+          <br />
           <TextField
             id="standard-basic"
             type="text"
@@ -72,7 +79,8 @@ class Register extends React.Component {
             placeholder="Full Name"
             required
           />
-          <br /><br />
+          <br />
+          <br />
           <TextField
             id="standard-basic"
             type="password"
@@ -83,7 +91,8 @@ class Register extends React.Component {
             placeholder="Password"
             required
           />
-          <br /><br />
+          <br />
+          <br />
           <TextField
             id="standard-basic"
             type="password"
@@ -94,47 +103,83 @@ class Register extends React.Component {
             placeholder="Confirm Password"
             required
           />
-          <br /><br />
-          <TextField
+          <br />
+          <br />
+          <Select
             id="standard-basic"
-            type="text"
-            autoComplete="off"
             name="role"
             value={this.state.role}
             onChange={this.onChange}
-            placeholder="Role"
             required
-          />
-          <br /><br />
-          <TextField
+            displayEmpty // Enable displayEmpty to show the placeholder
+            placeholder="Role"
+            style={{ minWidth: "200px" }} // Set the minWidth to make the dropdown wider
+          >
+            <MenuItem value="" disabled>
+              <div style={{ textAlign: "left", ...labelStyles }}>Role</div>
+            </MenuItem>
+            <MenuItem value="Student">Student</MenuItem>
+            <MenuItem value="Admin">Admin</MenuItem>
+            <MenuItem value="Tutor">Tutor</MenuItem>
+          </Select>
+          <br />
+          <br />
+          <Select
             id="standard-basic"
-            type="text"
-            autoComplete="off"
             name="project"
             value={this.state.project}
             onChange={this.onChange}
-            placeholder="Project"
             required
-          />
-          <br /><br />
+            displayEmpty // Enable displayEmpty to show the placeholder
+            placeholder="Project"
+            style={{ minWidth: "200px" }} // Set the minWidth to make the dropdown wider
+          >
+            <MenuItem value="" disabled>
+              <div style={{ textAlign: "left", ...labelStyles }}>Project</div>
+            </MenuItem>
+            <MenuItem value="Steam+">Steam+</MenuItem>
+            <MenuItem value="Butterfly">Butterfly</MenuItem>
+            <MenuItem value="Total_Access">Total Access</MenuItem>
+          </Select>
+          <br />
+          <br />
           <Button
             className="button_style"
             variant="contained"
-            color="primary"
+            style={{ backgroundColor: "#07EBB8", color: "white" }}
             size="small"
-            disabled={this.state.username == '' && this.state.password == ''}
+            disabled={this.state.username == "" && this.state.password == ""}
             onClick={this.register}
           >
             Register
-          </Button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </Button>{" "}
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <Link
             component="button"
-            style={{ fontFamily: "inherit", fontSize: "inherit", color: '#07EBB8' }}
+            style={{
+              fontFamily: "inherit",
+              fontSize: "inherit",
+              color: "#07EBB8",
+            }}
             onClick={() => {
               this.props.navigate("/");
             }}
           >
             Login
+          </Link>{" "}
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {/* This will add some space between Login and Dashboard */}
+          <Link
+            component="button"
+            style={{
+              fontFamily: "inherit",
+              fontSize: "inherit",
+              color: "#07EBB8",
+            }}
+            onClick={() => {
+              this.props.navigate("/Dashboard");
+            }}
+          >
+            Dashboard
           </Link>
         </div>
       </div>
