@@ -34,7 +34,7 @@ class Register extends React.Component {
           icon: "success",
           type: "success",
         });
-        this.props.navigate("/dashboard");
+        this.props.navigate("/WelcomePage");
       })
       .catch((err) => {
         swal({

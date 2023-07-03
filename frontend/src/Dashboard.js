@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Button, TextField, Dialog, DialogActions, LinearProgress,
   DialogTitle, DialogContent, TableBody, Table,
-  TableContainer, TableHead, TableRow, TableCell,InputLabel, Select, MenuItem
+  TableContainer, TableHead, TableRow, TableCell, InputLabel, Select, MenuItem
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
@@ -32,16 +32,15 @@ class Dashboard extends Component {
       pages: 0,
       loading: false,
       displayStudents: false,
-      sessionDay: '', // added
-      sessionMonth: '', // added
-      sessionYear: '', // added
+      sessionDay: '',
+      sessionMonth: '',
+      sessionYear: '',
     };
   }
 
   componentDidMount = () => {
     let token = localStorage.getItem('token');
     if (!token) {
-      // this.props.history.push('/login');
       this.props.navigate("/login");
     } else {
       this.setState({ token: token }, () => {
@@ -49,15 +48,16 @@ class Dashboard extends Component {
       });
     }
   }
+
   getAllStudents = () => {
     this.setState({ loading: true });
-  
-    axios.get('http://localhost:2000/get-students', { // The URL should be the one to get all students.
+
+    axios.get('http://localhost:2000/get-students', {
       headers: {
         'token': this.state.token
       }
     }).then((res) => {
-      this.setState({ loading: false, students: res.data.students.map(student => student.fullName) }); // I'm assuming the server will return an object with a 'students' property. If not, adjust accordingly.
+      this.setState({ loading: false, students: res.data.students.map(student => student.fullName) });
     }).catch((err) => {
       swal({
         text: err.response.data.errorMessage,
@@ -67,10 +67,8 @@ class Dashboard extends Component {
       this.setState({ loading: false, students: [] });
     });
   }
-  
-  
+
   getSession = () => {
-    
     this.setState({ loading: true });
 
     let data = '?';
@@ -90,7 +88,7 @@ class Dashboard extends Component {
         icon: "error",
         type: "error"
       });
-      this.setState({ loading: false, products: [], pages: 0 },()=>{});
+      this.setState({ loading: false, products: [], pages: 0 });
     });
   }
 
@@ -103,7 +101,6 @@ class Dashboard extends Component {
         'token': this.state.token
       }
     }).then((res) => {
-
       swal({
         text: res.data.title,
         icon: "success",
@@ -130,16 +127,15 @@ class Dashboard extends Component {
 
   logOut = () => {
     localStorage.setItem('token', null);
-    // this.props.history.push('/');
     this.props.navigate("/");
   }
 
   onChange = (e) => {
     if (e.target.files && e.target.files[0] && e.target.files[0].name) {
-      this.setState({ fileName: e.target.files[0].name }, () => { });
+      this.setState({ fileName: e.target.files[0].name });
     }
-    this.setState({ [e.target.name]: e.target.value }, () => { });
-    if (e.target.name == 'search') {
+    this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name === 'search') {
       this.setState({ page: 1 }, () => {
         this.getSession();
       });
@@ -164,7 +160,6 @@ class Dashboard extends Component {
         'token': this.state.token
       }
     }).then((res) => {
-
       swal({
         text: res.data.title,
         icon: "success",
@@ -172,7 +167,10 @@ class Dashboard extends Component {
       });
 
       this.handleSessionClose();
-      this.setState({ name: '', comments: '', taskAssignment: '',hours: '', sessionYear: '',sessionYear: '',sessionDay: '', subject: '', attendance: '', file: null, page: 1 }, () => {
+      this.setState({
+        name: '', comments: '', taskAssignment: '', hours: '', sessionYear: '',
+        sessionYear: '', sessionDay: '', subject: '', attendance: '', file: null, page: 1
+      }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -204,7 +202,6 @@ class Dashboard extends Component {
         'token': this.state.token
       }
     }).then((res) => {
-
       swal({
         text: res.data.title,
         icon: "success",
@@ -212,7 +209,10 @@ class Dashboard extends Component {
       });
 
       this.handleSessionEditClose();
-      this.setState({ name: '', comments: '', taskAssignment: '',hours: '', subject: '', attendance: '', sessionDay: '', sessionMonth: '',sessionYear: '',file: null }, () => {
+      this.setState({
+        name: '', comments: '', taskAssignment: '', hours: '', subject: '',
+        attendance: '', sessionDay: '', sessionMonth: '', sessionYear: '', file: null
+      }, () => {
         this.getSession();
       });
     }).catch((err) => {
@@ -269,14 +269,14 @@ class Dashboard extends Component {
   };
 
   render() {
-    const days = Array.from({length: 31}, (_, i) => i + 1);
-    const months = Array.from({length: 12}, (_, i) => i + 1);
-    const years = Array.from({length: 5}, (_, i) => i + 2023);
+    const days = Array.from({ length: 31 }, (_, i) => i + 1);
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const years = Array.from({ length: 5 }, (_, i) => i + 2023);
     return (
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-        <h1 style={{ color: '#07EBB8' }}>Administrator Dashboard</h1>
+          <h1 style={{ color: '#07EBB8' }}>Sessions Dashboard</h1>
           <Button
             className="button_style"
             variant="contained"
@@ -292,29 +292,9 @@ class Dashboard extends Component {
             variant="contained"
             color="primary"
             size="small"
-            onClick={() => this.props.navigate("/register")} // Assuming navigate method is used to change routes
+            onClick={() => this.props.navigate("/WelcomePage")}
           >
-          Register
-          </Button>
-
-          <Button
-            className="button_style"
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={() => this.props.navigate("/profiles")} // Assuming navigate method is used to change routes
-          >
-          Profile Management
-          </Button>
-
-          <Button
-            className="button_style"
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={() => this.props.navigate("/WelcomePage")} // Assuming navigate method is used to change routes
-          >
-          Welcome Page
+            Home
           </Button>
 
           <Button
@@ -326,9 +306,6 @@ class Dashboard extends Component {
           >
             Log Out
           </Button>
-
-          
-      
         </div>
 
         {/* Edit Session */}
@@ -337,79 +314,74 @@ class Dashboard extends Component {
           onClose={this.handleSessionClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
-          
-
         >
           <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
-          <InputLabel>Record Attendance</InputLabel>
-          <Select
-            style={{ minWidth: '200px' }}
-            value={this.state.attendance}
-            onChange={this.onChange}
-            inputProps={{
-            name: 'attendance',
-             }}
-           >
-            
-            <MenuItem value="Present">
-    <span style={{ marginRight: '10px' }}></span>
-    Present
-  </MenuItem>
-  <MenuItem value="Absent">
-    <span style={{ marginRight: '10px' }}></span>
-    Absent
-  </MenuItem>
-    </Select>
-    <br /> 
-    <br /> 
-    <InputLabel>Session Date DD-MM-YYYY</InputLabel>
-    <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
-      <Select
-        id="day-select"
-        name="sessionDay"
-        value={this.state.sessionDay}
-        onChange={this.onChange}
-      >
-        {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
-      </Select>
-      
-      <Select
-        id="month-select"
-        name="sessionMonth"
-        value={this.state.sessionMonth}
-        onChange={this.onChange}
-      >
-        {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
-      </Select>
-      
-      <Select
-        id="year-select"
-        name="sessionYear"
-        value={this.state.sessionYear}
-        onChange={this.onChange}
-      >
-        {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
-      </Select>
-    </div>
-          <br />
-            <InputLabel>Select Subject</InputLabel>
-           <Select
-            style={{ minWidth: '200px' }}
-            value={this.state.subject}
-            onChange={this.onChange}
-            inputProps={{
-            name: 'subject',
-             }}
-           >
-      <MenuItem value="Math">Math</MenuItem>
-      <MenuItem value="Physics">Physics</MenuItem>
-    </Select>
+            <InputLabel>Record Attendance</InputLabel>
+            <Select
+              style={{ minWidth: '200px' }}
+              value={this.state.attendance}
+              onChange={this.onChange}
+              inputProps={{
+                name: 'attendance',
+              }}
+            >
+              <MenuItem value="Present">
+                <span style={{ marginRight: '10px' }}></span>
+                Present
+              </MenuItem>
+              <MenuItem value="Absent">
+                <span style={{ marginRight: '10px' }}></span>
+                Absent
+              </MenuItem>
+            </Select>
+            <br />
+            <br />
+            <InputLabel>Session Date DD-MM-YYYY</InputLabel>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
+              <Select
+                id="day-select"
+                name="sessionDay"
+                value={this.state.sessionDay}
+                onChange={this.onChange}
+              >
+                {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
+              </Select>
 
-    <br /> 
-    <br /> 
-   
-    <InputLabel>Hours Worked</InputLabel>
+              <Select
+                id="month-select"
+                name="sessionMonth"
+                value={this.state.sessionMonth}
+                onChange={this.onChange}
+              >
+                {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+              </Select>
+
+              <Select
+                id="year-select"
+                name="sessionYear"
+                value={this.state.sessionYear}
+                onChange={this.onChange}
+              >
+                {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
+              </Select>
+            </div>
+            <br />
+            <InputLabel>Select Subject</InputLabel>
+            <Select
+              style={{ minWidth: '200px' }}
+              value={this.state.subject}
+              onChange={this.onChange}
+              inputProps={{
+                name: 'subject',
+              }}
+            >
+              <MenuItem value="Math">Math</MenuItem>
+              <MenuItem value="Physics">Physics</MenuItem>
+            </Select>
+            <br />
+            <br />
+            <InputLabel>Hours Worked</InputLabel>
             <TextField
               id="standard-basic"
               type="number"
@@ -419,8 +391,8 @@ class Dashboard extends Component {
               onChange={this.onChange}
               required
             /><br />
-            <br /> 
-    <InputLabel>Comments</InputLabel>
+            <br />
+            <InputLabel>Comments</InputLabel>
             <TextField
               id="standard-basic"
               multiline
@@ -431,19 +403,18 @@ class Dashboard extends Component {
               onChange={this.onChange}
               required
             /><br />
-            <br /> 
-    <InputLabel>Task Assignment</InputLabel>
+            <br />
+            <InputLabel>Task Assignment</InputLabel>
             <TextField
-            id="standard-basic"
-            multiline
-            rows={3}
-            autoComplete="off"
-            name="taskAssignment"
-            value={this.state.taskAssignment}
-            onChange={this.onChange}
-            required
-          /><br /><br />
-            
+              id="standard-basic"
+              multiline
+              rows={3}
+              autoComplete="off"
+              name="taskAssignment"
+              value={this.state.taskAssignment}
+              onChange={this.onChange}
+              required
+            /><br /><br />
           </DialogContent>
 
           <DialogActions>
@@ -451,7 +422,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' || this.state.taskAssignment == '' ||this.state.hours == '' || this.state.sessionDay == ''|| this.state.sessionMonth == ''|| this.state.sessionYear == ''}
+              disabled={this.state.name === '' || this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' || this.state.sessionDay === '' || this.state.sessionMonth === '' || this.state.sessionYear === ''}
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
@@ -464,93 +435,91 @@ class Dashboard extends Component {
           onClose={this.handleSessionClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
-          
         >
           <DialogTitle id="alert-dialog-title">Add Session</DialogTitle>
           <DialogContent>
             <InputLabel>
-           {this.state.name ? this.state.name : "Select a Student"}
+              {this.state.name ? this.state.name : "Select a Student"}
             </InputLabel>
-           <Select
-            style={{ minWidth: '200px' }}
-             value={this.state.name}
-             onChange={this.onChange}
-             inputProps={{
-             name: 'name',
-             
-             }}
+            <Select
+              style={{ minWidth: '200px' }}
+              value={this.state.name}
+              onChange={this.onChange}
+              inputProps={{
+                name: 'name',
+              }}
             >
               <MenuItem value="" disabled>
-             Student Name
-             </MenuItem>
+                Student Name
+              </MenuItem>
               {this.state.students.map((student, index) => (
-              <MenuItem key={index} value={student}>
-              {student}
-           </MenuItem>
-            ))}
-            </Select> 
+                <MenuItem key={index} value={student}>
+                  {student}
+                </MenuItem>
+              ))}
+            </Select>
             <br />
-            <br /> 
+            <br />
             <InputLabel>Record Attendance</InputLabel>
-           <Select
-            style={{ minWidth: '200px' }}
-            value={this.state.attendance}
-            onChange={this.onChange}
-            inputProps={{
-            name: 'attendance',
-             }}
-           >
-      <MenuItem value="Present">Present</MenuItem>
-      <MenuItem value="Absent">Absent</MenuItem>
-    </Select>
+            <Select
+              style={{ minWidth: '200px' }}
+              value={this.state.attendance}
+              onChange={this.onChange}
+              inputProps={{
+                name: 'attendance',
+              }}
+            >
+              <MenuItem value="Present">Present</MenuItem>
+              <MenuItem value="Absent">Absent</MenuItem>
+            </Select>
 
             <br />
-            <br /> 
+            <br />
             <InputLabel>Select Subject</InputLabel>
-           <Select
-            style={{ minWidth: '200px' }}
-            value={this.state.subject}
-            onChange={this.onChange}
-            inputProps={{
-            name: 'subject',
-             }}
-           >
-      <MenuItem value="Math">Math</MenuItem>
-      <MenuItem value="Physics">Physics</MenuItem>
-    </Select>
-    <br /> 
-    <br /> 
-    <InputLabel>Session Date DD-MM-YYYY</InputLabel>
-    <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
-      <Select
-        id="day-select"
-        name="sessionDay"
-        value={this.state.sessionDay}
-        onChange={this.onChange}
-      >
-        {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
-      </Select>
-      
-      <Select
-        id="month-select"
-        name="sessionMonth"
-        value={this.state.sessionMonth}
-        onChange={this.onChange}
-      >
-        {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
-      </Select>
-      
-      <Select
-        id="year-select"
-        name="sessionYear"
-        value={this.state.sessionYear}
-        onChange={this.onChange}
-      >
-        {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
-      </Select>
-    </div>
-          <br />
-    <InputLabel>Hours Worked</InputLabel>
+            <Select
+              style={{ minWidth: '200px' }}
+              value={this.state.subject}
+              onChange={this.onChange}
+              inputProps={{
+                name: 'subject',
+              }}
+            >
+              <MenuItem value="Math">Math</MenuItem>
+              <MenuItem value="Physics">Physics</MenuItem>
+            </Select>
+            <br />
+            <br />
+            <InputLabel>Session Date DD-MM-YYYY</InputLabel>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
+              <Select
+                id="day-select"
+                name="sessionDay"
+                value={this.state.sessionDay}
+                onChange={this.onChange}
+              >
+                {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
+              </Select>
+
+              <Select
+                id="month-select"
+                name="sessionMonth"
+                value={this.state.sessionMonth}
+                onChange={this.onChange}
+              >
+                {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+              </Select>
+
+              <Select
+                id="year-select"
+                name="sessionYear"
+                value={this.state.sessionYear}
+                onChange={this.onChange}
+              >
+                {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
+              </Select>
+            </div>
+            <br />
+            <InputLabel>Hours Worked</InputLabel>
             <TextField
               id="standard-basic"
               type="number"
@@ -560,8 +529,8 @@ class Dashboard extends Component {
               onChange={this.onChange}
               required
             /><br />
-            <br /> 
-    <InputLabel>Comments</InputLabel>
+            <br />
+            <InputLabel>Comments</InputLabel>
             <TextField
               id="standard-basic"
               multiline
@@ -572,19 +541,18 @@ class Dashboard extends Component {
               onChange={this.onChange}
               required
             /><br />
-            <br /> 
-    <InputLabel>Task Assignment</InputLabel>
+            <br />
+            <InputLabel>Task Assignment</InputLabel>
             <TextField
-            id="standard-basic"
-            multiline
-            rows={3}
-            autoComplete="off"
-            name="taskAssignment"
-            value={this.state.taskAssignment}
-            onChange={this.onChange}
-            required
-          /><br /><br />
-            
+              id="standard-basic"
+              multiline
+              rows={3}
+              autoComplete="off"
+              name="taskAssignment"
+              value={this.state.taskAssignment}
+              onChange={this.onChange}
+              required
+            /><br /><br />
           </DialogContent>
 
           <DialogActions>
@@ -592,7 +560,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name == '' || this.state.comments == '' ||this.state.taskAssignment == '' || this.state.hours == '' ||  this.state.subject == '' || this.state.attendance == '' }
+              disabled={this.state.name === '' || this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' || this.state.subject === '' || this.state.attendance === ''}
               onClick={(e) => this.addSession()} color="primary" autoFocus>
               Add Session
             </Button>
@@ -632,7 +600,10 @@ class Dashboard extends Component {
                   <TableCell align="center">{`${row.sessionDay}-${row.sessionMonth}-${row.sessionYear}`}</TableCell>
                   <TableCell align="center">{row.subject}</TableCell>
                   <TableCell align="center">{row.hours}</TableCell>
-                  <TableCell align="center">{row.comments}</TableCell>
+                  <TableCell align="center" style={{ maxWidth: '600px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+  {row.comments}
+</TableCell>
+
                   <TableCell align="center">
                     <Button
                       className="button_style"
@@ -642,7 +613,7 @@ class Dashboard extends Component {
                       onClick={(e) => this.handleSessionEditOpen(row)}
                     >
                       Edit
-                  </Button>
+                    </Button>
                     <Button
                       className="button_style"
                       variant="outlined"
@@ -651,7 +622,7 @@ class Dashboard extends Component {
                       onClick={(e) => this.deleteSession(row._id)}
                     >
                       Delete
-                  </Button>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

@@ -28,7 +28,7 @@ class Login extends React.Component {
     }).then((res) => {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user_id', res.data.id);
-      this.props.navigate("/dashboard");
+      this.props.navigate("/WelcomePage");
     }).catch((err) => {
       if (err.response && err.response.data && err.response.data.errorMessage) {
         swal({
