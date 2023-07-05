@@ -11,6 +11,19 @@ class WelcomePage extends Component {
     this.props.navigate('/');
   };
 
+  componentDidMount() {
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.border = "0";
+  }
+
+  componentWillUnmount() {
+    // return to original state
+    document.body.style.margin = "";
+    document.body.style.padding = "";
+    document.body.style.border = "";
+  }
+
   renderCard = (title, description, navigateTo) => (
     <Grid item xs={12} sm={6} md={4} style={{ padding: '20px' }}>
       <Card style={{
@@ -66,7 +79,7 @@ class WelcomePage extends Component {
           </IconButton>
         </Grid>
         <Grid container justify="center" style={{ marginTop: '80px' }}>
-          {this.renderCard('Register', 'Register for an account', '/register')}
+          {this.renderCard('Student Management', 'Manage student information', '/student')}
           {this.renderCard('Profile Management', 'Manage User Profiles', '/profiles')}
           {this.renderCard('Marks Dashboard', 'View and manage marks', '/marks')}
           {this.renderCard('Surveys', 'Participate in surveys', '/surveys')}
