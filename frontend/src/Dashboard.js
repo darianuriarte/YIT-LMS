@@ -368,20 +368,24 @@ class Dashboard extends Component {
             </div>
             <br />
             <InputLabel>Select Subject</InputLabel>
-            <Select
-              style={{ minWidth: '200px' }}
-              value={this.state.subject}
-              onChange={this.onChange}
-              inputProps={{
-                name: 'subject',
-              }}
-            >
-              <MenuItem value="Math">Math</MenuItem>
-              <MenuItem value="Physics">Physics</MenuItem>
-            </Select>
-            <br />
-            <br />
-            <InputLabel>Hours Worked</InputLabel>
+           <Select
+            style={{ minWidth: '200px' }}
+            value={this.state.subject}
+            onChange={this.onChange}
+            inputProps={{
+            name: 'subject',
+             }}
+           >
+      <MenuItem value="Math">Math</MenuItem>
+      <MenuItem value="Reading">Reading</MenuItem>
+      <MenuItem value="Physics">Physics</MenuItem>
+    </Select>
+
+    <br /> 
+    <br /> 
+   
+    <InputLabel>Hours Worked</InputLabel>
+
             <TextField
               id="standard-basic"
               type="number"
@@ -476,50 +480,51 @@ class Dashboard extends Component {
             <br />
             <br />
             <InputLabel>Select Subject</InputLabel>
-            <Select
-              style={{ minWidth: '200px' }}
-              value={this.state.subject}
-              onChange={this.onChange}
-              inputProps={{
-                name: 'subject',
-              }}
-            >
-              <MenuItem value="Math">Math</MenuItem>
-              <MenuItem value="Physics">Physics</MenuItem>
-            </Select>
-            <br />
-            <br />
-            <InputLabel>Session Date DD-MM-YYYY</InputLabel>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
-              <Select
-                id="day-select"
-                name="sessionDay"
-                value={this.state.sessionDay}
-                onChange={this.onChange}
-              >
-                {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
-              </Select>
-
-              <Select
-                id="month-select"
-                name="sessionMonth"
-                value={this.state.sessionMonth}
-                onChange={this.onChange}
-              >
-                {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
-              </Select>
-
-              <Select
-                id="year-select"
-                name="sessionYear"
-                value={this.state.sessionYear}
-                onChange={this.onChange}
-              >
-                {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
-              </Select>
-            </div>
-            <br />
-            <InputLabel>Hours Worked</InputLabel>
+           <Select
+            style={{ minWidth: '200px' }}
+            value={this.state.subject}
+            onChange={this.onChange}
+            inputProps={{
+            name: 'subject',
+             }}
+           >
+      <MenuItem value="Math">Math</MenuItem>
+      <MenuItem value="Reading">Reading</MenuItem>
+      <MenuItem value="Physics">Physics</MenuItem>
+    </Select>
+    <br /> 
+    <br /> 
+    <InputLabel>Session Date DD-MM-YYYY</InputLabel>
+    <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
+      <Select
+        id="day-select"
+        name="sessionDay"
+        value={this.state.sessionDay}
+        onChange={this.onChange}
+      >
+        {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
+      </Select>
+      
+      <Select
+        id="month-select"
+        name="sessionMonth"
+        value={this.state.sessionMonth}
+        onChange={this.onChange}
+      >
+        {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+      </Select>
+      
+      <Select
+        id="year-select"
+        name="sessionYear"
+        value={this.state.sessionYear}
+        onChange={this.onChange}
+      >
+        {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
+      </Select>
+    </div>
+          <br />
+    <InputLabel>Hours Worked</InputLabel>
             <TextField
               id="standard-basic"
               type="number"
