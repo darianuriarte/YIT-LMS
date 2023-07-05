@@ -13,7 +13,9 @@ class Login extends React.Component {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      fullName: '',
+      role: '',
     };
   }
 
@@ -21,13 +23,15 @@ class Login extends React.Component {
 
   login = () => {
     const pwd = bcrypt.hashSync(this.state.password, salt);
-
+  
     axios.post('http://localhost:2000/login', {
       username: this.state.username,
       password: pwd,
     }).then((res) => {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user_id', res.data.id);
+      localStorage.setItem('role', res.data.role);
+      localStorage.setItem('fullName', res.data.fullName);
       this.props.navigate("/WelcomePage");
     }).catch((err) => {
       if (err.response && err.response.data && err.response.data.errorMessage) {
@@ -39,6 +43,7 @@ class Login extends React.Component {
       }
     });
   }
+  
 
   render() {
     return (
