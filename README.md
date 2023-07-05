@@ -1,5 +1,4 @@
-# MERN Stack | Login, Register and CRUD app
-Simlple example of user registration, login and CRUD action with backend restAPI using mongoDB, Nodejs(Express.js) and mongoose, authentication using JWT token also pagination and frontend using react.js and material-ui api calling with axios.
+# Youth in Transformation LMS
 
 [![flow](https://github.com/FSojitra/Registration-Login-and-CRUD-Action-using-MERN-stack/blob/development/MERN.gif)](https://github.com/FSojitra/Registration-Login-and-CRUD-Action-using-MERN-stack/blob/development/MERN.gif)
 
@@ -32,6 +31,9 @@ Clone or download this repository
 3. `cd Registration-and-Login-using-MERN-stack/frontend`
 4. `npm install`
 
+5. cd into backend, `npm install mongoose` and `npm install dotenv`
+6. create environment variable (.env file) and we have the link
+
 ### To Run
 To run node server
 1. `cd Registration-and-Login-using-MERN-stack/backend`
@@ -49,5 +51,3 @@ To run react frontend
 
 ### Product Pagination screen
 [![dashboard](https://github.com/FSojitra/Registration-Login-and-CRUD-Action-using-MERN-stack/blob/master/dashboard.png)](https://github.com/FSojitra/Registration-Login-and-CRUD-Action-using-MERN-stack/blob/master/dashboard.png) -->
-
-### Do not forget to leave a star! :hugs:
