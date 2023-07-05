@@ -3,7 +3,6 @@ import { Grid, Typography, IconButton, Card, CardHeader, CardContent, CardAction
 import { ExitToApp as LogoutIcon } from '@material-ui/icons';
 import { withRouter } from './utils';
 import logo from './logo.png';
-import backgroundImage from './image.png';
 
 class WelcomePage extends Component {
   logOut = () => {
