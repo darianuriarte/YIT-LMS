@@ -84,6 +84,7 @@ app.post("/login", (req, res) => {
 
           if (bcrypt.compareSync(data[0].password, req.body.password)) {
             checkUserAndGenerateToken(data[0], req, res);
+            console.log(data[0])
           } else {
 
             res.status(400).json({
@@ -169,7 +170,7 @@ app.post("/register", (req, res) => {
 });
 
 function checkUserAndGenerateToken(data, req, res) {
-  jwt.sign({ user: data.username, id: data._id }, 'shhhhh11111', { expiresIn: '1d' }, (err, token) => {
+  jwt.sign({ user: data.username, id: data._id}, 'shhhhh11111', { expiresIn: '1d' }, (err, token) => {
     if (err) {
       res.status(400).json({
         status: false,
@@ -178,6 +179,8 @@ function checkUserAndGenerateToken(data, req, res) {
     } else {
       res.json({
         message: 'Login Successfully.',
+        role: data.role,
+        fullName: data.fullName,
         token: token,
         status: true
       });
@@ -193,8 +196,8 @@ function checkUserAndGenerateToken(data, req, res) {
 app.post("/add-product", upload.any(), (req, res) => {
   
   try {
-    if (req.files && req.body && req.body.name && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear &&req.body.attendance && req.body.subject &&
-      req.body.hours) {
+    if (req.files && req.body && req.body.name && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear  && req.body.subject &&
+      req.body.hours && req.body.tutor) {
       let new_product = new product();
       new_product.name = req.body.name;
       new_product.comments = req.body.comments;
@@ -204,6 +207,7 @@ app.post("/add-product", upload.any(), (req, res) => {
       new_product.sessionYear = req.body.sessionYear;
       new_product.subject = req.body.subject;
       new_product.attendance = req.body.attendance;
+      new_product.tutor = req.body.tutor;
       new_product.hours = req.body.hours;
       new_product.user_id = req.user.id;
       new_product.save((err, data) => {
@@ -411,7 +415,7 @@ app.get("/get-product", (req, res) => {
     }
     var perPage = 8;
     var page = req.query.page || 1;
-    product.find(query, { date: 1, name: 1, id: 1, comments: 1, taskAssignment: 1,sessionDay: 1,sessionYear: 1,sessionMonth: 1, subject: 1, attendance: 1, hours: 1, image: 1 })
+    product.find(query, { date: 1, name: 1, id: 1, comments: 1, taskAssignment: 1,sessionDay: 1,sessionYear: 1,sessionMonth: 1, subject: 1, attendance: 1, hours: 1, tutor: 1 })
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
         product.find(query).count()
@@ -753,3 +757,4 @@ app.post("/delete-student", (req, res) => {
 app.listen(2000, () => {
   console.log("Server is Runing On port 2000");
 });
+

@@ -67,7 +67,6 @@ class WelcomePage extends Component {
           padding: '40px',
           backgroundColor: '#FFFFFF',
           minHeight: '100vh',
-          // backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -78,13 +77,13 @@ class WelcomePage extends Component {
             <LogoutIcon style={{ color: '#000000' }}/>
           </IconButton>
         </Grid>
-        <Grid container justify="center" style={{ marginTop: '80px' }}>
-          {this.renderCard('Student Management', 'Manage student information', '/student')}
-          {this.renderCard('Profile Management', 'Manage User Profiles', '/profiles')}
-          {this.renderCard('Marks Dashboard', 'View and manage marks', '/marks')}
+        <Grid container justify="center" style={{ marginTop: '30px' }}>
+          {this.renderCard('Student Profiles', 'Manage student information', '/student')}
+          {this.renderCard('Users Management', 'Manage User Profiles', '/profiles')}
+          {this.renderCard('Payroll', 'View and manage marks', '/marks')}
           {this.renderCard('Surveys', 'Participate in surveys', '/surveys')}
           {this.renderCard('Sessions Dashboard', 'View and manage sessions', '/dashboard')}
-          {this.renderCard('Attendance', 'Manage attendance records', '/attendance')}
+          {this.renderCard('Announcements', 'Manage attendance records', '/attendance')}
         </Grid>
       </div>
     );
