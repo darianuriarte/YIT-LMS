@@ -12,6 +12,7 @@ mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTop
 var fs = require('fs');
 var product = require("./model/product.js");
 var user = require("./model/user.js");
+var student = require("./model/student.js");
 var dir = './uploads';
 var upload = multer({
   storage: multer.diskStorage({
@@ -233,7 +234,7 @@ app.post("/add-product", upload.any(), (req, res) => {
   }
 });
 
-/* Api to update Product */
+/* Api to update Session */
 app.post("/update-product", upload.any(), (req, res) => {
   try {
     if (req.files && req.body && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear &&req.body.subject && req.body.attendance &&
@@ -299,7 +300,7 @@ app.post("/update-product", upload.any(), (req, res) => {
   }
 });
 
-/* Api to delete Product */
+/* Api to delete Session */
 app.post("/delete-product", (req, res) => {
   try {
     if (req.body && req.body.id) {
@@ -361,9 +362,40 @@ app.get("/get-students", (req, res) => {
   }
 });
 
+/* Api to get all tutors sorted by full name */
+app.get("/get-tutors", (req, res) => {
+  try {
+    user.find({ role: "Tutor" }).sort({fullName: 1}).exec((err, tutors) => {
+      if (err) {
+        return res.status(400).json({
+          errorMessage: 'Something went wrong!',
+          status: false
+        });
+      }
+
+      if (!tutors || tutors.length === 0) {
+        return res.status(404).json({
+          errorMessage: 'No tutors found!',
+          status: false
+        });
+      }
+      return res.status(200).json({
+        status: true,
+        tutors: tutors
+      });
+
+    })
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
 
 
-/*Api to get and search product with pagination and search by name*/
+
+/*Api to get and search session with pagination and search by name*/
 app.get("/get-product", (req, res) => {
   try {
     var query = {};
@@ -551,6 +583,171 @@ app.post("/update-users", (req, res) => {
   }
 });
 
+/*Api to get and search students with pagination and search by name*/
+app.get("/get-students", (req, res) => {
+  try {
+    var query = {};
+    if (req.query && req.query.search) {
+      query["fullName"] = { $regex: req.query.search };
+    }
+    var perPage = 8;
+    var page = req.query.page || 1;
+    student.find(query, { name: 1, tutor: 1, grade: 1, averageMark: 1})
+      .skip((perPage * page) - perPage).limit(perPage)
+      .then((data) => {
+        student.countDocuments(query)
+          .then((count) => {
+
+            if (data && data.length > 0) {
+              res.status(200).json({
+                status: true,
+                title: 'Student retrieved.',
+                users: data,
+                current_page: page,
+                total: count,
+                pages: Math.ceil(count / perPage),
+              });
+            } else {
+              res.status(400).json({
+                errorMessage: 'No students found!',
+                status: false
+              });
+            }
+
+          });
+
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+
+});
+
+
+/* Api to add Student */
+app.post("/add-student", upload.any(), (req, res) => {
+  
+  try {
+    if (req.body && req.body.name && req.body.tutor && req.body.grade ) {
+      let new_student = new student();
+      new_student.name = req.body.name;
+      new_student.tutor = req.body.tutor;
+      new_student.grade = req.body.grade;
+      new_student.save((err, data) => {
+        if (err) {
+          res.status(400).json({
+            errorMessage: err,
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'Student Info Added successfully.'
+          });
+        }
+      });
+
+    } else {
+      res.status(400).json({
+        errorMessage: 'Add proper parameter first!',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+
+/* Api to update students */
+app.post("/update-student", (req, res) => {
+  
+  try {
+    if (req.body && req.body.id) {
+      var update = {};
+
+      if(req.body.name) {
+        update.name = req.body.name;
+      }
+      if(req.body.tutor) {
+        update.tutor = req.body.tutor;
+      }
+      if(req.body.grade) {
+        update.grade = req.body.grade;
+      }
+      if(req.body.averageMark) {
+        update.averageMark = req.body.averageMark;
+      }
+
+      student.findByIdAndUpdate(req.body.id, update, { new: true }, (err, data) => {
+        
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error updating student.',
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'Student updated successfully.',
+            user: data
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the student ID and details to update.',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+/* Api to delete Students */
+app.post("/delete-student", (req, res) => {
+  try {
+    if (req.body && req.body.id) {
+      student.findByIdAndRemove(req.body.id, (err, data) => {
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error deleting student.',
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'Student deleted successfully.'
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the student ID.',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
 
 
 app.listen(2000, () => {

@@ -19,22 +19,16 @@ class Dashboard extends Component {
       id: '',
       name: '',
       students: [],
-      comments: '',
-      taskAssignment: '',
-      hours: '',
-      attendance: '',
-      subject: '',
+      tutor: '',
+      tutors: [],
+      grade: '',
       file: '',
-      fileName: '',
       page: 1,
       search: '',
       products: [],
       pages: 0,
       loading: false,
       displayStudents: false,
-      sessionDay: '',
-      sessionMonth: '',
-      sessionYear: '',
     };
   }
 
@@ -68,6 +62,26 @@ class Dashboard extends Component {
     });
   }
 
+
+  getAllTutors = () => {
+    this.setState({ loading: true });
+
+    axios.get('http://localhost:2000/get-tutors', {
+      headers: {
+        'token': this.state.token
+      }
+    }).then((res) => {
+      this.setState({ loading: false, tutors: res.data.tutors.map(tutor => tutor.fullName) });
+    }).catch((err) => {
+      swal({
+        text: err.response.data.errorMessage,
+        icon: "error",
+        type: "error"
+      });
+      this.setState({ loading: false, tutors: [] });
+    });
+  }
+
   getSession = () => {
     this.setState({ loading: true });
 
@@ -76,7 +90,7 @@ class Dashboard extends Component {
     if (this.state.search) {
       data = `${data}&search=${this.state.search}`;
     }
-    axios.get(`http://localhost:2000/get-product${data}`, {
+    axios.get(`http://localhost:2000/get-student${data}`, {
       headers: {
         'token': this.state.token
       }
@@ -145,16 +159,10 @@ class Dashboard extends Component {
   addSession = () => {
     const file = new FormData();
     file.append('name', this.state.name);
-    file.append('comments', this.state.comments);
-    file.append('taskAssignment', this.state.taskAssignment);
-    file.append('hours', this.state.hours);
-    file.append('sessionDay', this.state.sessionDay);
-    file.append('sessionMonth', this.state.sessionMonth);
-    file.append('sessionYear', this.state.sessionYear);
-    file.append('subject', this.state.subject);
-    file.append('attendance', this.state.attendance);
+    file.append('grade', this.state.grade);
+    file.append('tutor', this.state.tutor);
 
-    axios.post('http://localhost:2000/add-product', file, {
+    axios.post('http://localhost:2000/add-student', file, {
       headers: {
         'content-type': 'multipart/form-data',
         'token': this.state.token
@@ -168,8 +176,7 @@ class Dashboard extends Component {
 
       this.handleSessionClose();
       this.setState({
-        name: '', comments: '', taskAssignment: '', hours: '', sessionYear: '',
-        sessionYear: '', sessionDay: '', subject: '', attendance: '', file: null, page: 1
+        name: '', tutor: '', grade: '', file: null, page: 1
       }, () => {
         this.getSession();
       });
@@ -187,16 +194,11 @@ class Dashboard extends Component {
   updateSession = () => {
     const file = new FormData();
     file.append('id', this.state.id);
-    file.append('comments', this.state.comments);
-    file.append('taskAssignment', this.state.taskAssignment);
-    file.append('hours', this.state.hours);
-    file.append('sessionDay', this.state.sessionDay);
-    file.append('sessionMonth', this.state.sessionMonth);
-    file.append('sessionYear', this.state.sessionYear);
-    file.append('subject', this.state.subject);
-    file.append('attendance', this.state.attendance);
+    file.append('grade', this.state.grade);
+    file.append('name', this.state.grade);
+    file.append('tutor', this.state.grade);
 
-    axios.post('http://localhost:2000/update-product', file, {
+    axios.post('http://localhost:2000/update-student', file, {
       headers: {
         'content-type': 'multipart/form-data',
         'token': this.state.token
@@ -210,8 +212,7 @@ class Dashboard extends Component {
 
       this.handleSessionEditClose();
       this.setState({
-        name: '', comments: '', taskAssignment: '', hours: '', subject: '',
-        attendance: '', sessionDay: '', sessionMonth: '', sessionYear: '', file: null
+        name: '', grade: '', tutor: '', file: null
       }, () => {
         this.getSession();
       });
@@ -228,18 +229,13 @@ class Dashboard extends Component {
 
   handleSessionOpen = () => {
     this.getAllStudents();
+    this.getAllTutors();
     this.setState({
       openSessionModal: true,
       id: '',
       name: '',
-      comments: '',
-      taskAssignment: '',
-      sessionDay: '',
-      sessionMonth: '',
-      sessionYear: '',
-      hours: '',
-      subject: '',
-      attendance: '',
+      grade: '',
+      tutor: '',
       fileName: ''
     });
   };
@@ -253,14 +249,8 @@ class Dashboard extends Component {
       openSessionEditModal: true,
       id: data._id,
       name: data.name,
-      comments: data.comments,
-      taskAssignment: data.taskAssignment,
-      sessionDay: data.sessionDay,
-      sessionMonth: data.sessionMonth,
-      sessionYear: data.sessionYear,
-      hours: data.hours,
-      subject: data.subject,
-      attendance: data.attendance,
+      tutor: data.tutor,
+      grade: data.grade,
     });
   };
 
@@ -276,7 +266,7 @@ class Dashboard extends Component {
       <div>
         {this.state.loading && <LinearProgress size={40} />}
         <div>
-          <h1 style={{ color: '#07EBB8' }}>Sessions Dashboard</h1>
+          <h1 style={{ color: '#07EBB8' }}>Student Management</h1>
           <Button
             className="button_style"
             variant="contained"
@@ -284,7 +274,7 @@ class Dashboard extends Component {
             size="small"
             onClick={this.handleSessionOpen}
           >
-            Add Session
+            Register Student
           </Button>
 
           <Button
@@ -317,108 +307,55 @@ class Dashboard extends Component {
         >
           <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
-            <InputLabel>Record Attendance</InputLabel>
+            <InputLabel>Select Grade</InputLabel>
             <Select
               style={{ minWidth: '200px' }}
-              value={this.state.attendance}
+              value={this.state.grade}
               onChange={this.onChange}
               inputProps={{
-                name: 'attendance',
+                name: 'grade',
               }}
             >
-              <MenuItem value="Present">
-                <span style={{ marginRight: '10px' }}></span>
-                Present
-              </MenuItem>
-              <MenuItem value="Absent">
-                <span style={{ marginRight: '10px' }}></span>
-                Absent
-              </MenuItem>
+              <MenuItem value="Grade1">Grade 1</MenuItem>
+              <MenuItem value="Grade2">Grade 2</MenuItem>
+              <MenuItem value="Grade3">Grade 3</MenuItem>
+              <MenuItem value="Grade4">Grade 4</MenuItem>
+              <MenuItem value="Grade5">Grade 5</MenuItem>
+              <MenuItem value="Grade6">Grade 6</MenuItem>
+              <MenuItem value="Grade7">Grade 7</MenuItem>
+              <MenuItem value="Grade8">Grade 8</MenuItem>
+              <MenuItem value="Grade9">Grade 9</MenuItem>
+              <MenuItem value="Grade10">Grade 10</MenuItem>
+              <MenuItem value="Grade11">Grade 11</MenuItem>
+              <MenuItem value="Grade12">Grade 12</MenuItem>
             </Select>
             <br />
             <br />
-            <InputLabel>Session Date DD-MM-YYYY</InputLabel>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
-              <Select
-                id="day-select"
-                name="sessionDay"
-                value={this.state.sessionDay}
-                onChange={this.onChange}
-              >
-                {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
-              </Select>
-
-              <Select
-                id="month-select"
-                name="sessionMonth"
-                value={this.state.sessionMonth}
-                onChange={this.onChange}
-              >
-                {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
-              </Select>
-
-              <Select
-                id="year-select"
-                name="sessionYear"
-                value={this.state.sessionYear}
-                onChange={this.onChange}
-              >
-                {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
-              </Select>
-            </div>
-            <br />
-            <InputLabel>Select Subject</InputLabel>
-           <Select
-            style={{ minWidth: '200px' }}
-            value={this.state.subject}
-            onChange={this.onChange}
-            inputProps={{
-            name: 'subject',
-             }}
-           >
-      <MenuItem value="Math">Math</MenuItem>
-      <MenuItem value="Reading">Reading</MenuItem>
-      <MenuItem value="Physics">Physics</MenuItem>
-    </Select>
-
-    <br /> 
-    <br /> 
-   
-    <InputLabel>Hours Worked</InputLabel>
-
-            <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="hours"
-              value={this.state.hours}
+            <InputLabel>
+              {this.state.tutor ? this.state.tutor : "Assign Tutor"}
+            </InputLabel>
+            <Select
+              style={{ minWidth: '200px' }}
+              value={this.state.tutor}
               onChange={this.onChange}
-              required
-            /><br />
+              inputProps={{
+                name: 'tutor',
+              }}
+            >
+              <MenuItem value="" disabled>
+                Tutor Name
+              </MenuItem>
+              {this.state.tutors.map((tutor, index) => (
+                <MenuItem key={index} value={tutor}>
+                  {tutor}
+                </MenuItem>
+              ))}
+            </Select>
+
             <br />
-            <InputLabel>Comments</InputLabel>
-            <TextField
-              id="standard-basic"
-              multiline
-              rows={3}
-              autoComplete="off"
-              name="comments"
-              value={this.state.comments}
-              onChange={this.onChange}
-              required
-            /><br />
             <br />
-            <InputLabel>Task Assignment</InputLabel>
-            <TextField
-              id="standard-basic"
-              multiline
-              rows={3}
-              autoComplete="off"
-              name="taskAssignment"
-              value={this.state.taskAssignment}
-              onChange={this.onChange}
-              required
-            /><br /><br />
+           
+          
           </DialogContent>
 
           <DialogActions>
@@ -426,21 +363,21 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name === '' || this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' || this.state.sessionDay === '' || this.state.sessionMonth === '' || this.state.sessionYear === ''}
+              disabled={this.state.name === '' || this.state.comments === '' || this.state.taskAssignment === '' || this.state.averageMark === '' || this.state.sessionDay === '' || this.state.sessionMonth === '' || this.state.sessionYear === ''}
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
           </DialogActions>
         </Dialog>
 
-        {/* Add Session */}
+        {/* Register Student */}
         <Dialog
           open={this.state.openSessionModal}
           onClose={this.handleSessionClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">Add Session</DialogTitle>
+          <DialogTitle id="alert-dialog-title">Register Student</DialogTitle>
           <DialogContent>
             <InputLabel>
               {this.state.name ? this.state.name : "Select a Student"}
@@ -464,100 +401,54 @@ class Dashboard extends Component {
             </Select>
             <br />
             <br />
-            <InputLabel>Record Attendance</InputLabel>
+            <InputLabel>
+              {this.state.tutor ? this.state.tutor : "Assign Tutor"}
+            </InputLabel>
             <Select
               style={{ minWidth: '200px' }}
-              value={this.state.attendance}
+              value={this.state.tutor}
               onChange={this.onChange}
               inputProps={{
-                name: 'attendance',
+                name: 'tutor',
               }}
             >
-              <MenuItem value="Present">Present</MenuItem>
-              <MenuItem value="Absent">Absent</MenuItem>
+              <MenuItem value="" disabled>
+                Tutor Name
+              </MenuItem>
+              {this.state.tutors.map((tutor, index) => (
+                <MenuItem key={index} value={tutor}>
+                  {tutor}
+                </MenuItem>
+              ))}
             </Select>
 
             <br />
             <br />
-            <InputLabel>Select Subject</InputLabel>
-           <Select
-            style={{ minWidth: '200px' }}
-            value={this.state.subject}
-            onChange={this.onChange}
-            inputProps={{
-            name: 'subject',
-             }}
-           >
-      <MenuItem value="Math">Math</MenuItem>
-      <MenuItem value="Reading">Reading</MenuItem>
-      <MenuItem value="Physics">Physics</MenuItem>
-    </Select>
-    <br /> 
-    <br /> 
-    <InputLabel>Session Date DD-MM-YYYY</InputLabel>
-    <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
-      <Select
-        id="day-select"
-        name="sessionDay"
-        value={this.state.sessionDay}
-        onChange={this.onChange}
-      >
-        {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
-      </Select>
-      
-      <Select
-        id="month-select"
-        name="sessionMonth"
-        value={this.state.sessionMonth}
-        onChange={this.onChange}
-      >
-        {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
-      </Select>
-      
-      <Select
-        id="year-select"
-        name="sessionYear"
-        value={this.state.sessionYear}
-        onChange={this.onChange}
-      >
-        {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
-      </Select>
-    </div>
-          <br />
-    <InputLabel>Hours Worked</InputLabel>
-            <TextField
-              id="standard-basic"
-              type="number"
-              autoComplete="off"
-              name="hours"
-              value={this.state.hours}
+            <InputLabel>Select Grade</InputLabel>
+            <Select
+              style={{ minWidth: '200px' }}
+              value={this.state.grade}
               onChange={this.onChange}
-              required
-            /><br />
+              inputProps={{
+                name: 'grade',
+              }}
+            >
+             <MenuItem value="Grade1">Grade 1</MenuItem>
+              <MenuItem value="Grade2">Grade 2</MenuItem>
+              <MenuItem value="Grade3">Grade 3</MenuItem>
+              <MenuItem value="Grade4">Grade 4</MenuItem>
+              <MenuItem value="Grade5">Grade 5</MenuItem>
+              <MenuItem value="Grade6">Grade 6</MenuItem>
+              <MenuItem value="Grade7">Grade 7</MenuItem>
+              <MenuItem value="Grade8">Grade 8</MenuItem>
+              <MenuItem value="Grade9">Grade 9</MenuItem>
+              <MenuItem value="Grade10">Grade 10</MenuItem>
+              <MenuItem value="Grade11">Grade 11</MenuItem>
+              <MenuItem value="Grade12">Grade 12</MenuItem>
+            </Select>
             <br />
-            <InputLabel>Comments</InputLabel>
-            <TextField
-              id="standard-basic"
-              multiline
-              rows={3}
-              autoComplete="off"
-              name="comments"
-              value={this.state.comments}
-              onChange={this.onChange}
-              required
-            /><br />
             <br />
-            <InputLabel>Task Assignment</InputLabel>
-            <TextField
-              id="standard-basic"
-              multiline
-              rows={3}
-              autoComplete="off"
-              name="taskAssignment"
-              value={this.state.taskAssignment}
-              onChange={this.onChange}
-              required
-            /><br /><br />
+            
           </DialogContent>
 
           <DialogActions>
@@ -565,9 +456,9 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name === '' || this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' || this.state.subject === '' || this.state.attendance === ''}
+              disabled={this.state.name === '' || this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' || this.state.grade === '' || this.state.grade === ''}
               onClick={(e) => this.addSession()} color="primary" autoFocus>
-              Add Session
+              Register Student
             </Button>
           </DialogActions>
         </Dialog>
@@ -589,11 +480,8 @@ class Dashboard extends Component {
             <TableHead>
               <TableRow>
                 <TableCell align="center">Name</TableCell>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Subject</TableCell>
-                <TableCell align="center">Hours Worked</TableCell>
-                <TableCell align="center">Comments</TableCell>
-                <TableCell align="center">Action</TableCell>
+                <TableCell align="center">Grade</TableCell>
+                <TableCell align="center">Tutor</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -602,13 +490,9 @@ class Dashboard extends Component {
                   <TableCell align="center" component="th" scope="row">
                     {row.name}
                   </TableCell>
-                  <TableCell align="center">{`${row.sessionDay}-${row.sessionMonth}-${row.sessionYear}`}</TableCell>
-                  <TableCell align="center">{row.subject}</TableCell>
-                  <TableCell align="center">{row.hours}</TableCell>
-                  <TableCell align="center" style={{ maxWidth: '600px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-  {row.comments}
-</TableCell>
-
+                  <TableCell align="center">{row.grade}</TableCell>
+                  <TableCell align="center">{row.tutor}</TableCell>
+                  
                   <TableCell align="center">
                     <Button
                       className="button_style"
