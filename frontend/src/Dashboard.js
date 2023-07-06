@@ -6,12 +6,24 @@ import {
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { styled } from '@mui/material/styles';
+import { EventNote, School, Group, AccessTime, Comment, Assignment } from '@mui/icons-material';
 import swal from 'sweetalert';
 import { withRouter } from './utils';
 const axios = require('axios');
 const storedName = localStorage.getItem('fullName'); //Keeps Track of current logged user name
 
+// Styled components for modern look
+const StyledDialogTitle = styled(DialogTitle)({
+  backgroundColor: '#f5f5f5',
+  color: '#3f51b5',
+  textAlign: 'center',
+});
+
+const StyledSelect = styled(Select)({
+  width: '30%',
+  marginRight: '1%',
+});
 class Dashboard extends Component {
   constructor() {
     super();
@@ -221,7 +233,7 @@ class Dashboard extends Component {
 
       this.handleSessionEditClose();
       this.setState({
-        name: [], comments: '', taskAssignment: '', hours: '', subject: [], sessionDay: '', sessionMonth: '', sessionYear: '', file: null
+        comments: '', taskAssignment: '', hours: '', sessionDay: '', sessionMonth: '', sessionYear: '', file: null
       }, () => {
         this.getSession();
       });
@@ -258,6 +270,7 @@ class Dashboard extends Component {
   };
 
   handleSessionEditOpen = (data) => {
+    this.getAllStudents();
     this.setState({
       openSessionEditModal: true,
       id: data._id,
@@ -326,38 +339,89 @@ class Dashboard extends Component {
           <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
   
-            <InputLabel>Session Date DD-MM-YYYY</InputLabel>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '200px' }}>
-              <Select
-                id="day-select"
-                name="sessionDay"
-                value={this.state.sessionDay}
-                onChange={this.onChange}
-              >
-                {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
-              </Select>
+          <InputLabel>Session Date DD-MM-YYYY</InputLabel>
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <Select
+    id="day-select"
+    name="sessionDay"
+    value={this.state.sessionDay}
+    onChange={this.onChange}
+  >
+    {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
+  </Select>
 
-              <Select
-                id="month-select"
-                name="sessionMonth"
-                value={this.state.sessionMonth}
-                onChange={this.onChange}
-              >
-                {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
-              </Select>
+  <Select
+    id="month-select"
+    name="sessionMonth"
+    value={this.state.sessionMonth}
+    onChange={this.onChange}
+  >
+    {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
+  </Select>
 
-              <Select
-                id="year-select"
-                name="sessionYear"
-                value={this.state.sessionYear}
-                onChange={this.onChange}
-              >
-                {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
-              </Select>
-            </div>
+  <Select
+    id="year-select"
+    name="sessionYear"
+    value={this.state.sessionYear}
+    onChange={this.onChange}
+  >
+    {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
+  </Select>
+</div>
+<br /> 
+            <InputLabel>Selected Subjects</InputLabel>
+           <Select
+           multiple
+            style={{ minWidth: '200px' }}
+            value={this.state.subject}
+            onChange={this.onChange}
+            inputProps={{
+            name: 'subject',
+             }}
+             renderValue={(selected) => {
+              const isArrayString = /^\[.*\]$/.test(selected);
+              if (isArrayString) {
+                let parsedSelected = JSON.parse(selected);
+                return parsedSelected.join(', ');
+              }
+              return selected;
+            }}
+            disabled  // Disable the ability to change selected subjects
+           >
+      <MenuItem value="Math">Math</MenuItem>
+      <MenuItem value="Science">Science</MenuItem>
+      <MenuItem value="Reading">Reading</MenuItem>
+      <MenuItem value="Robotics">Robotics</MenuItem>
+    </Select>
+    <br /> 
+    <br /> 
+    <InputLabel>Selected Students</InputLabel>
+<Select
+    multiple
+    style={{ minWidth: '200px' }}
+    value={this.state.name}
+    inputProps={{
+        name: 'name',
+    }}
+    renderValue={(selected) => { //To properly show students separated by comma
+        const isArrayString = /^\[.*\]$/.test(selected);
+        if (isArrayString) {
+            let parsedSelected = JSON.parse(selected);
+            return parsedSelected.join(', ');
+        }
+        return selected;
+    }}
+    disabled  // Disable the ability to change selected students
+>
+    {this.state.students.map((student, index) => (
+        <MenuItem key={index} value={student}>
+            {student}
+        </MenuItem>
+    ))}
+</Select>
+
             <br />
-           
-   
+            <br />
     <InputLabel>Hours Worked</InputLabel>
 
             <TextField
@@ -382,7 +446,7 @@ class Dashboard extends Component {
               required
             /><br />
             <br />
-            <InputLabel>Task Assignment</InputLabel>
+            <InputLabel>Assigned Tasks</InputLabel>
             <TextField
               id="standard-basic"
               multiline
@@ -400,7 +464,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.name === [] ||this.state.subject === [] || this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' || this.state.sessionDay === '' || this.state.sessionMonth === '' || this.state.sessionYear === ''}
+              disabled={this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' || this.state.sessionDay === '' || this.state.sessionMonth === '' || this.state.sessionYear === ''}
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
@@ -582,7 +646,7 @@ class Dashboard extends Component {
                       size="small"
                       onClick={(e) => this.handleSessionEditOpen(row)}
                     >
-                      Edit
+                      View
                     </Button>
                     <Button
                       className="button_style"

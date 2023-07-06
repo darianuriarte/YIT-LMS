@@ -241,7 +241,7 @@ app.post("/add-product", upload.any(), (req, res) => {
 /* Api to update Session */
 app.post("/update-product", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear &&req.body.subject && req.body.attendance &&
+    if (req.files && req.body && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear &&
       req.body.id && req.body.hours) {
 
       product.findById(req.body.id, (err, new_product) => {
@@ -264,12 +264,6 @@ app.post("/update-product", upload.any(), (req, res) => {
         if (req.body.sessionYear) {
           new_product.sessionYear = req.body.sessionYear;
         }
-        if (req.body.subject) {
-          new_product.subject = req.body.subject;
-        }
-        if (req.body.attendance) {
-          new_product.attendance = req.body.attendance;
-        }
         if (req.body.hours) {
           new_product.hours = req.body.hours;
         }
@@ -283,7 +277,7 @@ app.post("/update-product", upload.any(), (req, res) => {
           } else {
             res.status(200).json({
               status: true,
-              title: 'Product updated.'
+              title: 'Session updated.'
             });
           }
         });
