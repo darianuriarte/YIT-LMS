@@ -410,6 +410,7 @@ app.get("/get-product", (req, res) => {
     var perPage = 8;
     var page = req.query.page || 1;
     product.find(query, { date: 1, name: 1, id: 1, comments: 1, taskAssignment: 1,sessionDay: 1,sessionYear: 1,sessionMonth: 1, subject: 1, attendance: 1, hours: 1, tutor: 1 })
+      .sort({date: -1})  // Sorting in descending order
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
         product.find(query).count()
@@ -445,8 +446,8 @@ app.get("/get-product", (req, res) => {
       status: false
     });
   }
-
 });
+
 
 
 
