@@ -230,6 +230,7 @@ class Dashboard extends Component {
       this.setState({ page: 1 }, () => {
         this.getSession();
       });
+      
     }
   };
 
