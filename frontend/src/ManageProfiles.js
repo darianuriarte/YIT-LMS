@@ -28,6 +28,7 @@ import { withRouter } from './utils';
 import axios from 'axios';
 import logo from './logo2.png';
 
+
 const styles = createStyles({
   container: {
     padding: '20px',
@@ -36,7 +37,7 @@ const styles = createStyles({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px',
+    marginBottom: '10px',
   },
   logo: {
     height: '80px',
@@ -53,7 +54,7 @@ const styles = createStyles({
     textTransform: 'none',
   },
   tableContainer: {
-    marginTop: '20px',
+    marginTop: '5px',
   },
   searchField: {
     marginBottom: '20px',
@@ -73,6 +74,50 @@ const styles = createStyles({
     gap: '20px',
   },
 });
+
+
+// Header component
+const Header = ({ logo, title, navigate, classes, logOut }) => {
+  return (
+    <div className={classes.header}>
+      <img src={logo} alt="Logo" className={classes.logo} />
+      <Typography variant="h4" className={classes.title}>
+        {title}
+      </Typography>
+      <div className={classes.buttonContainer}>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => navigate('/register')}
+        >
+          Register
+        </Button>
+
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => navigate('/payroll')}
+        >
+          Dashboard
+        </Button>
+
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="secondary"
+          size="small"
+          onClick={logOut}
+        >
+          Log Out
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 class Dashboard extends Component {
   constructor() {
@@ -252,213 +297,218 @@ class Dashboard extends Component {
   handleSessionEditClose = () => {
     this.setState({ openSessionEditModal: false });
   };
+    render() {
+  const { classes } = this.props;
 
-  render() {
-    const { classes } = this.props;
+  return (
+    <div className={classes.container}>
+      {this.state.loading && <LinearProgress size={40} />}
+      <div className={classes.header}>
+        <img src={logo} alt="Logo" className={classes.logo} />
+        <Typography variant="h5" align="center" style={{ flex: 1 }}>
+          Profile Management
+        </Typography>
+        <div className={classes.header} style={{ justifyContent: 'center' }}>
+</div>
 
-    return (
-      <div className={classes.container}>
-        {this.state.loading && <LinearProgress size={40} />}
-        <div className={classes.header}>
-          <img src={logo} alt="Logo" className={classes.logo} />
-          <Typography variant="h4" className={classes.title}>
-            Profile Management
-          </Typography>
-          <div className={classes.buttonContainer}>
-            <Button
-              className={classes.button}
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => this.props.navigate('/register')}
-            >
-              Register
-            </Button>
 
-            <Button
-              className={classes.button}
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => this.props.navigate('/dashboard')}
-            >
-              Dashboard
-            </Button>
+        <div className={classes.buttonContainer}>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={() => this.props.navigate('/register')}
+          >
+            Register
+          </Button>
 
-            <Button
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-              size="small"
-              onClick={this.logOut}
-            >
-              Log Out
-            </Button>
-          </div>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={() => this.props.navigate('/WelcomePage')}
+          >
+            Dashboard
+          </Button>
+
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={this.logOut}
+          >
+            Log Out
+          </Button>
         </div>
+      </div>
 
-        {/* Edit Session */}
-        <Dialog
-          open={this.state.openSessionEditModal}
-          onClose={this.handleSessionClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle className={classes.dialogTitle} id="alert-dialog-title">
-            Edit Session
-          </DialogTitle>
-          <DialogContent className={classes.dialogContent}>
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="username"
-              value={this.state.username}
-              onChange={this.onChange}
-              placeholder="Username"
-              required
-            />
-
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="fullName"
-              value={this.state.fullName}
-              onChange={this.onChange}
-              placeholder="Full Name"
-              required
-            />
-
-            <Select
-              id="standard-basic"
-              name="role"
-              value={this.state.role}
-              onChange={this.onChange}
-              required
-              placeholder="Role"
-            >
-              <MenuItem value="Student">Student</MenuItem>
-              <MenuItem value="Admin">Admin</MenuItem>
-              <MenuItem value="Tutor">Tutor</MenuItem>
-            </Select>
-
-            <TextField
-              id="standard-basic"
-              type="text"
-              autoComplete="off"
-              name="password"
-              value={this.state.password}
-              onChange={this.onChange}
-              placeholder="Password"
-              required
-            />
-
-            <Select
-              id="standard-basic"
-              name="project"
-              value={this.state.project}
-              onChange={this.onChange}
-              required
-              placeholder="Project"
-            >
-              <MenuItem value="Steam+">Steam+</MenuItem>
-              <MenuItem value="Butterfly">Butterfly</MenuItem>
-              <MenuItem value="Total_Acess">Total Access</MenuItem>
-            </Select>
-          </DialogContent>
-
-          <DialogActions>
-            <Button onClick={this.handleSessionEditClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              disabled={
-                this.state.name === '' ||
-                this.state.project === '' ||
-                this.state.password === '' ||
-                this.state.fullName === ''
-              }
-              onClick={(e) => this.updateSession()}
-              color="primary"
-              autoFocus
-            >
-              Edit Session
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <br />
-
-        <Paper className={classes.tableContainer}>
+      {/* Edit Session */}
+      <Dialog
+        open={this.state.openSessionEditModal}
+        onClose={this.handleSessionClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle className={classes.dialogTitle} id="alert-dialog-title">
+          Edit Session
+        </DialogTitle>
+        <DialogContent className={classes.dialogContent}>
           <TextField
             id="standard-basic"
-            type="search"
+            type="text"
             autoComplete="off"
-            name="search"
-            value={this.state.search}
+            name="username"
+            value={this.state.username}
             onChange={this.onChange}
-            placeholder="Search by Full Name"
+            placeholder="Username"
             required
-            className={classes.searchField}
           />
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Username</TableCell>
-                <TableCell align="center">Full Name</TableCell>
-                <TableCell align="center">Role</TableCell>
-                <TableCell align="center">Password</TableCell>
-                <TableCell align="center">Project</TableCell>
-                <TableCell align="center">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.users.map((row) => (
-                <TableRow key={row.username}>
-                  <TableCell align="center" component="th" scope="row">
-                    {row.username}
-                  </TableCell>
-                  <TableCell align="center">{row.fullName}</TableCell>
-                  <TableCell align="center">{row.role}</TableCell>
-                  <TableCell align="center">{row.password}</TableCell>
-                  <TableCell align="center">{row.project}</TableCell>
-                  <TableCell align="center">
-                    <Button
-                      className={classes.button}
-                      variant="outlined"
-                      color="primary"
-                      size="small"
-                      onClick={(e) => this.handleSessionEditOpen(row)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      className={classes.button}
-                      variant="outlined"
-                      color="secondary"
-                      size="small"
-                      onClick={(e) => this.deleteSession(row._id)}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <br />
-          <Pagination
-            className={classes.pagination}
-            count={this.state.pages}
-            page={this.state.page}
-            onChange={this.pageChange}
+
+          <TextField
+            id="standard-basic"
+            type="text"
+            autoComplete="off"
+            name="fullName"
+            value={this.state.fullName}
+            onChange={this.onChange}
+            placeholder="Full Name"
+            required
+          />
+
+          <Select
+            id="standard-basic"
+            name="role"
+            value={this.state.role}
+            onChange={this.onChange}
+            required
+            placeholder="Role"
+          >
+            <MenuItem value="Student">Student</MenuItem>
+            <MenuItem value="Admin">Admin</MenuItem>
+            <MenuItem value="Tutor">Tutor</MenuItem>
+          </Select>
+
+          <TextField
+            id="standard-basic"
+            type="text"
+            autoComplete="off"
+            name="password"
+            value={this.state.password}
+            onChange={this.onChange}
+            placeholder="Password"
+            required
+          />
+
+          <Select
+            id="standard-basic"
+            name="project"
+            value={this.state.project}
+            onChange={this.onChange}
+            required
+            placeholder="Project"
+          >
+            <MenuItem value="Steam+">Steam+</MenuItem>
+            <MenuItem value="Butterfly">Butterfly</MenuItem>
+            <MenuItem value="Total_Acess">Total Access</MenuItem>
+          </Select>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={this.handleSessionEditClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            disabled={
+              this.state.username === '' ||
+              this.state.project === '' ||
+              this.state.password === '' ||
+              this.state.fullName === ''
+            }
+            onClick={(e) => this.updateSession()}
             color="primary"
-          />
-        </Paper>
-      </div>
-    );
-  }
+            autoFocus
+          >
+            Edit Session
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <br />
+
+      <Paper className={classes.tableContainer}>
+        <TextField
+          id="standard-basic"
+          type="search"
+          autoComplete="off"
+          name="search"
+          value={this.state.search}
+          onChange={this.onChange}
+          placeholder="Search by Full Name"
+          required
+          className={classes.searchField}
+        />
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Username</TableCell>
+              <TableCell align="center">Full Name</TableCell>
+              <TableCell align="center">Role</TableCell>
+              <TableCell align="center">Password</TableCell>
+              <TableCell align="center">Project</TableCell>
+              <TableCell align="center">Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.state.users.map((row) => (
+              <TableRow key={row.username}>
+                <TableCell align="center" component="th" scope="row">
+                  {row.username}
+                </TableCell>
+                <TableCell align="center">{row.fullName}</TableCell>
+                <TableCell align="center">{row.role}</TableCell>
+                <TableCell align="center">{row.password}</TableCell>
+                <TableCell align="center">{row.project}</TableCell>
+                <TableCell align="center">
+                  <Button
+                    className={classes.button}
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                    onClick={(e) => this.handleSessionEditOpen(row)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    className={classes.button}
+                    variant="outlined"
+                    color="secondary"
+                    size="small"
+                    onClick={(e) => this.deleteSession(row._id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <br />
+        <Pagination
+          className={classes.pagination}
+          count={this.state.pages}
+          page={this.state.page}
+          onChange={this.pageChange}
+          color="primary"
+        />
+      </Paper>
+    </div>
+  );
+}
+
+  
 }
 
 export default withStyles(styles)(withRouter(Dashboard));

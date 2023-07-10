@@ -9,6 +9,7 @@ import Dashboard from "./Dashboard";
 import ManageProfiles from "./ManageProfiles";
 import WelcomePage from "./WelcomePage";
 import ManageStudent from "./ManageStudents";
+import PayrollDashboard from "./Admin/Payroll/Dashboard.js";
 import "./Login.css";
 
 ReactDOM.render(
@@ -20,6 +21,7 @@ ReactDOM.render(
       <Route path="/profiles" element={<ManageProfiles />} /> 
       <Route path="/WelcomePage" element={<WelcomePage />} /> 
       <Route path="/student" element={<ManageStudent />} /> 
+      <Route path="/payroll" element={<PayrollDashboard />} /> 
                                                           //remove dashboard.js file and use the ones inside the role folder
     </Routes>
   </BrowserRouter>,
