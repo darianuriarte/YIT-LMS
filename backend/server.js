@@ -145,6 +145,12 @@ app.post("/register", (req, res) => {
                 let newTutor = new tutor({
                   name: req.body.fullName,
                   payRate: 0,
+                  weeklyHours : 0,
+                  monthlyHours: 0,
+                  yearlyHours: 0,
+                  weeklyEarnings : 0,
+                  monthlyEarnings: 0,
+                  yearlyEarnings: 0,
                 });
 
                 newTutor.save((err, data) => {
@@ -897,6 +903,64 @@ app.get('/yearly-hours/:tutor', function(req, res) {
   });
 });
 
+/* Api to update Hours and Earnings */
+app.post("/update-tutor-details", (req, res) => {
+  try {
+    if (req.body && req.body.name) {
+      var update = {};
+
+      if(req.body.weeklyHours) {
+        update.weeklyHours = req.body.weeklyHours;
+      }
+
+      if(req.body.monthlyHours) {
+        update.monthlyHours = req.body.monthlyHours;
+      }
+
+      if(req.body.yearlyHours) {
+        update.yearlyHours = req.body.yearlyHours;
+      }
+
+      if(req.body.weeklyEarnings) {
+        update.weeklyEarnings = req.body.weeklyEarnings;
+      }
+
+      if(req.body.monthlyEarnings) {
+        update.monthlyEarnings = req.body.monthlyEarnings;
+      }
+
+      if(req.body.yearlyEarnings) {
+        update.yearlyEarnings = req.body.yearlyEarnings;
+      }
+
+      tutor.findOneAndUpdate({ name: req.body.name }, update, { new: true }, (err, data) => {
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error updating tutor details.',
+            status: false
+          });
+        } else {
+          console.log("It is working");
+          res.status(200).json({
+            status: true,
+            title: 'Tutor details updated successfully.',
+            user: data
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the name and details to update.',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
 
 
 app.listen(2000, () => {

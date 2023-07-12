@@ -13,7 +13,8 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
 
 
-export const mainListItems = (onClickTutors, onClickPayRate, onClickDashboard) => (
+
+export const mainListItems = (onClickTutors, onClickPayRate, onClickDashboard, onClickCharts) => (
   <React.Fragment>
     <ListItemButton onClick={onClickDashboard}>
       <ListItemIcon>
@@ -35,13 +36,14 @@ export const mainListItems = (onClickTutors, onClickPayRate, onClickDashboard) =
       </ListItemIcon>
       <ListItemText primary="Pay Rate" />
     </ListItemButton>
-    
-    <ListItemButton>
+
+    <ListItemButton onClick={onClickCharts}>
       <ListItemIcon>
-        <BarChartIcon />
+      <BarChartIcon />
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItemButton>
+
   </React.Fragment>
 );
 
