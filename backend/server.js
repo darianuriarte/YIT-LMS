@@ -206,9 +206,6 @@ function checkUserAndGenerateToken(data, req, res) {
 }
 
 
-
-
-
 /* Api to add Session */
 app.post("/add-product", upload.any(), (req, res) => {
   
@@ -862,6 +859,42 @@ app.delete("/delete-tutor", (req, res) => {
       status: false
     });
   }
+});
+
+app.get('/yearly-hours/:tutor', function(req, res) {
+  
+  var tutorName = req.params.tutor;
+
+  var today = new Date();
+  var firstDayOfYear = new Date(today.getFullYear(), 0, 1); // January 1st
+  firstDayOfYear.setHours(0, 0, 0, 0); // start of the day
+
+  var lastDayOfYear = new Date(today.getFullYear(), 11, 31); // December 31st
+  lastDayOfYear.setHours(23, 59, 59, 999); // end of the day
+
+  product.aggregate([
+      {
+          $match: {
+              tutor: tutorName,
+              date: { $gte: firstDayOfYear, $lte: lastDayOfYear },
+              is_delete: false
+          }
+      },
+      {
+          $group: {
+              _id: null,
+              totalHours: { $sum: "$hours" }
+          }
+          
+      }
+      
+  ]).then(function(result) { 
+    console.log(result)
+      res.json(result);
+  }).catch(function(err){
+      console.error(err);
+      res.send(err);
+  });
 });
 
 

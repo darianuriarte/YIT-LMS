@@ -16,8 +16,9 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
 import Spendings from './Spendings';
+import MonthlySpendings from './MonthlySpendings';
+import YearlySpendings from './YearlySpendings';
 import Orders from './Orders';
 import logo from '../../logo.png';
 import axios from 'axios';
@@ -52,7 +53,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://www.youthintransformation.org">
-        Yout in Transformation
+        Youth in Transformation
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -248,7 +249,7 @@ class Dashboard extends Component {
             <List component="nav">
             {mainListItems(this.handleTutorsClick, this.handlePayRateClick, this.handleDashboardClick)}
               <Divider sx={{ my: 1 }} />
-              {secondaryListItems}
+             
             </List>
           </Drawer>
           <Box
@@ -269,8 +270,8 @@ class Dashboard extends Component {
               {showPayRate ? <PayRate /> : null}
               {!showTutors && !showPayRate ? (
                 <Grid container spacing={3}>
-                  {/* Chart */}
-                  <Grid item xs={12} md={8} lg={9}>
+                  {/* Recent Deposits */}
+                  <Grid item xs={12} md={4} lg={3}>
                     <Paper
                       sx={{
                         p: 2,
@@ -279,7 +280,21 @@ class Dashboard extends Component {
                         height: 240,
                       }}
                     >
-                      <Chart />
+                      <Spendings />
+                    </Paper>
+                  </Grid>
+                  
+                  {/* Recent Deposits */}
+                  <Grid item xs={12} md={4} lg={3}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 240,
+                      }}
+                    >
+                      <MonthlySpendings />
                     </Paper>
                   </Grid>
                   {/* Recent Deposits */}
@@ -292,7 +307,7 @@ class Dashboard extends Component {
                         height: 240,
                       }}
                     >
-                      <Spendings />
+                      <YearlySpendings />
                     </Paper>
                   </Grid>
                   {/* Recent Sessions */}

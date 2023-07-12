@@ -581,7 +581,7 @@ class Dashboard extends Component {
                 <TableCell align="center">Tutor</TableCell>
                 <TableCell align="center">Hours Worked</TableCell>
                 <TableCell align="center">Subjects</TableCell>
-                <TableCell align="center">Comments</TableCell>
+
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
