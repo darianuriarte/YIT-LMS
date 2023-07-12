@@ -1,202 +1,247 @@
-import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
-import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
-import logo from '../../logo.png';  // 
+import React, { Component } from 'react';
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  LinearProgress,
+  DialogTitle,
+  DialogContent,
+  TableBody,
+  Table,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  InputLabel,
+  makeStyles,
+  createStyles,
+  Select,
+  MenuItem,
+  withStyles,
+  Paper,
+  Typography,
+} from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import axios from 'axios';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://www.youthintransformation.org">
-        Yout in Transformation
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+const styles = createStyles({
+  container: {
+    padding: '20px',
+  },
+  tableContainer: {
+    marginTop: '20px',
+  },
+  
+  header: {
+    backgroundColor: '#F5F5F5', // Light gray background
+    color: '#333333', // Dark gray text
+    fontWeight: 'bold', // Bold text
+    padding: '12px 16px', // Add padding for better spacing
+    borderBottom: '1px solid #CCCCCC', // Add a bottom border
+    textTransform: 'uppercase', // Convert text to uppercase
+    letterSpacing: '1px', // Add letter spacing
+    fontSize: '14px', // Adjust font size
+    textAlign: 'center', // Center-align the header text
+    whiteSpace: 'nowrap', // Prevent text from wrapping
+  },
+  
 
-const drawerWidth = 240;
+});
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+class TutorsList extends Component {
+  constructor() {
+    super();
+    this.state = {
+      token: '',
+      tutors: [],
+      loading: false,
+      weeklyHours: {},
+      Hours: {},
+    };
+  }
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-);
-
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
-
-export default function Dashboard() {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
+  componentDidMount = () => {
+    let token = localStorage.getItem('token');
+    if (!token) {
+      this.props.navigate('/login');
+    } else {
+      this.setState({ token: token }, () => {
+        this.getSession();
+      });
+    }
   };
 
-  return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Payroll Dashboard
-            </Typography>
-            <IconButton color="inherit">
-              <img src={logo} alt="Logo" style={{height: '40px'}} />  
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
-          </List>
-        </Drawer>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid>
-            <Copyright sx={{ pt: 4 }} />
-          </Container>
-        </Box>
-      </Box>
-    </ThemeProvider>
-  );
+  getSession = () => {
+    this.setState({ loading: true });
+  
+    axios
+      .get("http://localhost:2000/get-tutors", {
+        headers: {
+          token: this.state.token,
+        },
+      })
+      .then(async (res) => {
+        const tutors = res.data.tutors;
+        const weeklyHours = {};
+        const monthlyHours = {};
+        const weeklyEarnings = {};
+        const monthlyEarnings = {};
+
+  
+        // Fetch weekly and monthly hours for each tutor
+        for (let i = 0; i < tutors.length; i++) {
+          const tutorName = tutors[i].fullName;
+          weeklyHours[tutorName] = await this.fetchWeeklyHours(tutorName);
+          monthlyHours[tutorName] = await this.fetchMonthlyHours(tutorName);
+  
+          // Fetch payRate for each tutor and calculate the weekly earnings
+          const payRate = await this.fetchPayRate(tutorName);
+          
+          if (
+            weeklyHours[tutorName] && 
+            weeklyHours[tutorName][0] && 
+            weeklyHours[tutorName][0].totalHours && 
+            payRate
+          ) {
+            weeklyEarnings[tutorName] = weeklyHours[tutorName][0].totalHours * payRate;
+          } else {
+            weeklyEarnings[tutorName] = 0;
+          }
+
+          if (
+            monthlyHours[tutorName] && 
+            monthlyHours[tutorName][0] && 
+            monthlyHours[tutorName][0].totalHours && 
+            payRate
+          ) {
+            monthlyEarnings[tutorName] = monthlyHours[tutorName][0].totalHours * payRate;
+          } else {
+            monthlyEarnings[tutorName] = 0;
+          }
+        }
+        
+  
+        this.setState({ loading: false, tutors: tutors, weeklyHours: weeklyHours, monthlyHours: monthlyHours, weeklyEarnings: weeklyEarnings,monthlyEarnings: monthlyEarnings });
+      })
+      .catch((err) => {
+        this.setState({ loading: false, tutors: [] });
+      });
+  };
+  
+
+  
+
+  fetchWeeklyHours = async (tutorName) => {
+    try {
+        const url = `http://localhost:2000/weekly-hours/${tutorName}`;
+        console.log('Fetching weekly hours with GET request to:', url);
+        
+        const response = await axios.get(url, {
+          headers: {
+            token: this.state.token,
+          },
+        });
+  
+        const data = response.data;
+        localStorage.setItem(tutorName, JSON.stringify(data));
+        return data;  
+    } catch (error) {
+        console.error('Error with GET request:', error);
+        return null;  
+    }
+  }
+  
+  fetchMonthlyHours = async (tutorName) => {
+    try {
+      const url = `http://localhost:2000/monthly-hours/${tutorName}`;
+      console.log('Fetching monthly hours with GET request to:', url);
+        
+      const response = await axios.get(url, {
+        headers: {
+          token: this.state.token,
+        },
+      });
+  
+      const data = response.data;
+      localStorage.setItem(`${tutorName}_monthly`, JSON.stringify(data));
+      return data;  
+    } catch (error) {
+      console.error('Error with GET request:', error);
+      return null;  
+    }
+  }
+
+  fetchPayRate = async (tutorName) => {
+    try {
+      const url = `http://localhost:2000/get-payrate/${tutorName}`;
+      console.log('Fetching pay rate with GET request to:', url);
+  
+      const response = await axios.get(url, {
+        headers: {
+          token: this.state.token,
+        },
+      });
+  
+      const data = response.data;
+      return data.payRate;
+    } catch (error) {
+      console.error('Error with GET request:', error);
+      return null;
+    }
+  }
+  
+  pageChange = (e, page) => {
+    this.setState({ page: page }, () => {
+      this.getSession();
+    });
+  };
+
+  render() {
+    const { classes } = this.props;
+  
+    return (
+      <div className={classes.container}>
+        {this.state.loading && <LinearProgress size={40} />}
+      
+          <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" className={classes.header}>Full Name</TableCell>
+              <TableCell align="center" className={classes.header}>Weekly Hours</TableCell>
+              <TableCell align="center" className={classes.header}>Monthly Hours</TableCell>
+              <TableCell align="center" className={classes.header}>Weekly Earnings</TableCell>
+              <TableCell align="center" className={classes.header}>Monthly Earnings</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.state.tutors.map((row) => (
+              <TableRow key={row.username}>
+                <TableCell align="center" component="th" scope="row">
+                  {row.fullName}
+                </TableCell>
+                <TableCell align="center">
+                  {this.state.weeklyHours[row.fullName] && this.state.weeklyHours[row.fullName].length > 0 
+                    ? this.state.weeklyHours[row.fullName][0].totalHours
+                    : 0}
+                </TableCell>
+                <TableCell align="center">
+                  {this.state.monthlyHours[row.fullName] && this.state.monthlyHours[row.fullName].length > 0 
+                    ? this.state.monthlyHours[row.fullName][0].totalHours
+                    : 0}
+                </TableCell>
+                <TableCell align="center"> R {this.state.weeklyEarnings[row.fullName]}</TableCell>
+
+                <TableCell align="center"> R {this.state.monthlyEarnings[row.fullName]}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <br />
+      </div>
+    );
+  }
+  
+
 }
+export default withStyles(styles)(TutorsList);

@@ -13,6 +13,7 @@ var fs = require('fs');
 var product = require("./model/product.js");
 var user = require("./model/user.js");
 var student = require("./model/student.js");
+var tutor = require("./model/tutor.js");
 var dir = './uploads';
 var upload = multer({
   storage: multer.diskStorage({
@@ -84,7 +85,6 @@ app.post("/login", (req, res) => {
 
           if (bcrypt.compareSync(data[0].password, req.body.password)) {
             checkUserAndGenerateToken(data[0], req, res);
-            console.log(data[0])
           } else {
 
             res.status(400).json({
@@ -130,8 +130,8 @@ app.post("/register", (req, res) => {
             role: req.body.role,
 	          fullName: req.body.fullName,
             project: req.body.project
-
           });
+
           User.save((err, data) => {
             if (err) {
               res.status(400).json({
@@ -139,6 +139,23 @@ app.post("/register", (req, res) => {
                 status: false
               });
             } else {
+
+              // If user is a tutor, also save them to the Tutor collection
+              if (req.body.role === 'Tutor') {
+                let newTutor = new tutor({
+                  name: req.body.fullName,
+                  payRate: 0,
+                });
+
+                newTutor.save((err, data) => {
+                  if (err) {
+                    console.log('Error saving tutor:', err);
+                  } else {
+                    console.log('Tutor saved successfully');
+                  }
+                });
+              }
+
               res.status(200).json({
                 status: true,
                 title: 'Registered Successfully.'
@@ -196,15 +213,13 @@ function checkUserAndGenerateToken(data, req, res) {
 app.post("/add-product", upload.any(), (req, res) => {
   
   try {
-    if (req.files && req.body && req.body.name && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear  && req.body.subject &&
+    if (req.files && req.body && req.body.name && req.body.comments && req.body.taskAssignment && req.body.date && req.body.subject &&
       req.body.hours && req.body.tutor) {
       let new_product = new product();
       new_product.name = req.body.name;
       new_product.comments = req.body.comments;
       new_product.taskAssignment = req.body.taskAssignment;
-      new_product.sessionDay = req.body.sessionDay;
-      new_product.sessionMonth = req.body.sessionMonth;
-      new_product.sessionYear = req.body.sessionYear;
+      new_product.date = req.body.date;
       new_product.subject = req.body.subject;
       new_product.attendance = req.body.attendance;
       new_product.tutor = req.body.tutor;
@@ -241,7 +256,7 @@ app.post("/add-product", upload.any(), (req, res) => {
 /* Api to update Session */
 app.post("/update-product", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.comments && req.body.taskAssignment && req.body.sessionDay && req.body.sessionMonth && req.body.sessionYear &&
+    if (req.files && req.body && req.body.comments && req.body.taskAssignment && req.body.date  &&
       req.body.id && req.body.hours) {
 
       product.findById(req.body.id, (err, new_product) => {
@@ -255,14 +270,8 @@ app.post("/update-product", upload.any(), (req, res) => {
         if (req.body.taskAssignment) {
           new_product.taskAssignment = req.body.taskAssignment;
         }
-        if (req.body.sessionDay) {
-          new_product.sessionDay = req.body.sessionDay;
-        }
-        if (req.body.sessionMonth) {
-          new_product.sessionMonth = req.body.sessionMonth;
-        }
-        if (req.body.sessionYear) {
-          new_product.sessionYear = req.body.sessionYear;
+        if (req.body.date) {
+          new_product.date = req.body.date;
         }
         if (req.body.hours) {
           new_product.hours = req.body.hours;
@@ -377,9 +386,12 @@ app.get("/get-tutors", (req, res) => {
           status: false
         });
       }
+     
       return res.status(200).json({
+       
         status: true,
-        tutors: tutors
+        tutors: tutors,
+       
       });
 
     })
@@ -409,7 +421,7 @@ app.get("/get-product", (req, res) => {
     }
     var perPage = 8;
     var page = req.query.page || 1;
-    product.find(query, { date: 1, name: 1, id: 1, comments: 1, taskAssignment: 1,sessionDay: 1,sessionYear: 1,sessionMonth: 1, subject: 1, attendance: 1, hours: 1, tutor: 1 })
+    product.find(query, { date: 1, name: 1, id: 1, comments: 1, taskAssignment: 1,date: 1, subject: 1, attendance: 1, hours: 1, tutor: 1 })
       .sort({date: -1})  // Sorting in descending order
       .skip((perPage * page) - perPage).limit(perPage)
       .then((data) => {
@@ -631,82 +643,71 @@ app.get("/get-students", (req, res) => {
 });
 
 
-/* Api to add Student */
-app.post("/add-student", upload.any(), (req, res) => {
-  
-  try {
-    if (req.body && req.body.name && req.body.tutor && req.body.grade ) {
-      let new_student = new student();
-      new_student.name = req.body.name;
-      new_student.tutor = req.body.tutor;
-      new_student.grade = req.body.grade;
-      new_student.save((err, data) => {
-        if (err) {
-          res.status(400).json({
-            errorMessage: err,
-            status: false
-          });
-        } else {
-          res.status(200).json({
-            status: true,
-            title: 'Student Info Added successfully.'
-          });
-        }
-      });
+app.get('/weekly-hours/:tutor', function(req, res) {
+  console.log("KKKKKKKK");
+  var tutorName = req.params.tutor;
 
-    } else {
-      res.status(400).json({
-        errorMessage: 'Add proper parameter first!',
-        status: false
-      });
-    }
-  } catch (e) {
-    res.status(400).json({
-      errorMessage: 'Something went wrong!',
-      status: false
-    });
-  }
+  var today = new Date();
+  var firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+  firstDayOfWeek.setHours(0, 0, 0, 0); // start of the day
+
+  var lastDayOfWeek = new Date(firstDayOfWeek);
+  lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
+  lastDayOfWeek.setHours(23, 59, 59, 999); // end of the day
+
+  product.aggregate([
+      {
+          $match: {
+              tutor: tutorName,
+              date: { $gte: firstDayOfWeek, $lte: lastDayOfWeek },
+              is_delete: false
+          }
+      },
+      {
+          $group: {
+              _id: null,
+              totalHours: { $sum: "$hours" }
+          }
+      }
+  ]).then(function(result) { 
+    
+
+      res.json(result);
+  }).catch(function(err){
+    console.error(err); // Add this line
+      res.send(err);
+  });
 });
 
 
-/* Api to update students */
-app.post("/update-student", (req, res) => {
-  
+/* Api to update Pay Rate */
+app.post("/update-payRate", (req, res) => {
   try {
     if (req.body && req.body.id) {
       var update = {};
 
-      if(req.body.name) {
-        update.name = req.body.name;
-      }
-      if(req.body.tutor) {
-        update.tutor = req.body.tutor;
-      }
-      if(req.body.grade) {
-        update.grade = req.body.grade;
-      }
-      if(req.body.averageMark) {
-        update.averageMark = req.body.averageMark;
+      if(req.body.payRate) {
+        update.payRate = req.body.payRate;
       }
 
-      student.findByIdAndUpdate(req.body.id, update, { new: true }, (err, data) => {
+      tutor.findByIdAndUpdate(req.body.id, update, { new: true }, (err, data) => {
         
         if (err) {
           res.status(400).json({
-            errorMessage: 'Error updating student.',
+            errorMessage: 'Error updating Pay Rate.',
             status: false
           });
         } else {
           res.status(200).json({
             status: true,
-            title: 'Student updated successfully.',
+            title: 'Pay Rate updated successfully.',
             user: data
           });
         }
       });
     } else {
       res.status(400).json({
-        errorMessage: 'Please provide the student ID and details to update.',
+        errorMessage: 'Please provide the Pay Rate and details to update.',
         status: false
       });
     }
@@ -717,26 +718,141 @@ app.post("/update-student", (req, res) => {
     });
   }
 });
-/* Api to delete Students */
-app.post("/delete-student", (req, res) => {
+
+//Api to get Tutor Scheme
+app.get("/get-tutorsInfo", (req, res) => {
+  try {
+    tutor.find({}, { name: 1, payRate: 1 })
+      .then((data) => {
+        
+
+        if (data && data.length > 0) {
+          res.status(200).json({
+            status: true,
+            title: 'Tutor Info retrieved.',
+            tutors: data,
+          });
+        } else {
+          res.status(400).json({
+            errorMessage: 'No Tutors found!',
+            status: false
+          });
+        }
+
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+app.get('/monthly-hours/:tutor', function(req, res) {
+  
+  var tutorName = req.params.tutor;
+
+  var today = new Date();
+  var firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  firstDayOfMonth.setHours(0, 0, 0, 0); // start of the day
+
+  var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  lastDayOfMonth.setHours(23, 59, 59, 999); // end of the day
+
+  product.aggregate([
+      {
+          $match: {
+              tutor: tutorName,
+              date: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
+              is_delete: false
+          }
+      },
+      {
+          $group: {
+              _id: null,
+              totalHours: { $sum: "$hours" }
+          }
+          
+      }
+      
+  ]).then(function(result) { 
+    
+      res.json(result);
+  }).catch(function(err){
+      console.error(err);
+      res.send(err);
+  });
+});
+
+app.get("/get-payrate/:tutor", (req, res) => {
+  try {
+    // Extract the tutor's name from the request parameters
+    const tutorName = req.params.tutor;
+
+    // Find a tutor with the given name
+    tutor.findOne({ name: tutorName }, { payRate: 1 })
+      .then((data) => {
+        if (data) {
+          // If a tutor with the given name exists, return their payRate
+          res.status(200).json({
+            status: true,
+            title: 'Tutor Payrate retrieved.',
+            tutor: tutorName,
+            payRate: data.payRate
+          });
+        } else {
+          // If no tutor with the given name exists, return an error message
+          res.status(400).json({
+            errorMessage: 'No Tutor found with the provided name!',
+            status: false
+          });
+        }
+      }).catch(err => {
+        // If any error occurs while trying to find the tutor, return an error message
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    // If any error occurs before trying to find the tutor, return an error message
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+// Api to delete a Tutor
+app.delete("/delete-tutor", (req, res) => {
   try {
     if (req.body && req.body.id) {
-      student.findByIdAndRemove(req.body.id, (err, data) => {
+      tutor.findByIdAndRemove(req.body.id, (err, data) => {
         if (err) {
           res.status(400).json({
-            errorMessage: 'Error deleting student.',
+            errorMessage: 'Error deleting Tutor.',
+            status: false
+          });
+        } else if (!data) {
+          res.status(404).json({
+            errorMessage: 'Tutor with given ID not found.',
             status: false
           });
         } else {
           res.status(200).json({
             status: true,
-            title: 'Student deleted successfully.'
+            title: 'Tutor deleted successfully.'
           });
         }
       });
     } else {
       res.status(400).json({
-        errorMessage: 'Please provide the student ID.',
+        errorMessage: 'Please provide the Tutor ID to delete.',
         status: false
       });
     }
@@ -747,6 +863,7 @@ app.post("/delete-student", (req, res) => {
     });
   }
 });
+
 
 
 app.listen(2000, () => {

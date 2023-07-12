@@ -10,6 +10,10 @@ import { styled } from '@mui/material/styles';
 import { EventNote, School, Group, AccessTime, Comment, Assignment } from '@mui/icons-material';
 import swal from 'sweetalert';
 import { withRouter } from './utils';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import { format } from 'date-fns';
+
 const axios = require('axios');
 const storedName = localStorage.getItem('fullName'); //Keeps Track of current logged user name
 
@@ -43,18 +47,14 @@ class Dashboard extends Component {
       page: 1,
       search: '',
       products: [],
+      selectedDate: new Date(),  // initialize selectedDate to current date
       tutor : '',
       pages: 0,
       loading: false,
       displayStudents: false,
-      sessionDay: '',
-      sessionMonth: '',
-      sessionYear: '',
     };
   }
 
-
-  
 
   componentDidMount = () => {
     let token = localStorage.getItem('token');
@@ -164,19 +164,17 @@ class Dashboard extends Component {
     }
   };
 
-  
-
   addSession = () => {
     const file = new FormData();
     file.append('name', JSON.stringify(this.state.name)); // Convert it into a string
     file.append('comments', this.state.comments);
     file.append('taskAssignment', this.state.taskAssignment);
     file.append('hours', this.state.hours);
-    file.append('sessionDay', this.state.sessionDay);
-    file.append('sessionMonth', this.state.sessionMonth);
-    file.append('sessionYear', this.state.sessionYear);
     file.append('subject', JSON.stringify(this.state.subject));
     file.append('tutor', storedName);
+    const date = this.state.selectedDate.toISOString();
+    file.append('date', date);
+
 
     axios.post('http://localhost:2000/add-product', file, {
       headers: {
@@ -192,8 +190,7 @@ class Dashboard extends Component {
 
       this.handleSessionClose();
       this.setState({
-        name: [], comments: '', taskAssignment: '', hours: '', sessionYear: '',
-        sessionYear: '', sessionDay: '', subject: [], file: null, page: 1
+        name: [], comments: '', taskAssignment: '', hours: '', subject: [], file: null, page: 1
       }, () => {
         this.getSession();
       });
@@ -214,10 +211,9 @@ class Dashboard extends Component {
     file.append('comments', this.state.comments);
     file.append('taskAssignment', this.state.taskAssignment);
     file.append('hours', this.state.hours);
-    file.append('sessionDay', this.state.sessionDay);
-    file.append('sessionMonth', this.state.sessionMonth);
-    file.append('sessionYear', this.state.sessionYear);
     file.append('subject', this.state.subject);
+    const date = this.state.selectedDate.toISOString();
+    file.append('date', date);
 
     axios.post('http://localhost:2000/update-product', file, {
       headers: {
@@ -233,7 +229,7 @@ class Dashboard extends Component {
 
       this.handleSessionEditClose();
       this.setState({
-        comments: '', taskAssignment: '', hours: '', sessionDay: '', sessionMonth: '', sessionYear: '', file: null
+        comments: '', taskAssignment: '', hours: '', file: null
       }, () => {
         this.getSession();
       });
@@ -256,9 +252,6 @@ class Dashboard extends Component {
       name: [],
       comments: '',
       taskAssignment: '',
-      sessionDay: '',
-      sessionMonth: '',
-      sessionYear: '',
       hours: '',
       subject: [],
       fileName: ''
@@ -277,11 +270,9 @@ class Dashboard extends Component {
       name: Array.isArray(data.name) ? data.name : [data.name],
       comments: data.comments,
       taskAssignment: data.taskAssignment,
-      sessionDay: data.sessionDay,
-      sessionMonth: data.sessionMonth,
-      sessionYear: data.sessionYear,
       hours: data.hours,
       subject: Array.isArray(data.subjecs) ? data.subject : [data.subject],
+      selectedDate: new Date(data.date) // Set the selectedDate to the date from the data object
     });
   };
 
@@ -338,36 +329,22 @@ class Dashboard extends Component {
         >
           <DialogTitle id="alert-dialog-title">Edit Session</DialogTitle>
           <DialogContent>
-  
-          <InputLabel>Session Date DD-MM-YYYY</InputLabel>
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <Select
-    id="day-select"
-    name="sessionDay"
-    value={this.state.sessionDay}
-    onChange={this.onChange}
-  >
-    {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
-  </Select>
 
-  <Select
-    id="month-select"
-    name="sessionMonth"
-    value={this.state.sessionMonth}
-    onChange={this.onChange}
-  >
-    {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
-  </Select>
+<br /> 
 
-  <Select
-    id="year-select"
-    name="sessionYear"
-    value={this.state.sessionYear}
-    onChange={this.onChange}
-  >
-    {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
-  </Select>
+<InputLabel>Date</InputLabel>
+
+           <div style={{ display: 'flex', justifyContent: 'center' }}>
+  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <DatePicker
+      format="yyyy/MM/dd"
+      value={this.state.selectedDate}
+      onChange={(date) => this.setState({ selectedDate: date })}
+      animateYearScrolling
+    />
+  </MuiPickersUtilsProvider>
 </div>
+
 <br /> 
             <InputLabel>Selected Subjects</InputLabel>
            <Select
@@ -464,7 +441,7 @@ class Dashboard extends Component {
               Cancel
             </Button>
             <Button
-              disabled={this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' || this.state.sessionDay === '' || this.state.sessionMonth === '' || this.state.sessionYear === ''}
+              disabled={this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' }
               onClick={(e) => this.updateSession()} color="primary" autoFocus>
               Edit Session
             </Button>
@@ -480,35 +457,20 @@ class Dashboard extends Component {
         >
           <DialogContent>
            <DialogTitle id="alert-dialog-title">Add Session</DialogTitle>
-          <InputLabel>Session Date DD-MM-YYYY</InputLabel>
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <Select
-    id="day-select"
-    name="sessionDay"
-    value={this.state.sessionDay}
-    onChange={this.onChange}
-  >
-    {days.map(day => <MenuItem key={day} value={day}>{day}</MenuItem>)}
-  </Select>
+           <InputLabel>Date</InputLabel>
 
-  <Select
-    id="month-select"
-    name="sessionMonth"
-    value={this.state.sessionMonth}
-    onChange={this.onChange}
-  >
-    {months.map(month => <MenuItem key={month} value={month}>{month}</MenuItem>)}
-  </Select>
-
-  <Select
-    id="year-select"
-    name="sessionYear"
-    value={this.state.sessionYear}
-    onChange={this.onChange}
-  >
-    {years.map(year => <MenuItem key={year} value={year}>{year}</MenuItem>)}
-  </Select>
+           <div style={{ display: 'flex', justifyContent: 'center' }}>
+  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <DatePicker
+      format="yyyy/MM/dd"
+      value={this.state.selectedDate}
+      onChange={(date) => this.setState({ selectedDate: date })}
+      animateYearScrolling
+    />
+  </MuiPickersUtilsProvider>
 </div>
+
+<br /> 
 
           <br />
           <InputLabel>Select Subjects</InputLabel>
@@ -627,8 +589,8 @@ class Dashboard extends Component {
               {this.state.products.map((row) => (
                 <TableRow key={row.date}>
                   <TableCell align="center" component="th" scope="row">
-                    {`${row.sessionDay}-${row.sessionMonth}-${row.sessionYear}`}
-                  </TableCell>
+  {format(new Date(row.date), 'dd-MM-yyyy')}
+</TableCell>
                   <TableCell align="center">{row.tutor}</TableCell>
                   <TableCell align="center">{row.hours}</TableCell>
                   <TableCell align="center">{row.subject.replace(/[\[\]"\s]/g, '').split(',').join(', ')}</TableCell>

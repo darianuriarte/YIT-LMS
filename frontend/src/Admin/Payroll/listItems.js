@@ -9,32 +9,42 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
-export const mainListItems = (
+
+
+export const mainListItems = (onClickTutors, onClickPayRate, onClickDashboard) => (
   <React.Fragment>
-    <ListItemButton>
+    <ListItemButton onClick={onClickDashboard}>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItemButton>
     
-     
-    <ListItemButton>
+    <ListItemButton onClick={onClickTutors}>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="Tutors" />
     </ListItemButton>
+    
+    <ListItemButton onClick={onClickPayRate}>
+      <ListItemIcon>
+        <AttachMoneyIcon />
+      </ListItemIcon>
+      <ListItemText primary="Pay Rate" />
+    </ListItemButton>
+    
     <ListItemButton>
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItemButton>
-    
   </React.Fragment>
 );
+
 
 export const secondaryListItems = (
   <React.Fragment>

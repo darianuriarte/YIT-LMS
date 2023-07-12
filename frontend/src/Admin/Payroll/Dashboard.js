@@ -17,10 +17,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
-import Deposits from './Deposits';
+import Spendings from './Spendings';
 import Orders from './Orders';
 import logo from '../../logo.png';
 import axios from 'axios';
+import TutorsList from './tutors';
+import PayRate from './payRate';
+
+
 import {
   Button,
   TextField,
@@ -55,6 +59,7 @@ function Copyright(props) {
     </Typography>
   );
 }
+
 
 const drawerWidth = 240;
 const styles = createStyles({
@@ -124,11 +129,26 @@ class Dashboard extends Component {
     this.state = {
       token: '',
       page: 1,
+      
       users: [],
       pages: 0,
+      showTutors: false,
+      showPayRate: false,
       loading: false,
     };
   }
+
+  handleTutorsClick = () => {
+    this.setState({ showTutors: true, showPayRate: false });
+  };
+  
+  handlePayRateClick = () => {
+    this.setState({ showPayRate: true, showTutors: false });
+  };
+  handleDashboardClick = () => {
+    this.setState({ showTutors: false, showPayRate: false });
+  };
+  
 
   componentDidMount = () => {
     let token = localStorage.getItem('token');
@@ -173,8 +193,8 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { open } = this.state;
-
+    const { open, showTutors, showPayRate } = this.state;
+  
     return (
       <ThemeProvider theme={defaultTheme}>
         <Box sx={{ display: 'flex' }}>
@@ -226,7 +246,7 @@ class Dashboard extends Component {
             </Toolbar>
             <Divider />
             <List component="nav">
-              {mainListItems}
+            {mainListItems(this.handleTutorsClick, this.handlePayRateClick, this.handleDashboardClick)}
               <Divider sx={{ my: 1 }} />
               {secondaryListItems}
             </List>
@@ -245,40 +265,44 @@ class Dashboard extends Component {
           >
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              <Grid container spacing={3}>
-                {/* Chart */}
-                <Grid item xs={12} md={8} lg={9}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: 240,
-                    }}
-                  >
-                    <Chart />
-                  </Paper>
+              {showTutors ? <TutorsList /> : null}
+              {showPayRate ? <PayRate /> : null}
+              {!showTutors && !showPayRate ? (
+                <Grid container spacing={3}>
+                  {/* Chart */}
+                  <Grid item xs={12} md={8} lg={9}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 240,
+                      }}
+                    >
+                      <Chart />
+                    </Paper>
+                  </Grid>
+                  {/* Recent Deposits */}
+                  <Grid item xs={12} md={4} lg={3}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 240,
+                      }}
+                    >
+                      <Spendings />
+                    </Paper>
+                  </Grid>
+                  {/* Recent Sessions */}
+                  <Grid item xs={12}>
+                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                      <Orders />
+                    </Paper>
+                  </Grid>
                 </Grid>
-                {/* Recent Deposits */}
-                <Grid item xs={12} md={4} lg={3}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: 240,
-                    }}
-                  >
-                    <Deposits />
-                  </Paper>
-                </Grid>
-                {/* Recent Sessions */}
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Orders />
-                  </Paper>
-                </Grid>
-              </Grid>
+              ) : null}
               <Copyright sx={{ pt: 4 }} />
             </Container>
           </Box>
@@ -286,6 +310,8 @@ class Dashboard extends Component {
       </ThemeProvider>
     );
   }
+  
+  
 }
 
 export default Dashboard;
