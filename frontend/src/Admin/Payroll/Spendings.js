@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Link from '@mui/material/Link';
+
 import Typography from '@mui/material/Typography';
 import Title from './Title';
 
@@ -17,7 +17,6 @@ class UpdateDataBase extends Component {
       loading: false,
       monthlyHours: {},
       weeklyHours: {},
-      Hours: {},
       currentDate: new Date().toLocaleDateString(), // add currentDate to state
     };
   }
@@ -28,17 +27,16 @@ class UpdateDataBase extends Component {
       this.props.navigate('/login');
     } else {
       this.setState({ token: token }, async () => {
-        await this.getSession();
+        await this.getSpendings();
         await this.updateAllTutors();
-        console.log('Daraianananananananananananananananananana');
       });
     }
   };
   
 
-  getSession = () => {
+  getSpendings = () => {
     this.setState({ loading: true });
-
+  
     axios
       .get("http://localhost:2000/get-tutors", {
         headers: {
@@ -53,19 +51,19 @@ class UpdateDataBase extends Component {
         const yearlyEarnings = {};
         const weeklyHours = {};
         const weeklyEarnings = {};
-
+  
         let totalMonthlySpending = 0; // total monthly spending
         let totalYearlySpending = 0; // total yearly spending
         let totalWeeklySpending = 0; // total weekly spending
-
+  
         // Fetch monthly hours for each tutor
         for (let i = 0; i < tutors.length; i++) {
           const tutorName = tutors[i].fullName;
           monthlyHours[tutorName] = await this.fetchmonthlyHours(tutorName);
-
+  
           // Fetch payRate for each tutor and calculate the monthly earnings
           const payRate = await this.fetchPayRate(tutorName);
-
+  
           if (
             monthlyHours[tutorName] &&
             monthlyHours[tutorName][0] &&
@@ -78,80 +76,69 @@ class UpdateDataBase extends Component {
             monthlyEarnings[tutorName] = 0;
           }
         }
-
+  
         for (let i = 0; i < tutors.length; i++) {
-            const tutorName = tutors[i].fullName;
-            monthlyHours[tutorName] = await this.fetchmonthlyHours(tutorName);
+          const tutorName = tutors[i].fullName;
+          yearlyHours[tutorName] = await this.fetchyearlyHours(tutorName);
   
-            // Fetch payRate for each tutor and calculate the monthly earnings
-            const payRate = await this.fetchPayRate(tutorName);
+          // Fetch payRate for each tutor and calculate the yearly earnings
+          const payRate = await this.fetchPayRate(tutorName);
   
-            if (
-              monthlyHours[tutorName] &&
-              monthlyHours[tutorName][0] &&
-              monthlyHours[tutorName][0].totalHours &&
-              payRate
-            ) {
-              monthlyEarnings[tutorName] = monthlyHours[tutorName][0].totalHours * payRate;
-              totalMonthlySpending += monthlyEarnings[tutorName]; // add monthly earnings to total
-            } else {
-              monthlyEarnings[tutorName] = 0;
-            }
+          if (
+            yearlyHours[tutorName] &&
+            yearlyHours[tutorName][0] &&
+            yearlyHours[tutorName][0].totalHours &&
+            payRate
+          ) {
+            yearlyEarnings[tutorName] = yearlyHours[tutorName][0].totalHours * payRate;
+            totalYearlySpending += yearlyEarnings[tutorName]; // add yearly earnings to total
+          } else {
+            yearlyEarnings[tutorName] = 0;
           }
-
-          for (let i = 0; i < tutors.length; i++) {
-            const tutorName = tutors[i].fullName;
-            yearlyHours[tutorName] = await this.fetchyearlyHours(tutorName);
+        }
   
-            // Fetch payRate for each tutor and calculate the yearly earnings
-            const payRate = await this.fetchPayRate(tutorName);
+        for (let i = 0; i < tutors.length; i++) {
+          const tutorName = tutors[i].fullName;
+          weeklyHours[tutorName] = await this.fetchWeeklyHours(tutorName);
   
-            if (
-              yearlyHours[tutorName] &&
-              yearlyHours[tutorName][0] &&
-              yearlyHours[tutorName][0].totalHours &&
-              payRate
-            ) {
-              yearlyEarnings[tutorName] = yearlyHours[tutorName][0].totalHours * payRate;
-              totalYearlySpending += yearlyEarnings[tutorName]; // add yearly earnings to total
-            } else {
-              yearlyEarnings[tutorName] = 0;
-            }
+          // Fetch payRate for each tutor and calculate the weekly earnings
+          const payRate = await this.fetchPayRate(tutorName);
+  
+          if (
+            weeklyHours[tutorName] &&
+            weeklyHours[tutorName][0] &&
+            weeklyHours[tutorName][0].totalHours &&
+            payRate
+          ) {
+            weeklyEarnings[tutorName] = weeklyHours[tutorName][0].totalHours * payRate;
+            totalWeeklySpending += weeklyEarnings[tutorName]; // add weekly earnings to total
+          } else {
+            weeklyEarnings[tutorName] = 0;
           }
-
-          for (let i = 0; i < tutors.length; i++) {
-            const tutorName = tutors[i].fullName;
-            weeklyHours[tutorName] = await this.fetchWeeklyHours(tutorName);
+        }
   
-            // Fetch payRate for each tutor and calculate the weekly earnings
-            const payRate = await this.fetchPayRate(tutorName);
+        this.setState({ 
+          loading: false, 
+          tutors: tutors, 
+          monthlyHours: monthlyHours, 
+          monthlyEarnings: monthlyEarnings, 
+          totalMonthlySpending: totalMonthlySpending,
+          yearlyHours: yearlyHours, 
+          yearlyEarnings: yearlyEarnings, 
+          totalYearlySpending: totalYearlySpending, 
+          weeklyHours: weeklyHours, 
+          weeklyEarnings: weeklyEarnings, 
+          totalWeeklySpending: totalWeeklySpending  
+        });
   
-            if (
-              weeklyHours[tutorName] &&
-              weeklyHours[tutorName][0] &&
-              weeklyHours[tutorName][0].totalHours &&
-              payRate
-            ) {
-              weeklyEarnings[tutorName] = weeklyHours[tutorName][0].totalHours * payRate;
-              totalWeeklySpending += weeklyEarnings[tutorName]; // add weekly earnings to total
-            } else {
-              weeklyEarnings[tutorName] = 0;
-            }
-          }
-
-        this.setState({ loading: false, tutors: tutors, monthlyHours: monthlyHours, monthlyEarnings: monthlyEarnings, totalMonthlySpending: totalMonthlySpending
-            , yearlyHours: yearlyHours, yearlyEarnings: yearlyEarnings, totalYearlySpending: totalYearlySpending, weeklyHours: weeklyHours, weeklyEarnings: weeklyEarnings, totalWeeklySpending: totalWeeklySpending  }); // include total monthly spending in state
-
-            this.updateAllTutors();
-
+        this.updateAllTutors();
+  
       })
       .catch((err) => {
         this.setState({ loading: false, tutors: [] });
       });
-
-
   };
-
+  
   fetchmonthlyHours = async (tutorName) => {
     try {
       const url = `http://localhost:2000/monthly-hours/${tutorName}`;
@@ -164,7 +151,6 @@ class UpdateDataBase extends Component {
       });
 
       const data = response.data;
-      localStorage.setItem(tutorName, JSON.stringify(data));
       return data;
     } catch (error) {
       console.error('Error with GET request:', error);
@@ -184,7 +170,6 @@ class UpdateDataBase extends Component {
       });
 
       const data = response.data;
-      localStorage.setItem(tutorName, JSON.stringify(data));
       return data;
     } catch (error) {
       console.error('Error with GET request:', error);
@@ -204,7 +189,6 @@ class UpdateDataBase extends Component {
       });
 
       const data = response.data;
-      localStorage.setItem(tutorName, JSON.stringify(data));
       return data;
     } catch (error) {
       console.error('Error with GET request:', error);

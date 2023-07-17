@@ -6,17 +6,17 @@ import {
   TableRow,
   TableCell,
   TableHead,
-  withStyles,
-  createStyles,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
+  Typography,
   TextField,
   Button
-} from '@material-ui/core';
+} from '@mui/material';
 import axios from 'axios';
+import { withStyles, createStyles } from '@material-ui/core';
 
 const styles = createStyles({
   container: {
@@ -57,12 +57,13 @@ class PayRate extends Component {
       this.props.navigate('/login');
     } else {
       this.setState({ token: token }, () => {
-        this.getSession();
+        this.getPayRates();
       });
     }
   };
 
-  getSession = () => {
+  // Fetches pay rates from the server
+  getPayRates = () => {
     this.setState({ loading: true });
 
     axios
@@ -80,6 +81,7 @@ class PayRate extends Component {
       });
   };
 
+  // Opens the dialog for editing pay rate
   handleOpenEditDialog = (tutor) => {
     this.setState({
       editDialogOpen: true,
@@ -88,6 +90,7 @@ class PayRate extends Component {
     });
   };
 
+  // Closes the dialog for editing pay rate
   handleCloseEditDialog = () => {
     this.setState({
       editDialogOpen: false,
@@ -96,28 +99,33 @@ class PayRate extends Component {
     });
   };
 
+  // Handles the change in pay rate input field
   handlePayRateChange = (event) => {
     this.setState({
       editedPayRate: event.target.value,
     });
   };
 
+  // Updates the pay rate of the selected tutor
   updatePayRate = () => {
     const { editedTutorId, editedPayRate, token } = this.state;
-  
-    axios.post('http://localhost:2000/update-payRate', {
-      id: editedTutorId,
-      payRate: editedPayRate,
-    }, {
-      headers: {
-        token: token,
-      }
-    }).then(() => {
-      this.getSession();
-      this.handleCloseEditDialog();
-    });
+
+    axios
+      .post('http://localhost:2000/update-payRate', {
+        id: editedTutorId,
+        payRate: editedPayRate,
+      }, {
+        headers: {
+          token: token,
+        },
+      })
+      .then(() => {
+        this.getPayRates();
+        this.handleCloseEditDialog();
+      });
   };
 
+  // Opens the dialog for confirming tutor deletion
   handleOpenDeleteDialog = (tutorId) => {
     this.setState({
       deleteDialogOpen: true,
@@ -125,6 +133,7 @@ class PayRate extends Component {
     });
   };
 
+  // Closes the dialog for confirming tutor deletion
   handleCloseDeleteDialog = () => {
     this.setState({
       deleteDialogOpen: false,
@@ -132,20 +141,22 @@ class PayRate extends Component {
     });
   };
 
+  // Deletes the selected tutor
   deleteTutor = () => {
     const { deletedTutorId, token } = this.state;
-  
-    axios.delete('http://localhost:2000/delete-tutor', {
-      data: { id: deletedTutorId },
-      headers: {
-        token: token,
-      }
-    }).then(() => {
-      this.getSession();
-      this.handleCloseDeleteDialog();
-    });
+
+    axios
+      .delete('http://localhost:2000/delete-tutor', {
+        data: { id: deletedTutorId },
+        headers: {
+          token: token,
+        },
+      })
+      .then(() => {
+        this.getSession();
+        this.handleCloseDeleteDialog();
+      });
   };
-  
 
   render() {
     const { classes } = this.props;
@@ -153,16 +164,28 @@ class PayRate extends Component {
     return (
       <div className={classes.container}>
         {this.state.loading && <LinearProgress />}
-        
-      
+
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center" className={classes.header}>Full Name</TableCell>
-              <TableCell align="center" className={classes.header}>Pay Rate</TableCell>
-              <TableCell align="center" className={classes.header}>Actions</TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                  Tutor
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                  Pay Rate
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                  Actions
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {this.state.tutors.map((tutor) => (
               <TableRow key={tutor._id}>
@@ -173,8 +196,21 @@ class PayRate extends Component {
                   R {tutor.payRate}
                 </TableCell>
                 <TableCell align="center">
-                  <button style={{ marginRight: '10px' }} onClick={() => this.handleOpenEditDialog(tutor)} className="button-small">Change Pay Rate</button>
-                  <button onClick={() => this.handleOpenDeleteDialog(tutor._id)} className="button-small">Delete Tutor</button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    style={{ marginRight: '10px', borderColor: '#07EBB8' }}
+                    onClick={() => this.handleOpenEditDialog(tutor)}
+                  >
+                    Change Pay Rate
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => this.handleOpenDeleteDialog(tutor._id)}
+                  >
+                    Delete Tutor
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -202,7 +238,7 @@ class PayRate extends Component {
               Cancel
             </Button>
             <Button onClick={this.updatePayRate} color="primary">
-              Save
+              Change
             </Button>
           </DialogActions>
         </Dialog>

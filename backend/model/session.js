@@ -1,12 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-productSchema = new Schema( {
+sessionSchema = new Schema( {
 	name: String,
 	comments: String,
 	taskAssignment: String,
 	date: Date,
-	subject: String,
 	attendance: String,
 	hours: Number,
 	tutor: String,
@@ -14,6 +13,6 @@ productSchema = new Schema( {
 	is_delete: { type: Boolean, default: false },
 	date : { type : Date, default: Date.now }
 }),
-product = mongoose.model('product', productSchema);
+sessions = mongoose.model('sessions', sessionSchema);
 
-module.exports = product;
+module.exports = sessions;

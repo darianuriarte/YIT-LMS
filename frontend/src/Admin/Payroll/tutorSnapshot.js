@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
-import { LinearProgress, Table, TableBody, TableHead, TableRow, TableCell, createStyles } from '@mui/material';
+import {
+  LinearProgress,
+  TableBody,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  createStyles,
+  withStyles,
+  Typography,
+} from '@material-ui/core';
 import axios from 'axios';
-import { withStyles } from '@material-ui/core'
+import Title from './Title';
 
+// Styles for the component
 const styles = createStyles({
   container: {
     padding: '20px',
@@ -10,21 +21,9 @@ const styles = createStyles({
   tableContainer: {
     marginTop: '20px',
   },
-  header: {
-    backgroundColor: '#F5F5F5',
-    color: '#333333',
-    fontWeight: 'bold',
-    padding: '12px 16px',
-    borderBottom: '1px solid #CCCCCC',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    fontSize: '14px',
-    textAlign: 'center',
-    whiteSpace: 'nowrap',
-  },
 });
 
-class TutorsList extends Component {
+class TutorSnapshot extends Component {
   constructor() {
     super();
     this.state = {
@@ -45,9 +44,10 @@ class TutorsList extends Component {
     }
   };
 
+
   getTutors = () => {
     this.setState({ loading: true });
-
+  
     axios
       .get("http://localhost:2000/get-tutorsInfo", {
         headers: {
@@ -56,7 +56,14 @@ class TutorsList extends Component {
       })
       .then((res) => {
         if (res.data.status) {
-          const tutors = res.data.tutors;
+          let tutors = res.data.tutors;
+  
+          // Shuffling the array
+          tutors = tutors.sort(() => Math.random() - 0.5);
+  
+          // Selecting only first three elements
+          tutors = tutors.slice(0, 4);
+  
           this.setState({ loading: false, tutors: tutors });
         } else {
           throw new Error(res.data.errorMessage);
@@ -67,6 +74,7 @@ class TutorsList extends Component {
         this.setState({ loading: false, tutors: [] });
       });
   };
+  
 
   render() {
     const { classes } = this.props;
@@ -74,17 +82,46 @@ class TutorsList extends Component {
     return (
       <div className={classes.container}>
         {this.state.loading && <LinearProgress size={40} />}
-
+        <Title>Tutors Snapshot</Title>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center" className={classes.header}>Full Name</TableCell>
-              <TableCell align="center" className={classes.header}>Weekly Hours</TableCell>
-              <TableCell align="center" className={classes.header}>Monthly Hours</TableCell>
-              <TableCell align="center" className={classes.header}>Yearly Hours</TableCell>
-              <TableCell align="center" className={classes.header}>Weekly Earnings</TableCell>
-              <TableCell align="center" className={classes.header}>Monthly Earnings</TableCell>
-              <TableCell align="center" className={classes.header}>Yearly Earnings</TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                  Tutor
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                  Weekly Hours
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                Monthly Hours
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                Yearly Hours
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                Weekly Earnings
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                Monthly Earnings
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography variant="h7" component="div" fontWeight="fontWeightBold">
+                Yearly Earnings
+                </Typography>
+              </TableCell>
+              
             </TableRow>
           </TableHead>
           <TableBody>
@@ -109,4 +146,4 @@ class TutorsList extends Component {
   }
 }
 
-export default withStyles(styles)(TutorsList);
+export default withStyles(styles)(TutorSnapshot);

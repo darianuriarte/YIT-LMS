@@ -1,36 +1,30 @@
 import React, { Component } from 'react';
+import MuiAppBar from '@mui/material/AppBar';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems, secondaryListItems } from './listItems';
-import Spendings from './Spendings';
-import MonthlySpendings from './MonthlySpendings';
-import YearlySpendings from './YearlySpendings';
-import Orders from './Orders';
+import { mainListItems } from './listUserOptions';
+import Account from './accounts';
 import logo from '../../logo.png';
 import axios from 'axios';
-import TutorsList from './tutors';
-import PayRate from './payRate';
+import GoToRegister from './navigateRegister';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
 
 
-import {
-  createStyles,
-} from '@material-ui/core';
 
+// Component to display copyright information
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -45,29 +39,37 @@ function Copyright(props) {
 }
 
 
-const drawerWidth = 240;
-const styles = createStyles({
-  container: {
-    padding: '20px',
-  },
-  tableContainer: {
-    marginTop: '20px',
-  },
-  pagination: {
-    marginTop: '20px',
-    display: 'flex',
-    justifyContent: 'center',
+
+// Width of the drawer
+const drawerWidth = 180;
+
+// Creating a default theme for the application
+const defaultTheme = createTheme({
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          // Custom styling for MuiPaper component
+        },
+      },
+    },
   },
 });
 
+// Custom styled AppBar component using MuiAppBar
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== 'close',
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  '&, &.MuiAppBar-root': {
+    backgroundColor: 'blue', // This will not be overwritten by parent or global styles
+    color: '#FFFFFF',
+    background: '#01a4ef',
+  },
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -78,6 +80,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+// Custom styled Drawer component using MuiDrawer
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
@@ -104,36 +107,46 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
 
-class Dashboard extends Component {
+
+class ManageProfiles extends Component {
   constructor() {
     super();
     this.state = {
       token: '',
       page: 1,
-      
       users: [],
       pages: 0,
-      showTutors: false,
-      showPayRate: false,
+      showAccounts: false,
+      showRegister: false,
       loading: false,
+      
+     
     };
   }
 
-  handleTutorsClick = () => {
-    this.setState({ showTutors: true, showPayRate: false, showCharts: false });
-  };
-  
-  handlePayRateClick = () => {
-    this.setState({ showPayRate: true, showTutors: false, showCharts: false });
-  };
-  handleDashboardClick = () => {
-    this.setState({ showTutors: false, showPayRate: false, showCharts: false });
-  };
+
   
 
+  
+  
+
+  // Event handler for the register button click
+  handleRegisterClick = () => {
+    this.setState({ showAccounts: false, showRegister: true, showCharts: false });
+  };
+
+  // Event handler for the accounts button click
+  handleAccountsClick = () => {
+    this.setState({ showRegister: false, showAccounts: true, showCharts: false });
+  };
+
+  // Event handler for the charts button click
+  handleChartsClick = () => {
+    this.setState({ showAccounts: false, showRegister: false, showCharts: false });
+  };
+
+  // Lifecycle method that is called after the component has been added to the DOM
   componentDidMount = () => {
     let token = localStorage.getItem('token');
     if (!token) {
@@ -141,17 +154,17 @@ class Dashboard extends Component {
     } else {
       this.setState({ token: token }, () => {
         this.getSession();
-
       });
     }
   };
 
+  // Method to fetch session data
   getSession = () => {
     this.setState({ loading: true });
 
     let data = '?';
     data = `${data}page=${this.state.page}`;
-    
+
     axios
       .get(`http://localhost:2000/get-users${data}`, {
         headers: {
@@ -166,24 +179,61 @@ class Dashboard extends Component {
       });
   };
 
+  // Event handler for page change
   pageChange = (e, page) => {
     this.setState({ page: page }, () => {
       this.getSession();
     });
   };
 
+  // Event handler for the charts button click
   handleChartsClick = () => {
-    this.setState({ showTutors: false, showPayRate: false, showCharts: true });
+    this.setState({ showAccounts: false, showRegister: false, showCharts: true });
   };
 
-
+  // Toggle the drawer open/close state
   toggleDrawer = () => {
     this.setState((prevState) => ({ open: !prevState.open }));
   };
 
-  render() {
-    const { open, showTutors, showPayRate, showCharts } = this.state;
+
+  LogOutButton = () => {
+    const navigate = useNavigate();
+
+    const logOut = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('fullName');
+      localStorage.removeItem('role');
+      navigate('/');
+    };
+
+    return (
+      <IconButton onClick={logOut} style={{ fontSize: '32px', padding: '12px' }}>
+        <LogoutIcon style={{ color: 'white', fontSize: '33px' }} />
+      </IconButton>
+    );
+  };
+
+  LogoButton = () => {
+    const navigate = useNavigate();
   
+    const goToWelcomePage = () => {
+      navigate('/WelcomePage');
+    };
+  
+    return (
+      <IconButton color="white" onClick={goToWelcomePage}>
+        <img src={logo} alt="Logo" style={{ height: '50px' }} />
+      </IconButton>
+    );
+  };
+  
+
+  render() {
+ 
+    const { open, showAccounts, showRegister, showCharts } = this.state;
+    const { LogOutButton, LogoButton } = this;
+
     return (
       <ThemeProvider theme={defaultTheme}>
         <Box sx={{ display: 'flex' }}>
@@ -208,16 +258,21 @@ class Dashboard extends Component {
               </IconButton>
               <Typography
                 component="h1"
-                variant="h6"
-                color="inherit"
+                variant="h5"
+                color="white"
                 noWrap
-                sx={{ flexGrow: 1 }}
+                sx={{ flexGrow: 1, fontWeight: 'bold', marginLeft: '150px' }} // Adjust this value to your needs
               >
-                Payroll Dashboard
+                Account Management
               </Typography>
-              <IconButton color="inherit">
-                <img src={logo} alt="Logo" style={{ height: '40px' }} />
-              </IconButton>
+
+              <div>
+              <LogoButton />
+
+                <span style={{ marginRight: '10px' }}></span> {/* Add space between the two icons */}
+
+                <LogOutButton />
+              </div>
             </Toolbar>
           </AppBar>
           <Drawer variant="permanent" open={open}>
@@ -233,19 +288,17 @@ class Dashboard extends Component {
                 <ChevronLeftIcon />
               </IconButton>
             </Toolbar>
-            <Divider />
+
             <List component="nav">
-              {mainListItems(this.handleTutorsClick, this.handlePayRateClick, this.handleDashboardClick, this.handleChartsClick)}
-              <Divider sx={{ my: 1 }} />
+              {/* Render the main list items */}
+              {mainListItems(this.handleRegisterClick, this.handleAccountsClick, this.handleChartsClick)}
             </List>
           </Drawer>
           <Box
             component="main"
             sx={{
               backgroundColor: (theme) =>
-                theme.palette.mode === 'light'
-                  ? theme.palette.grey[100]
-                  : theme.palette.grey[900],
+                theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
               flexGrow: 1,
               height: '100vh',
               overflow: 'auto',
@@ -253,71 +306,34 @@ class Dashboard extends Component {
           >
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              {showTutors ? <TutorsList /> : null}
-              {showPayRate ? <PayRate /> : null}
+              {/* Render GoToRegister component if showRegister is true */}
+              {showRegister ? <GoToRegister /> : null}
+
+              {/* Render charts component */}
               {showCharts ? (
-                <iframe 
+                <iframe
                   style={{
                     background: '#F1F5F4',
                     border: 'none',
                     borderRadius: '2px',
                     boxShadow: '0 2px 10px 0 rgba(70, 76, 79, .2)',
                     width: '80vw',
-                    height: '100vh'
+                    height: '100vh',
                   }}
-                  src="https://charts.mongodb.com/charts-project-0-oyiwi/embed/dashboards?id=c075600e-06f7-4cd2-b9f3-a0bc9ba537c0&theme=light&autoRefresh=true&maxDataAge=3600&showTitleAndDesc=false&scalingWidth=scale&scalingHeight=scale"
+                  src="https://charts.mongodb.com/charts-project-0-oyiwi/embed/dashboards?id=de991947-2947-4029-a992-1fb0cc6ac1fb&theme=light&autoRefresh=true&maxDataAge=300&showTitleAndDesc=false&scalingWidth=scale&scalingHeight=scale"
                 />
               ) : null}
-              {!showTutors && !showPayRate && !showCharts ? (
-                <Grid container spacing={3} justify="center">
-                  {/* Recent Deposits */}
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Paper
-                      sx={{
-                        p: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: 240,
-                      }}
-                    >
-                      <Spendings />
-                    </Paper>
-                  </Grid>
-                  
-                  {/* Recent Deposits */}
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Paper
-                      sx={{
-                        p: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: 240,
-                      }}
-                    >
-                      <MonthlySpendings />
-                    </Paper>
-                  </Grid>
-                  {/* Recent Deposits */}
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Paper
-                      sx={{
-                        p: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: 240,
-                      }}
-                    >
-                      <YearlySpendings />
-                    </Paper>
-                  </Grid>
-                  {/* Recent Sessions */}
+
+              {/* Render Account component or other content */}
+              {showAccounts || (!showRegister && !showCharts) ? (
+                <Grid container spacing={3} justifyContent="center">
                   <Grid item xs={12}>
-                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                      <Orders />
-                    </Paper>
+                    <Account />
                   </Grid>
                 </Grid>
               ) : null}
+
+              {/* Render copyright component */}
               <Copyright sx={{ pt: 4 }} />
             </Container>
           </Box>
@@ -325,10 +341,6 @@ class Dashboard extends Component {
       </ThemeProvider>
     );
   }
-  
-
-  
-  
 }
 
-export default Dashboard;
+export default  (ManageProfiles);

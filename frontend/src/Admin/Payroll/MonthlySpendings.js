@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Title from './Title';
-
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 class MonthlySpendings extends Component {
   constructor() {
@@ -17,25 +12,29 @@ class MonthlySpendings extends Component {
       totalMonthlySpending: '',
       loading: false,
       monthlyHours: {},
-      Hours: {},
-      currentDate: new Date().toLocaleDateString(), // add currentDate to state
+      monthlyEarnings: {},
+      currentDate: new Date().toLocaleDateString(),
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
+    // Check if token is present in local storage
     let token = localStorage.getItem('token');
     if (!token) {
+      // Redirect to login if token is not found
       this.props.navigate('/login');
     } else {
+      // Set the token in component state and call getSpendings()
       this.setState({ token: token }, () => {
-        this.getSession();
+        this.getSpendings();
       });
     }
-  };
+  }
 
-  getSession = () => {
+  getSpendings = () => {
     this.setState({ loading: true });
 
+    // Fetch tutors using the token
     axios
       .get("http://localhost:2000/get-tutors", {
         headers: {
@@ -47,16 +46,15 @@ class MonthlySpendings extends Component {
         const monthlyHours = {};
         const monthlyEarnings = {};
 
-        let totalMonthlySpending = 0; // total monthly spending
+        let totalMonthlySpending = 0;
 
-        // Fetch monthly hours for each tutor
+        // Fetch monthly hours and pay rate for each tutor
         for (let i = 0; i < tutors.length; i++) {
           const tutorName = tutors[i].fullName;
           monthlyHours[tutorName] = await this.fetchmonthlyHours(tutorName);
-
-          // Fetch payRate for each tutor and calculate the monthly earnings
           const payRate = await this.fetchPayRate(tutorName);
 
+          // Calculate monthly earnings and total monthly spending
           if (
             monthlyHours[tutorName] &&
             monthlyHours[tutorName][0] &&
@@ -64,13 +62,20 @@ class MonthlySpendings extends Component {
             payRate
           ) {
             monthlyEarnings[tutorName] = monthlyHours[tutorName][0].totalHours * payRate;
-            totalMonthlySpending += monthlyEarnings[tutorName]; // add monthly earnings to total
+            totalMonthlySpending += monthlyEarnings[tutorName];
           } else {
             monthlyEarnings[tutorName] = 0;
           }
         }
 
-        this.setState({ loading: false, tutors: tutors, monthlyHours: monthlyHours, monthlyEarnings: monthlyEarnings, totalMonthlySpending: totalMonthlySpending }); // include total monthly spending in state
+        // Update the component state with fetched data
+        this.setState({
+          loading: false,
+          tutors: tutors,
+          monthlyHours: monthlyHours,
+          monthlyEarnings: monthlyEarnings,
+          totalMonthlySpending: totalMonthlySpending,
+        });
       })
       .catch((err) => {
         this.setState({ loading: false, tutors: [] });
@@ -82,6 +87,7 @@ class MonthlySpendings extends Component {
       const url = `http://localhost:2000/monthly-hours/${tutorName}`;
       console.log('Fetching monthly hours with GET request to:', url);
 
+      // Fetch monthly hours for a specific tutor using the token
       const response = await axios.get(url, {
         headers: {
           token: this.state.token,
@@ -89,7 +95,6 @@ class MonthlySpendings extends Component {
       });
 
       const data = response.data;
-      localStorage.setItem(tutorName, JSON.stringify(data));
       return data;
     } catch (error) {
       console.error('Error with GET request:', error);
@@ -102,6 +107,7 @@ class MonthlySpendings extends Component {
       const url = `http://localhost:2000/get-payrate/${tutorName}`;
       console.log('Fetching pay rate with GET request to:', url);
 
+      // Fetch pay rate for a specific tutor using the token
       const response = await axios.get(url, {
         headers: {
           token: this.state.token,
@@ -117,22 +123,20 @@ class MonthlySpendings extends Component {
   };
 
   render() {
+    const { totalMonthlySpending, currentDate } = this.state;
+
     return (
       <React.Fragment>
         <br />
-
         <Title>Total Spending this Month</Title>
         <br />
         <Typography component="p" variant="h4">
-         R{this.state.totalMonthlySpending}
+          R{totalMonthlySpending}
         </Typography>
         <Typography color="text.secondary" sx={{ flex: 1 }}>
           <br />
-          on {this.state.currentDate} {/* Display current date */}
+          on {currentDate}
         </Typography>
-        <div>
-         
-        </div>
       </React.Fragment>
     );
   }

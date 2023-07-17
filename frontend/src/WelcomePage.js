@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { Grid, Typography, IconButton, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core';
 import { ExitToApp as LogoutIcon } from '@material-ui/icons';
@@ -59,6 +60,14 @@ class WelcomePage extends Component {
     </Grid>
   );
 
+  componentDidMount() {
+    document.documentElement.style.all = 'unset';
+  }
+
+  componentWillUnmount() {
+    document.documentElement.style.all = '';
+  }
+
   render() {
     return (
       <div
@@ -78,10 +87,10 @@ class WelcomePage extends Component {
         </Grid>
         <Grid container justify="center" style={{ marginTop: '30px' }}>
           {this.renderCard('Student Profiles', 'Manage student information', '/student')}
-          {this.renderCard('Users Management', 'Manage User Profiles', '/profiles')}
-          {this.renderCard('Payroll', 'View and manage marks', '/payroll')}
+          {this.renderCard('Account Management', 'Manage User Profiles', '/ManageProfiles')}
+          {this.renderCard('Payroll', 'Track tutor hours, earnings, and manage pay rates', '/payroll')}
           {this.renderCard('Surveys', 'Participate in surveys', '/surveys')}
-          {this.renderCard('Sessions Dashboard', 'View and manage sessions', '/dashboard')}
+          {this.renderCard('Sessions Dashboard', 'View and manage sessions', '/sessions')}
           {this.renderCard('Announcements', 'Manage attendance records', '/attendance')}
         </Grid>
       </div>

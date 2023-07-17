@@ -89,7 +89,6 @@ class YearlySpendings extends Component {
       });
 
       const data = response.data;
-      localStorage.setItem(tutorName, JSON.stringify(data));
       return data;
     } catch (error) {
       console.error('Error with GET request:', error);

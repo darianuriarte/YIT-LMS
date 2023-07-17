@@ -10,4 +10,4 @@ productSchema = new Schema( {
 }),
 student = mongoose.model('student', productSchema);
 
-module.exports = product;
+module.exports = student;
