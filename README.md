@@ -1,4 +1,4 @@
-# Youth in Transformation LMS
+# Youth in Transformation Learning Management System (YIT-LMS)
 
 ### This Project uses a MERN stack which demonstrates the following
 ##### Backend
