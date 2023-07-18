@@ -20,7 +20,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import Sessions from './../../pages/student/StudentSessionsDashboard/sessions';
 import Announcements from './../../pages/admin/Announcements';
-import Surveys from './../../pages/admin/Surveys/SurveyForm';
+import Surveys from '../../pages/student/StudentSurveyForm';
 
 
 // Component to display copyright information
