@@ -13,13 +13,13 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems } from './../../pages/student/StudentSessionsDashboard/listSessionOptions';
+import { mainListItems } from '../../pages/student/StudentSessionsDashboard/listSessionOptions';
 import logo from '../../images/logo.png';
 import axios from 'axios';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import Sessions from './../../pages/student/StudentSessionsDashboard/sessions';
-import Announcements from './../../pages/admin/Announcements';
+import Sessions from '../../pages/student/StudentSessionsDashboard/sessions';
+import Announcements from '../../pages/admin/Announcements';
 import Surveys from '../../pages/student/StudentSurveyForm';
 
 
@@ -204,7 +204,7 @@ class SessionDashbaord extends Component {
                 noWrap
                 sx={{ flexGrow: 1, fontWeight: 'bold', marginLeft: '150px' }} // Adjust this value to your needs
               >
-                Sessions Dashboard
+                
               </Typography>
               <div>
                 <LogoButton />

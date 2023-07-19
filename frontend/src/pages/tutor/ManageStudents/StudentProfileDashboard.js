@@ -316,36 +316,7 @@ class StudentProfiles extends Component {
 
                 </div>
 
-                <div>
-                    <Button
-                        className={classes.button}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        onClick={() => this.props.navigate('/register')}
-                    >
-                        REGISTER
-                    </Button>
-
-                    <Button
-                        className="button_style"
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        onClick={() => this.props.navigate("/WelcomePage")}
-                    >
-                        Home
-                    </Button>
-
-                    <Button
-                        className="button_style"
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        onClick={this.logOut}
-                    >
-                        Log Out
-                    </Button></div>
+                
 
 
                 {/* Edit Session */}

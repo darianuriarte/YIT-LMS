@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import swal from "sweetalert";
 import { Button, Select, MenuItem, TextField, Link } from "@material-ui/core";
-import { withRouter } from "./../../utils";
+import { withRouter } from "../../utils";
 const axios = require("axios");
 
 class Register extends React.Component {

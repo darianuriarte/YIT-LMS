@@ -15,13 +15,16 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems } from './../../pages/tutor/TutorSessionsDashboard/listSessionOptions';
+import { mainListItems } from '../../pages/tutor/TutorSessionsDashboard/listSessionOptions';
 import logo from '../../images/logo.png';
 import axios from 'axios';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import Sessions from './../../pages/tutor/TutorSessionsDashboard/sessions';
-import AddSession from './../shared/addSession';
+import Sessions from '../../pages/tutor/TutorSessionsDashboard/sessions';
+import AddSession from '../shared/addSession';
+import StudentProfile from '../../pages/tutor/ManageStudents/StudentProfileDashboard';
+import Payroll from '../admin/payroll/payrollNavbar';
+import Chat from '../../pages/admin/Surveys/SurveyForm';
 
 // Component to display copyright information
 function Copyright(props) {
@@ -110,7 +113,9 @@ class SessionDashbaord extends Component {
     this.state = {
       showSessions: true,
       addSession: false,
-      showReports: false,
+      showStudents: false,
+      showPay: false,
+      showChat: false,
       loading: false,
     };
   }
@@ -122,17 +127,29 @@ class SessionDashbaord extends Component {
   
   // Event handler for the register button click
   handleSessionsClick = () => {
-    this.setState({ showSessions: true, addSession: false, showReports: false });
+    this.setState({ showSessions: true, addSession: false, showStudents: false, showPay: false, showChat: false });
   };
 
   // Event handler for the accounts button click
   handleAddSessionClick = () => {
-    this.setState({ showSessions: false, addSession: true, showReports: false });
+    this.setState({ showSessions: false, addSession: true, showStudents: false, showPay: false, showChat: false });
   };
 
   // Event handler for the charts button click
-  handleReportsClick = () => {
-    this.setState({ showSessions: false, addSession: false, showReports: true });
+  handleStudentsClick = () => {
+    this.setState({ showSessions: false, addSession: false, showStudents: true, showPay: false, showChat: false });
+  };
+
+
+  // Event handler for the charts button click
+  handlePayrollClick = () => {
+    this.setState({ showSessions: false, addSession: false, showStudents: false, showPay: true, showChat: false });
+  };
+
+
+  // Event handler for the charts button click
+  handleChatClick = () => {
+    this.setState({ showSessions: false, addSession: false, showStudents: false, showPay: false, showChat: true });
   };
 
   LogOutButton = () => {
@@ -167,7 +184,7 @@ class SessionDashbaord extends Component {
   };
   
   render() {
-    const { open, showSessions, addSession, showReports } = this.state;
+    const { open, showSessions, addSession, showStudents, showPay, showChat } = this.state;
     const { LogOutButton, LogoButton } = this;
   
     return (
@@ -199,7 +216,7 @@ class SessionDashbaord extends Component {
                 noWrap
                 sx={{ flexGrow: 1, fontWeight: 'bold', marginLeft: '150px' }} // Adjust this value to your needs
               >
-                Sessions Dashboard
+                
               </Typography>
               <div>
                 <LogoButton />
@@ -223,7 +240,7 @@ class SessionDashbaord extends Component {
             </Toolbar>
             <List component="nav">
               {/* Render the list Session Options */}
-              {mainListItems(this.handleSessionsClick, this.handleAddSessionClick, this.handleReportsClick)}
+              {mainListItems(this.handleSessionsClick, this.handleAddSessionClick, this.handleStudentsClick, this.handlePayrollClick, this.handleChatClick)}
             </List>
           </Drawer>
           <Box
@@ -241,19 +258,10 @@ class SessionDashbaord extends Component {
               {/* Conditionally render the components based on the state */}
               {showSessions && <Sessions/>}
               {addSession && <AddSession/>}
-              {showReports && (
-                <iframe
-                style={{
-                  background: '#F1F5F4',
-                  border: 'none',
-                  borderRadius: '2px',
-                  boxShadow: '0 2px 10px 0 rgba(70, 76, 79, .2)',
-                  width: '80vw',
-                  height: '100vh',
-                }}
-                src="https://charts.mongodb.com/charts-project-0-oyiwi/embed/dashboards?id=a6bc5c09-215f-4d3d-942e-fc32036d064f&theme=light&autoRefresh=true&maxDataAge=300&showTitleAndDesc=false&scalingWidth=scale&scalingHeight=scale"
-              />
-              )}
+              {showStudents && <StudentProfile/>}
+              {showPay && <Payroll/>}
+              {showChat && <Chat/>}
+
               {/* Render copyright component */}
               <Copyright sx={{ pt: 4 }} />
             </Container>
