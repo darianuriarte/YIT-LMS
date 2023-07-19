@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import Sessions from '../../pages/student/StudentSessionsDashboard/sessions';
 import Announcements from '../../pages/admin/Announcements';
 import Surveys from '../../pages/student/StudentSurveyForm';
+import Resources from '../../pages/student/Resources';
 
 
 // Component to display copyright information
@@ -247,7 +248,7 @@ class SessionDashbaord extends Component {
               {showSessions && <Sessions/>}
               {showAnnouncement && <Announcements/>}
               {showSurveys && <Surveys/>}
-              {/* {showResources && <Surveys/>} */}
+              {showResources && <Resources/>}
               {/* Render copyright component */}
               <Copyright sx={{ pt: 4 }} />
             </Container>
