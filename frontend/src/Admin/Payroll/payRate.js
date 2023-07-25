@@ -153,7 +153,7 @@ class PayRate extends Component {
         },
       })
       .then(() => {
-        this.getSession();
+        this.getPayRates();
         this.handleCloseDeleteDialog();
       });
   };

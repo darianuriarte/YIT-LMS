@@ -8,6 +8,7 @@ import SessionsDashboard from "./Admin/SessionsDashboard/sessionsDashboard";
 import ManageProfiles from "./Admin/AccountManagement/accoutManagement";
 import WelcomePage from "./WelcomePage";
 import PayrollDashboard from "./Admin/Payroll/payroll.js";
+import Survey from  "./Survey.js";
 import "./Login.css";
 
 ReactDOM.render(
@@ -19,6 +20,7 @@ ReactDOM.render(
       <Route path="/ManageProfiles" element={<ManageProfiles />} /> 
       <Route path="/WelcomePage" element={<WelcomePage />} /> 
       <Route path="/payroll" element={<PayrollDashboard />} /> 
+      <Route path="/survey" element={<Survey />} /> 
                                                           //remove dashboard.js file and use the ones inside the role folder
     </Routes>
   </BrowserRouter>,

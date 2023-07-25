@@ -86,12 +86,12 @@ class WelcomePage extends Component {
           </IconButton>
         </Grid>
         <Grid container justify="center" style={{ marginTop: '30px' }}>
-          {this.renderCard('Student Profiles', 'Manage student information', '/student')}
+          {this.renderCard('Student Profiles', 'Manage student information', '/WelcomePage')}
           {this.renderCard('Account Management', 'Manage User Profiles', '/ManageProfiles')}
           {this.renderCard('Payroll', 'Track tutor hours, earnings, and manage pay rates', '/payroll')}
-          {this.renderCard('Surveys', 'Participate in surveys', '/surveys')}
+          {this.renderCard('Surveys', 'Participate in surveys', '/survey')}
           {this.renderCard('Sessions Dashboard', 'View and manage sessions', '/sessions')}
-          {this.renderCard('Announcements', 'Manage attendance records', '/attendance')}
+          {this.renderCard('Announcements', 'Manage attendance records', '/WelcomePage')}
         </Grid>
       </div>
     );
@@ -99,3 +99,5 @@ class WelcomePage extends Component {
 }
 
 export default withRouter(WelcomePage);
+
+

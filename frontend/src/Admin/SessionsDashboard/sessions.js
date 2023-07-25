@@ -304,7 +304,7 @@ class Sessions extends Component {
               </div>
 
               <br />
-
+{/*
               <InputLabel>Selected Students</InputLabel>
               <Select
                 multiple
@@ -329,8 +329,11 @@ class Sessions extends Component {
                   </MenuItem>
                 ))}
               </Select>
+
+                
               <br />
               <br />
+              */}
               <InputLabel>Tutor</InputLabel>
               <Select
   style={{ minWidth: '200px' }}
