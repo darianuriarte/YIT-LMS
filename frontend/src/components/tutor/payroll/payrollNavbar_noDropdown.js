@@ -52,9 +52,14 @@ class TutorPayroll extends Component {
   };
 
   render() {
+    
     return (
+      
       <Box sx={{ display: 'flex' }}>
+        
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <h1 style={{ color: '#07EBB8' }}>Payroll</h1>
+
           <Grid container spacing={3} justify="center">
             
             {/* Weekly Pay */}

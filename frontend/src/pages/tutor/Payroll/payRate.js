@@ -163,6 +163,7 @@ class PayRate extends Component {
 
     return (
       <div className={classes.container}>
+        
         {this.state.loading && <LinearProgress />}
 
         <Table aria-label="simple table">

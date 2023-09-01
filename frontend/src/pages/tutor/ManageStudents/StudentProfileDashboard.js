@@ -43,7 +43,6 @@ const styles = theme => ({
 class StudentProfiles extends Component {
     state = {
         token: '',
-        openSessionEditModal: false,
         id: '',
         username: '',
         students: [],
@@ -125,9 +124,9 @@ class StudentProfiles extends Component {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell align="center">Full Name</TableCell>
-                                <TableCell align="center">Project</TableCell>
-                                <TableCell align="center">Action</TableCell>
+                                <TableCell align="center"><b>Full Name</b></TableCell>
+                                <TableCell align="center"><b>Project</b></TableCell>
+                                <TableCell align="center"><b>Action</b></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

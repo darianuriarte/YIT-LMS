@@ -408,7 +408,7 @@ class Sessions extends Component {
               </Button>
             </DialogActions>
           </Dialog>
-
+          <h1 style={{ color: '#07EBB8' }}>Sessions Dashboard</h1>
           <Paper>
             <br />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
