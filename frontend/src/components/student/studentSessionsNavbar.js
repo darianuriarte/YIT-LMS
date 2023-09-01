@@ -13,14 +13,15 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems } from './../../pages/student/StudentSessionsDashboard/listSessionOptions';
+import { mainListItems } from '../../pages/student/StudentSessionsDashboard/listSessionOptions';
 import logo from '../../images/logo.png';
 import axios from 'axios';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import Sessions from './../../pages/student/StudentSessionsDashboard/sessions';
-import Announcements from './../../pages/admin/Announcements';
-import Surveys from './../../pages/admin/Surveys/SurveyForm';
+import Sessions from '../../pages/student/StudentSessionsDashboard/sessions';
+import Announcements from '../../pages/admin/Announcements';
+import Surveys from '../../pages/student/StudentSurveyForm';
+import Resources from '../../pages/student/Resources';
 
 
 // Component to display copyright information
@@ -204,7 +205,7 @@ class SessionDashbaord extends Component {
                 noWrap
                 sx={{ flexGrow: 1, fontWeight: 'bold', marginLeft: '150px' }} // Adjust this value to your needs
               >
-                Sessions Dashboard
+                
               </Typography>
               <div>
                 <LogoButton />
@@ -228,7 +229,7 @@ class SessionDashbaord extends Component {
             </Toolbar>
             <List component="nav">
               {/* Render the list Session Options */}
-              {mainListItems(this.handleSessionsClick, this.handleAnnouncementsClick, this.handleResourcesClick, this.handleSurveysClick)}
+              {mainListItems(this.handleSessionsClick, this.handleResourcesClick, this.handleAnnouncementsClick, this.handleSurveysClick)}
             </List>
           </Drawer>
           <Box
@@ -247,7 +248,7 @@ class SessionDashbaord extends Component {
               {showSessions && <Sessions/>}
               {showAnnouncement && <Announcements/>}
               {showSurveys && <Surveys/>}
-              {/* {showResources && <Surveys/>} */}
+              {showResources && <Resources/>}
               {/* Render copyright component */}
               <Copyright sx={{ pt: 4 }} />
             </Container>

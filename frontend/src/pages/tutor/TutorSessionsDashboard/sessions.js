@@ -425,16 +425,6 @@ class Sessions extends Component {
 
               <div style={{ marginLeft: '20px' }}></div> {/* Adds a horizontal space of 10px */}
 
-              <TextField
-                id="standard-basic"
-                type="searchByTutor"
-                autoComplete="off"
-                name="searchByTutor"
-                value={this.state.searchByTutor}
-                onChange={this.onChange}
-                placeholder="Search by tutor name"
-                required
-              />
             </div>
 
             <TableContainer component={Paper} elevation={0} square>

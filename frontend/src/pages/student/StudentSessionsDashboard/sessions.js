@@ -412,16 +412,7 @@ class Sessions extends Component {
           <Paper>
             <br />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <TextField
-                id="standard-basic"
-                type="search"
-                autoComplete="off"
-                name="search"
-                value={this.state.search}
-                onChange={this.onChange}
-                placeholder="Search by student name"
-                required
-              />
+              
 
               <div style={{ marginLeft: '20px' }}></div> {/* Adds a horizontal space of 10px */}
 

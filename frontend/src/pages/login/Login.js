@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import swal from "sweetalert";
 import { Button, TextField, Link } from "@material-ui/core";
-import { withRouter } from "./../../utils";
+import { withRouter } from "../../utils";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import logo from '../../images/logo.png';  // Importing the logo

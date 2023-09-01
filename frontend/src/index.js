@@ -7,7 +7,7 @@ import Register from "./pages/login/Register";
 import StudentDashboard from "./components/student/studentSessionsNavbar";
 import TutorDashboard from "./components/tutor/tutorSessionsNavbar";
 import AdminDashboard from "./components/admin/adminSessionsNavbar";
-import ManageProfiles from "./pages/admin//AccountManagement/accoutManagement";
+import ManageProfiles from "./pages/admin/AccountManagement/accoutManagement";
 import AdminWelcomePage from "./pages/admin/AdminWelcomePage";
 import PayrollDashboard from "./components/admin/payroll/payrollNavbar.js";
 import "./pages/login/Login.css";

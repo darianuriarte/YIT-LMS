@@ -5,7 +5,7 @@ import { Grid, IconButton } from '@material-ui/core';
 import { ExitToApp as LogoutIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useNavigate } from 'react-router-dom';
-import logo from './../../images/logo.png';
+import logo from '../../images/logo.png';
 
 const useStyles = makeStyles((theme) => ({
   header: {

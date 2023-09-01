@@ -13,13 +13,13 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems } from './../../pages/admin/AdminSessionsDashboard/listSessionOptions';
+import { mainListItems } from '../../pages/admin/AdminSessionsDashboard/listSessionOptions';
 import logo from '../../images/logo.png';
 import axios from 'axios';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import Sessions from './../../pages/admin/AdminSessionsDashboard/sessions';
-import AddSession from './../shared/addSession';
+import Sessions from '../../pages/admin/AdminSessionsDashboard/sessions';
+import AddSession from '../shared/addSession';
 
 // Component to display copyright information
 function Copyright(props) {
