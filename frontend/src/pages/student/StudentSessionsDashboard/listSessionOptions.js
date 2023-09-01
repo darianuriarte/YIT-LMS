@@ -4,7 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import BookIcon from '@mui/icons-material/AutoStories';
-import NotifIcon from '@mui/icons-material/Notifications';
+import NotifIcon from '@mui/icons-material/Chat';
 import SurveyIcon from '@mui/icons-material/LibraryBooks';
 
 export const mainListItems = (onClickSessions, onClickResources, onClickAnnouncements, onClickSurveys) => (
@@ -20,7 +20,7 @@ export const mainListItems = (onClickSessions, onClickResources, onClickAnnounce
       <ListItemIcon>
         <NotifIcon />
       </ListItemIcon>
-      <ListItemText primary="Announcements" />
+      <ListItemText primary="Chat" />
     </ListItemButton>
 
     <ListItemButton onClick={onClickResources}>

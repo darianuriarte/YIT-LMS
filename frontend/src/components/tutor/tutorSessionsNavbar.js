@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import Sessions from '../../pages/tutor/TutorSessionsDashboard/sessions';
 import AddSession from '../shared/addSession';
 import StudentProfile from '../../pages/tutor/ManageStudents/StudentProfileDashboard';
-import Payroll from '../admin/payroll/payrollNavbar';
+import Payroll from '../tutor/payroll/payrollNavbar_noDropdown';
 import Chat from '../../pages/admin/Surveys/SurveyForm';
 
 // Component to display copyright information

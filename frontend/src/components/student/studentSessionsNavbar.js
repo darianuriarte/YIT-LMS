@@ -229,7 +229,7 @@ class SessionDashbaord extends Component {
             </Toolbar>
             <List component="nav">
               {/* Render the list Session Options */}
-              {mainListItems(this.handleSessionsClick, this.handleAnnouncementsClick, this.handleResourcesClick, this.handleSurveysClick)}
+              {mainListItems(this.handleSessionsClick, this.handleResourcesClick, this.handleAnnouncementsClick, this.handleSurveysClick)}
             </List>
           </Drawer>
           <Box

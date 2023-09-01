@@ -1,15 +1,12 @@
 import React from 'react';
-import { Typography, Card, Grid, IconButton } from '@material-ui/core';
-import { ExitToApp as LogoutIcon } from '@material-ui/icons';
+import { Typography, Card, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useNavigate } from 'react-router-dom';
-import logo from '../../images/logo.png';
+import logo from '../../images/logo.png'; // Assuming the logo is still relevant
 import Header from '../../components/shared/Header';
-import Navbar from '../../components/shared/nodropdownNavbar'; // Import the new component
+import Navbar from '../../components/shared/nodropdownNavbar';
 
-// ... (previous code)
 const useStyles = makeStyles((theme) => ({
-  
     root: {
       marginTop: theme.spacing(3),
       padding: theme.spacing(3),
@@ -43,12 +40,12 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(2),
       height: '80vh',
     },
-  }));
+}));
 
-function SurveyForm() {
-  // ... (previous code)
+function ResourcesPage() {
   const classes = useStyles();
-  const navigate = useNavigate();  // use useHistory hook
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.setItem('token', null);
     navigate('/');
@@ -61,20 +58,22 @@ function SurveyForm() {
 
   return (
     <Grid className={classes.root}>
-      
-      <Card style={{
+      <Card 
+        style={{
           backgroundColor: '#FFFFFF',
           borderRadius: '15px',
           padding: '20px',
           textAlign: 'center',
           boxShadow: '0 5px 30px rgba(0, 0, 0, 0.1)',
-        }}elevation={3} >
-        <Typography className={classes.title} variant="h1">Student Survey</Typography>
+        }}
+        elevation={3}
+      >
+        <Typography className={classes.title} variant="h1">Student Resources</Typography>
         <Typography variant="subtitle1" align="center">
-          We value your feedback, please fill out this form to help us improve our system.
+          Here are some resources to help you in your studies.
         </Typography>
         <iframe 
-          src="https://drive.google.com/file/d/1wKXKNv1QKz7ORsVmjGjNBgvknTxZclFL/view?usp=sharing/embedded=true" 
+          src="YOUR_RESOURCE_LINK_HERE" 
           width="100%" 
           height="500px" 
           frameborder="0" 
@@ -89,4 +88,4 @@ function SurveyForm() {
   );
 }
 
-export default SurveyForm;
+export default ResourcesPage;
