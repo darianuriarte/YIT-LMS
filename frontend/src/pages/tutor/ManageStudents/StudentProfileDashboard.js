@@ -106,7 +106,6 @@ class StudentProfiles extends Component {
 
         return (
             <div className={classes.container}>
-                {this.state.loading && <LinearProgress size={40} />}
 
                 <h1 style={{ color: '#07EBB8' }}>Student Profiles</h1>
 

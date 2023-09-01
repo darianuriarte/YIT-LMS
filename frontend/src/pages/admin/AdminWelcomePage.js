@@ -91,7 +91,7 @@ class WelcomePage extends Component {
           {this.renderCard('Payroll', 'View and manage marks', '/payroll')}
           {this.renderCard('Surveys', 'Participate in surveys', '/surveys')}
           {this.renderCard('Sessions Dashboard', 'View and manage sessions', '/dashboard')}
-          {this.renderCard('Announcements', 'Manage attendance records', '/announcements')}
+          {this.renderCard('Chat', 'Talk with tutors and students', '/chat')}
         </Grid>
       </div>
     );
