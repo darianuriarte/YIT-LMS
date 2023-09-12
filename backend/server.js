@@ -974,6 +974,60 @@ app.post("/update-tutor-details", (req, res) => {
   }
 });
 
+/* Api to add Student */
+app.post("/add-profile", upload.any(), (req, res) => {
+  try {
+    if (req.files && req.body && req.body.fullName && req.body.grade && req.body.sex && req.body.tutor  &&
+      req.body.area && req.body.guardian1_Name && req.body.guardian2_Name && req.body.guardian1_Reletionship  &&
+      req.body.guardian2_Reletionship && req.body.email && req.body.number && req.body.guardian1_Number && req.body.guardian2_Number && req.body.joined  &&
+      req.body.birth ) {
+
+      let new_student = new student();
+      new_student.fullName = req.body.fullName;
+      new_student.grade = req.body.grade;
+      new_student.sex = req.body.sex;
+      new_student.tutor = req.body.tutor;
+      new_student.area = req.body.area;
+      new_student.guardian1_Name = req.body.guardian1_Name;
+      new_student.guardian2_Name = req.body.guardian2_Name;
+      new_student.guardian1_Reletionship = req.body.guardian1_Reletionship;
+      new_student.guardian2_Reletionship = req.body.guardian2_Reletionship;
+      new_student.email = req.body.email;
+      new_student.number = req.body.number;
+      new_student.guardian1_Number = req.body.guardian1_Number;
+      new_student.guardian2_Number = req.body.guardian2_Number;
+      new_student.joined = req.body.joined;
+      new_student.birth = req.body.birth;
+      new_student.user_id = req.user.id;
+
+      new_student.save((err, data) => {
+        if (err) {
+          res.status(400).json({
+            errorMessage: err,
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'Student Registered successfully.'
+          });
+        }
+      });
+
+    } else {
+      res.status(400).json({
+        errorMessage: 'Add proper parameter first!',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
 
 app.listen(2000, () => {
   console.log("Server is Runing On port 2000");
