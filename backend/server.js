@@ -974,16 +974,17 @@ app.post("/update-tutor-details", (req, res) => {
   }
 });
 
-/* Api to add Student */
+/* Api to add Student Profile */
 app.post("/add-profile", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.fullName && req.body.grade && req.body.sex && req.body.tutor  &&
+    if (req.files && req.body && req.body.fullName && req.body.project && req.body.grade && req.body.sex && req.body.tutor  &&
       req.body.area && req.body.guardian1_Name && req.body.guardian2_Name && req.body.guardian1_Reletionship  &&
       req.body.guardian2_Reletionship && req.body.email && req.body.number && req.body.guardian1_Number && req.body.guardian2_Number && req.body.joined  &&
       req.body.birth ) {
 
       let new_student = new student();
       new_student.fullName = req.body.fullName;
+      new_student.project = req.body.project;
       new_student.grade = req.body.grade;
       new_student.sex = req.body.sex;
       new_student.tutor = req.body.tutor;
@@ -1027,6 +1028,38 @@ app.post("/add-profile", upload.any(), (req, res) => {
     });
   }
 });
+
+//Api to get Student Profiles Scheme
+app.get("/get-studentProfiles", (req, res) => {
+  try {
+    student.find({}, { fullName: 1, grade: 1, sex: 1, tutor: 1, joined: 1, project: 1})
+      .then((data) => {
+        if (data && data.length > 0) {
+          res.status(200).json({
+            status: true,
+            title: 'Student Profiles Info retrieved.',
+            students: data,
+          });
+        } else {
+          res.status(400).json({
+            errorMessage: 'No Student Profiles found!',
+            status: false
+          });
+        }
+      }).catch(err => {
+        res.status(400).json({
+          errorMessage: err.message || err,
+          status: false
+        });
+      });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
 
 
 app.listen(2000, () => {

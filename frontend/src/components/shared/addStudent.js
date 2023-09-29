@@ -38,6 +38,7 @@ class AddStudent extends Component {
       grades: ['Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3','Grade 4', 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'], // List of South African Grades
       tutors: [], 
       tutor : '',
+      project : '',
       students: [],
       birth: new Date(),  
       email: '',
@@ -129,6 +130,7 @@ class AddStudent extends Component {
     file.append('grade', this.state.grade); 
     file.append('sex', this.state.sex); 
     file.append('tutor', this.state.tutor);
+    file.append('project', this.state.project);
     const date = this.state.joined.toISOString();
     file.append('joined', date);
     const birth = this.state.birth.toISOString();
@@ -160,7 +162,7 @@ class AddStudent extends Component {
 
       this.handleProfileClose();
       this.setState({
-        fullName: '',tutor: '', grade: '',sex: '',area: '', guardian1_Name: '',guardian2_Name: '',guardian1_Reletionship: '',guardian2_Reletionship: '',guardian2_Reletionship: '', email: '', number: '',guardian1_Number: '',guardian2_Number: '', file: null, page: 1
+        fullName: '',tutor: '',project: '', grade: '',sex: '',area: '', guardian1_Name: '',guardian2_Name: '',guardian1_Reletionship: '',guardian2_Reletionship: '',guardian2_Reletionship: '', email: '', number: '',guardian1_Number: '',guardian2_Number: '', file: null, page: 1
       }, () => {
       });
     }).catch((err) => {
@@ -184,6 +186,7 @@ class AddStudent extends Component {
       grade: '' ,
       sex: '',
       tutor: '',
+      project: '',
       area: '',
       guardian1_Name: '',
       guardian2_Name: '',
@@ -323,6 +326,23 @@ class AddStudent extends Component {
               <br />
               <br />
 
+              <InputLabel>Select Project</InputLabel>
+<Select
+  value={this.state.project}
+  onChange={this.onChange}
+  style={{ width: '400px' }} // Adjust the width value as needed
+  inputProps={{
+    name: 'project',
+  }}
+>
+  {/* Updated options */}
+  <MenuItem value="Butterfly Project">Butterfly Project</MenuItem>
+  <MenuItem value="STEAM+">STEAM+</MenuItem>
+</Select>
+<br />
+<br />
+
+
               
 
             <InputLabel>Enter Student's number (Optional) </InputLabel>
@@ -338,7 +358,12 @@ class AddStudent extends Component {
             /><br />
             <br />
 
-            <InputLabel>Enter an email (Optional)</InputLabel>
+           
+
+</Grid>
+
+<Grid item xs={6}>
+<InputLabel>Enter an email (Optional)</InputLabel>
 <TextField
   id="standard-basic"
   autoComplete="off"
@@ -348,10 +373,6 @@ class AddStudent extends Component {
   required
   style={{ width: '400px' }} // Adjust the width value as needed
 /><br /><br />
-
-</Grid>
-
-<Grid item xs={6}>
             <InputLabel>Enter Area (Optional)</InputLabel>
             <TextField
               id="standard-basic"
@@ -444,10 +465,10 @@ class AddStudent extends Component {
             </Grid>
 
             <Button
-              disabled={this.state.fullName === '' || this.state.grade === '' || this.state.sex === '' || this.state.tutor === '' || this.state.birth === '' || this.state.joined === '' }
+              disabled={this.state.fullName === '' || this.state.grade === '' || this.state.sex === '' || this.state.tutor === ''|| this.state.project === '' || this.state.birth === '' || this.state.joined === '' }
               onClick={(e) => this.addProfile()} color="primary" variant="contained">
               <AddIcon/>  
-              Add
+              Add Student
             </Button>
           </div>
         </Paper>

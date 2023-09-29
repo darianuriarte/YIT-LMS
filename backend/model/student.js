@@ -9,6 +9,7 @@ studentSchema = new Schema( {
     tutor: String,
     birth: String,
     email: String,
+    project: String,
     Number: Number,
     Area: String,
     guardian1_Name: String,
