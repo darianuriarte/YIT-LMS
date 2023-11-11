@@ -978,8 +978,8 @@ app.post("/update-tutor-details", (req, res) => {
 app.post("/add-profile", upload.any(), (req, res) => {
   try {
     if (req.files && req.body && req.body.fullName && req.body.project && req.body.grade && req.body.sex && req.body.tutor  &&
-      req.body.area && req.body.guardian1_Name && req.body.guardian2_Name && req.body.guardian1_Reletionship  &&
-      req.body.guardian2_Reletionship && req.body.email && req.body.number && req.body.guardian1_Number && req.body.guardian2_Number && req.body.joined  &&
+      req.body.Area && req.body.guardian1_Name && req.body.guardian2_Name && req.body.guardian1_Reletionship  &&
+      req.body.guardian2_Reletionship && req.body.email && req.body.Number && req.body.guardian1_Number && req.body.guardian2_Number && req.body.joined  &&
       req.body.birth ) {
 
       let new_student = new student();
@@ -988,13 +988,13 @@ app.post("/add-profile", upload.any(), (req, res) => {
       new_student.grade = req.body.grade;
       new_student.sex = req.body.sex;
       new_student.tutor = req.body.tutor;
-      new_student.area = req.body.area;
+      new_student.Area = req.body.Area;
       new_student.guardian1_Name = req.body.guardian1_Name;
       new_student.guardian2_Name = req.body.guardian2_Name;
       new_student.guardian1_Reletionship = req.body.guardian1_Reletionship;
       new_student.guardian2_Reletionship = req.body.guardian2_Reletionship;
       new_student.email = req.body.email;
-      new_student.number = req.body.number;
+      new_student.Number = req.body.Number;
       new_student.guardian1_Number = req.body.guardian1_Number;
       new_student.guardian2_Number = req.body.guardian2_Number;
       new_student.joined = req.body.joined;
@@ -1032,7 +1032,8 @@ app.post("/add-profile", upload.any(), (req, res) => {
 //Api to get Student Profiles Scheme
 app.get("/get-studentProfiles", (req, res) => {
   try {
-    student.find({}, { fullName: 1, grade: 1, sex: 1, tutor: 1, joined: 1, project: 1})
+    student.find({}, { fullName: 1, grade: 1, sex: 1, tutor: 1, joined: 1, project: 1, Number: 1, email: 1, Area: 1, guardian1_Name: 1,
+       guardian1_Number: 1, guardian1_Reletionship: 1, guardian2_Name: 1, guardian2_Number: 1, guardian2_Reletionship: 1})
       .then((data) => {
         if (data && data.length > 0) {
           res.status(200).json({
@@ -1052,6 +1053,124 @@ app.get("/get-studentProfiles", (req, res) => {
           status: false
         });
       });
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+// Api to delete Student
+app.delete("/delete-student", (req, res) => {
+  try {
+    if (req.body && req.body.id) {
+      student.findByIdAndRemove(req.body.id, (err, data) => {
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error deleting Student.',
+            status: false
+          });
+        } else if (!data) {
+          res.status(404).json({
+            errorMessage: 'Student with given ID not found.',
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'Student deleted successfully.'
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the Student ID to delete.',
+        status: false
+      });
+    }
+  } catch (e) {
+    res.status(400).json({
+      errorMessage: 'Something went wrong!',
+      status: false
+    });
+  }
+});
+
+/* Api to update Student */
+app.post("/update-student", (req, res) => {
+  
+  try {
+    if (req.body && req.body.id) {
+      var update = {};
+
+      if(req.body.joined) {
+        update.joined = req.body.joined;
+      }
+      if(req.body.grade) {
+        update.grade = req.body.grade;
+      }
+      if(req.body.sex) {
+        update.sex = req.body.sex;
+      }
+      if(req.body.tutor) {
+        update.tutor = req.body.tutor;
+      }
+      if(req.body.birth) {
+        update.birth = req.body.birth;
+      }
+      if(req.body.email) {
+        update.email = req.body.email;
+      }
+      if(req.body.project) {
+        update.project = req.body.project;
+      }
+      if(req.body.Area) {
+        update.Area = req.body.Area;
+      }
+      if(req.body.Number) {
+        update.Number = req.body.Number;
+      }
+      if(req.body.guardian1_Name) {
+        update.guardian1_Name = req.body.guardian1_Name;
+      }
+      if(req.body.guardian1_Number) {
+        update.guardian1_Number = req.body.guardian1_Number;
+      }
+      if(req.body.guardian1_Reletionship) {
+        update.guardian1_Reletionship = req.body.guardian1_Reletionship;
+      }
+      if(req.body.guardian2_Name) {
+        update.guardian2_Name = req.body.guardian2_Name;
+      }
+      if(req.body.guardian2_Number) {
+        update.guardian2_Number = req.body.guardian2_Number;
+      }
+      if(req.body.guardian2_Reletionship) {
+        update.guardian2_Reletionship = req.body.guardian2_Reletionship;
+      }
+
+      student.findByIdAndUpdate(req.body.id, update, { new: true }, (err, data) => {
+        
+        if (err) {
+          res.status(400).json({
+            errorMessage: 'Error updating student.',
+            status: false
+          });
+        } else {
+          res.status(200).json({
+            status: true,
+            title: 'Student updated successfully.',
+            user: data
+          });
+        }
+      });
+    } else {
+      res.status(400).json({
+        errorMessage: 'Please provide the student ID and details to update.',
+        status: false
+      });
+    }
   } catch (e) {
     res.status(400).json({
       errorMessage: 'Something went wrong!',

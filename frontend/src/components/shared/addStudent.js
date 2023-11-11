@@ -42,8 +42,8 @@ class AddStudent extends Component {
       students: [],
       birth: new Date(),  
       email: '',
-      number: '',
-      area: '',
+      Number: '',
+      Area: '',
       guardian1_Name: '',
       guardian1_Number: '',
       guardian1_Reletionship: '',
@@ -137,13 +137,13 @@ class AddStudent extends Component {
     file.append('birth', birth);
 
 
-    file.append('area', this.state.area || "N/A");
+    file.append('Area', this.state.Area || "N/A");
     file.append('guardian1_Name', this.state.guardian1_Name || "N/A");
     file.append('guardian2_Name', this.state.guardian2_Name || "N/A");
     file.append('guardian1_Reletionship', this.state.guardian1_Reletionship || "N/A");
     file.append('guardian2_Reletionship', this.state.guardian2_Reletionship || "N/A");
     file.append('email', this.state.email || "N/A");
-    file.append('number', this.state.number || 0);
+    file.append('Number', this.state.Number || 0);
     file.append('guardian1_Number', this.state.guardian1_Number || 0);
     file.append('guardian2_Number', this.state.guardian2_Number || 0);
   
@@ -162,7 +162,7 @@ class AddStudent extends Component {
 
       this.handleProfileClose();
       this.setState({
-        fullName: '',tutor: '',project: '', grade: '',sex: '',area: '', guardian1_Name: '',guardian2_Name: '',guardian1_Reletionship: '',guardian2_Reletionship: '',guardian2_Reletionship: '', email: '', number: '',guardian1_Number: '',guardian2_Number: '', file: null, page: 1
+        fullName: '',tutor: '',project: '', grade: '',sex: '',Area: '', guardian1_Name: '',guardian2_Name: '',guardian1_Reletionship: '',guardian2_Reletionship: '',guardian2_Reletionship: '', email: '', Number: '',guardian1_Number: '',guardian2_Number: '', file: null, page: 1
       }, () => {
       });
     }).catch((err) => {
@@ -187,13 +187,13 @@ class AddStudent extends Component {
       sex: '',
       tutor: '',
       project: '',
-      area: '',
+      Area: '',
       guardian1_Name: '',
       guardian2_Name: '',
       guardian1_Reletionship: '',
       guardian2_Reletionship: '',
       email: '',
-      number: '',
+      Number: '',
       guardian1_Number: '',
       guardian2_Number: '',
       fileName: ''
@@ -350,8 +350,8 @@ class AddStudent extends Component {
               id="standard-basic"
               type="number"
               autoComplete="off"
-              name="number"
-              value={this.state.number}
+              name="Number"
+              value={this.state.Number}
               onChange={this.onChange}
               required
               style={{ width: '400px' }} // Adjust the width value as needed
@@ -377,8 +377,8 @@ class AddStudent extends Component {
             <TextField
               id="standard-basic"
               autoComplete="off"
-              name="area"
-              value={this.state.area}
+              name="Area"
+              value={this.state.Area}
               onChange={this.onChange}
               required
               style={{ width: '400px' }} // Adjust the width value as needed
