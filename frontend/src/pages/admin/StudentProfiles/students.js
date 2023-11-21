@@ -89,7 +89,7 @@ class Sessions extends Component {
       renderCell: (params) => (
         <Button
           variant="outlined"
-          color="secondary"
+          color="primary"
           size="small"
           onClick={() => this.deleteStudent(params.id)}
         >
@@ -256,9 +256,13 @@ class Sessions extends Component {
     if (selectedStudent && !isEditMode) {
       return (
         <div>
-          <StudentDetail student={selectedStudent} />
-          <button onClick={this.backToList}>Back to List</button>
+          <StudentDetail 
+      student={selectedStudent} 
+      backToList={this.backToList} // Pass the method as a prop
+    />
+          
         </div>
+        
       );
     }
   
@@ -273,10 +277,15 @@ class Sessions extends Component {
       >
         <DataGrid 
         sx={{
-          '.MuiDataGrid-columnHeaderTitle': { 
-             fontWeight: 'bold !important',
-             overflow: 'visible !important'
-          }
+          '.MuiDataGrid-columnHeaders': {
+            backgroundColor: '#07EBB8', // Changes the header background to red
+            color: 'white', // Optional: Change the text color to white for better readability
+            '.MuiDataGrid-columnHeaderTitle': {
+              fontWeight: 'bold !important',
+              fontSize : 15,
+              overflow: 'visible !important',
+            },
+          },
         }}
           rows={students}
           columns={columns}

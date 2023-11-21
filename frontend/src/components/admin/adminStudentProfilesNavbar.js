@@ -12,7 +12,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems } from '../../pages/admin/AdminSessionsDashboard/listSessionOptions';
+import { mainListItems } from '../../pages/admin/StudentProfiles/listProfilesOptions';
 import logo from '../../images/logo.png';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
@@ -247,7 +247,7 @@ class SessionDashbaord extends Component {
                   width: '80vw',
                   height: '100vh',
                 }}
-                src="https://charts.mongodb.com/charts-project-0-oyiwi/embed/dashboards?id=a6bc5c09-215f-4d3d-942e-fc32036d064f&theme=light&autoRefresh=true&maxDataAge=300&showTitleAndDesc=false&scalingWidth=scale&scalingHeight=scale"
+                src="https://charts.mongodb.com/charts-project-0-oyiwi/embed/dashboards?id=da8a81d9-df9d-43c9-a7e3-2cdbcf3dcb3d&theme=light&autoRefresh=true&maxDataAge=3600&showTitleAndDesc=false&scalingWidth=fixed&scalingHeight=fixed"
               />
               )}
               {/* Render copyright component */}

@@ -79,13 +79,13 @@ class WelcomePage extends Component {
           backgroundPosition: 'center',
         }}
       >
-        <Grid container alignItems="center" justify="space-between">
+        <Grid container alignItems="center" justifyContent="space-between">
           <img src={logo} alt="Logo" style={{ maxHeight: '100px', marginRight: '20px', marginTop: '20px' }} />
           <IconButton onClick={this.logOut}>
             <LogoutIcon style={{ color: '#000000' }}/>
           </IconButton>
         </Grid>
-        <Grid container justify="center" style={{ marginTop: '30px' }}>
+        <Grid container justifyContent="center" style={{ marginTop: '30px' }}>
         {this.renderCard('Student Profiles', 'Manage student information', '/studentProfiles')}
           {this.renderCard('Account Management', 'Manage User Profiles', '/profiles')}
           {this.renderCard('Payroll', 'View and manage marks', '/payroll')}

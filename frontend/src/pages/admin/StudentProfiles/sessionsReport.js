@@ -6,6 +6,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button'; // Import Button from Material-UI
+import Stack from '@mui/material/Stack';
+
 
 class TaskAssignmentDialog extends Component {
   render() {
@@ -54,9 +57,20 @@ class Sessions extends Component {
       editable: false,
     },
     {
+      field: 'comments',
+      headerName: 'Comments',
+      width: 300,
+      editable: false,
+      renderCell: (params) => (
+        <div onClick={() => this.handleCellClick(params)}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
       field: 'taskAssignment',
       headerName: 'Assigned Task',
-      width: 650,
+      width: 300,
       renderCell: (params) => (
         <div onClick={() => this.handleCellClick(params)}>
           {params.value}
@@ -78,26 +92,28 @@ class Sessions extends Component {
     }
   };
   handleCellClick = (params) => {
-    if (params.field === 'taskAssignment') {
+    if (params.field === 'taskAssignment' || params.field === 'comments') {
       this.setState({
         dialogOpen: true,
         selectedTask: params.value,
       });
     }
   };
+  
   handleCloseDialog = () => {
     this.setState({ dialogOpen: false });
   };
 
   fetchSessions = async () => {
     const token = localStorage.getItem('token');
-    const fullName = localStorage.getItem('fullName'); // Get fullName from localStorage
+    const { studentName } = this.props; // Correctly destructure studentName from props
+
   
     if (!token) {
       this.props.navigate('/login');
     } else {
       try {
-        const response = await axios.get(`http://localhost:2000/get-sessions-student?name=${fullName}`, {
+        const response = await axios.get(`http://localhost:2000/get-sessions-student?name=${studentName}`, {
           headers: {
             'token': token
           }
@@ -132,6 +148,7 @@ class Sessions extends Component {
 
     return (
       <Box sx={{ height: '100%', width: '100%', backgroundColor: 'white' }}>
+        <Stack spacing={2}>
         <DataGrid
           // ... other DataGrid props
           rows={sessions}
@@ -143,7 +160,19 @@ class Sessions extends Component {
           onClose={this.handleCloseDialog}
           text={selectedTask}
         />
+ 
+ <Button 
+  onClick={this.props.backToDetail}
+  variant="contained"
+  color="secondary"
+  style={{ marginBottom: '10px' }}
+>
+  Back to Student Detail
+</Button>
+
+        </Stack>
       </Box>
+    
     );
   }
   

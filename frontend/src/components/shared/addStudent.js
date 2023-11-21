@@ -154,6 +154,8 @@ class AddStudent extends Component {
         'token': this.state.token
       }
     }).then((res) => {
+      const studentId = res.data.studentId; // Assuming the student ID is returned in the response
+      this.createAttendanceRecord(studentId); // Call a function to create the attendance record
       swal({
         text: res.data.title,
         icon: "success",
@@ -166,15 +168,50 @@ class AddStudent extends Component {
       }, () => {
       });
     }).catch((err) => {
+      console.error('Full error details:', err);
+      let errorMessage = "An unexpected error occurred."; // Fallback error message
+      if (err.response && err.response.data) {
+        // If the response exists and has a data property
+        errorMessage = err.response.data.errorMessage || "An error occurred in creating the student profile.";
+      }
       swal({
-        text: err.response.data.errorMessage,
+        text: errorMessage,
         icon: "error",
         type: "error"
       });
+
       this.handleProfileClose();
     });
-
   }
+
+  createAttendanceRecord = (studentId) => {
+    axios.post('http://localhost:2000/create-attendance', { studentId }, {
+      headers: {
+        'token': this.state.token
+      }
+    }).then((res) => {
+      console.log('Attendance record created', res.data);
+    }).catch((err) => {
+      // Check if err.response exists
+      if (err.response) {
+        // Display the error message from server
+        swal({
+          text: err.response.data.errorMessage || "An error occurred in creating the attendance record.",
+          icon: "error",
+          type: "error"
+        });
+      } else {
+        // Handle other errors like network errors
+        swal({
+          text: "An unexpected error occurred. Please check your network and try again.",
+          icon: "error",
+          type: "error"
+        });
+      }
+      console.error('Error creating attendance record', err);
+    });
+  }
+  
 
   handleProfileOpen = () => {
     this.getAllStudents();
