@@ -11,11 +11,19 @@ import {
 } from '@mui/material';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
-import { format } from 'date-fns';
 import axios from 'axios';
 import swal from 'sweetalert';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+
+import WorkIcon from '@mui/icons-material/Work';
+import PersonIcon from '@mui/icons-material/Person';
+import SchoolIcon from '@mui/icons-material/School';
+import EventIcon from '@mui/icons-material/Event';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import CommentIcon from '@mui/icons-material/Comment';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
+
 
 
 const InputField = styled(TextField)({
@@ -32,6 +40,7 @@ class AddSession extends Component {
       openSessionEditModal: false,
       id: '',
       name: [],
+      absences: [],
       students: [],
       comments: '',
       taskAssignment: '',
@@ -89,15 +98,19 @@ class AddSession extends Component {
   
   addSession = () => {
     const file = new FormData();
-    file.append('name', JSON.stringify(this.state.name)); // Convert it into a string
+    for (let i = 0; i < this.state.name.length; i++) {
+        file.append('name', this.state.name[i]);
+    }
+    for (let i = 0; i < this.state.absences.length; i++) {
+      file.append('absences', this.state.absences[i]);
+  }
     file.append('comments', this.state.comments);
     file.append('taskAssignment', this.state.taskAssignment);
     file.append('hours', this.state.hours);
     file.append('tutor', localStorage.getItem('fullName'));
     const date = this.state.selectedDate.toISOString();
     file.append('date', date);
-
-
+  
     axios.post('http://localhost:2000/add-session', file, {
       headers: {
         'content-type': 'multipart/form-data',
@@ -112,7 +125,7 @@ class AddSession extends Component {
 
       this.handleSessionClose();
       this.setState({
-        name: [], comments: '', taskAssignment: '', hours: '', file: null, page: 1
+        name: [], absences: [], comments: '', taskAssignment: '', hours: '', file: null, page: 1
       }, () => {
       });
     }).catch((err) => {
@@ -132,6 +145,7 @@ class AddSession extends Component {
       openSessionModal: true,
       id: '',
       name: [],
+      absences: [],
       comments: '',
       taskAssignment: '',
       hours: '',
@@ -158,41 +172,30 @@ class AddSession extends Component {
 
           <div style={{ padding: '20px' }}>
             
-            <InputLabel>Date</InputLabel>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <DatePicker
-                  format="yyyy/MM/dd"
-                  value={this.state.selectedDate}
-                  onChange={(date) => this.setState({ selectedDate: date })}
-                  animateYearScrolling
-                  style={{ width: '400px' }} // Adjust the width value as needed
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-            <br />
+           {/* Row for Date, Students, Absences, and Hours */}
+           <div style={{ display: 'flex', justifyContent: 'center', gap: '30px' }}>
 
-            <InputLabel>Select Students</InputLabel>
-            <Select
-              multiple
-              value={this.state.name}
-              onChange={this.onChange}
-              style={{ width: '400px' }} // Adjust the width value as needed
-              inputProps={{
-                name: 'name',
-              }}
-              renderValue={(selected) => selected.join(', ')}
-            >
-              {this.state.students.map((student, index) => (
-                <MenuItem key={index} value={student}>
-                  {student}
-                </MenuItem>
-              ))}
-            </Select>
-            <br />
-            <br />
+{/* Date Picker */}
+<div style={{ margin: '10px' }}>
+<InputLabel style={{ display: 'flex', alignItems: 'center' ,justifyContent: 'center'}}>
+  <EventIcon style={{ fontSize: '18px', marginRight: '8px', color : '#01a4ef'}} /> Date
+</InputLabel>
+  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <DatePicker
+      format="yyyy/MM/dd"
+      value={this.state.selectedDate}
+      onChange={(date) => this.setState({ selectedDate: date })}
+      animateYearScrolling
+      style={{ width: '430px' }} // Adjust the width as needed
+    />
+  </MuiPickersUtilsProvider>
+</div>
 
-            <InputLabel>Hours Worked</InputLabel>
+<div>
+{/* Select Students */}
+<InputLabel style={{ display: 'flex', alignItems: 'center' ,justifyContent: 'center'}}>
+  <WorkIcon style={{ fontSize: '18px', marginRight: '8px', color : '#01a4ef'}} /> Hours Worked
+</InputLabel>
             <TextField
               id="standard-basic"
               type="number"
@@ -201,38 +204,101 @@ class AddSession extends Component {
               value={this.state.hours}
               onChange={this.onChange}
               required
-              style={{ width: '400px' }} // Adjust the width value as needed
-            /><br />
+              style={{ width: '450px' }} // Adjust the width value as needed
+              /><br />
             <br />
 
-            <InputLabel>Task Assignment</InputLabel>
+
+</div>
+
+</div>
+
+
+            {/* Student Selection and Absences Registration */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '30px' }}>
+
+              {/* Select Students */}
+              <div>
+              <InputLabel style={{ display: 'flex', alignItems: 'center' ,justifyContent: 'center'}}>
+  <SchoolIcon style={{ fontSize: '18px', marginRight: '8px', color : '#01a4ef'}} /> Select Students
+</InputLabel>
+                <Select
+                  multiple
+                  value={this.state.name}
+                  onChange={this.onChange}
+                  style={{ width: '450px' }} // Adjust the width value as needed
+                  inputProps={{
+                    name: 'name',
+                  }}
+                  renderValue={(selected) => selected.join(', ')}
+                >
+                  {this.state.students.map((student, index) => (
+                    <MenuItem key={index} value={student}>
+                      {student}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
+
+              {/* Register Absences */}
+              <div>
+              <InputLabel style={{ display: 'flex', alignItems: 'center' ,justifyContent: 'center'}}>
+  <EventBusyIcon style={{ fontSize: '18px', marginRight: '8px', color : '#01a4ef'}} /> Register Absences
+</InputLabel>
+                <Select
+                  multiple
+                  value={this.state.absences}
+                  onChange={this.onChange}
+                  style={{ width: '450px' }} // Adjust the width value as needed
+                  inputProps={{
+                    name: 'absences',
+                  }}
+                  renderValue={(selected) => selected.join(', ')}
+                >
+                  {this.state.students.map((student, index) => (
+                    <MenuItem key={index} value={student}>
+                      {student}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
+
+            </div>
+            <br />
+            <br />
+
+            <InputLabel style={{ display: 'flex', alignItems: 'center' ,justifyContent: 'center'}}>
+  <AssignmentIcon style={{ fontSize: '18px', marginRight: '8px', color : '#01a4ef'}} /> Task Assignment
+</InputLabel>
 <TextField
   id="standard-basic"
   multiline
-  rows={3}
+  rows={5}
   autoComplete="off"
   name="taskAssignment"
   value={this.state.taskAssignment}
   onChange={this.onChange}
   required
-  style={{ width: '400px' }} // Adjust the width value as needed
+  style={{ width: '920px' }} // Adjust the width value as needed
 /><br /><br />
-            <InputLabel>Comments</InputLabel>
+<InputLabel style={{ display: 'flex', alignItems: 'center' ,justifyContent: 'center'}}>
+  <CommentIcon style={{ fontSize: '18px', marginRight: '8px', color : '#01a4ef'}} /> Comments
+</InputLabel>
             <TextField
               id="standard-basic"
               multiline
-              rows={3}
+              rows={5}
               autoComplete="off"
               name="comments"
               value={this.state.comments}
               onChange={this.onChange}
               required
-              style={{ width: '400px' }} // Adjust the width value as needed
+              style={{ width: '920px' }} // Adjust the width value as needed
             /><br />
             <br />
 
             <Button
-              disabled={this.state.name === [] || this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' }
+              disabled={this.state.name === [] || this.state.absences === [] || this.state.comments === '' || this.state.taskAssignment === '' || this.state.hours === '' }
               onClick={(e) => this.addSession()} color="primary" variant="contained">
               <AddIcon/>  
               Add

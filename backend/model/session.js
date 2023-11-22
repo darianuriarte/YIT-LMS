@@ -2,11 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 sessionSchema = new Schema( {
-	name: String,
+	name: [String],
+	absences: [String],
 	comments: String,
 	taskAssignment: String,
 	date: Date,
-	attendance: String,
 	hours: Number,
 	tutor: String,
 	user_id: Schema.ObjectId,

@@ -211,12 +211,15 @@ class Sessions extends Component {
     const file = new FormData();
     file.append('id', this.state.id);
     file.append('comments', this.state.comments);
-    file.append('students', this.state.comments);
     file.append('taskAssignment', this.state.taskAssignment);
     file.append('hours', this.state.hours);
     file.append('tutor', this.state.tutor);
     const date = this.state.selectedDate.toISOString();
     file.append('date', date);
+  
+    this.state.name.forEach((studentName) => {
+      file.append('name', studentName);
+    });
 
     axios
       .post('http://localhost:2000/update-session', file, {
@@ -262,7 +265,7 @@ class Sessions extends Component {
     this.setState({
       openSessionEditModal: true,
       id: data._id,
-      name: Array.isArray(data.name) ? data.name : [data.name],
+      name: Array.isArray(data.name) ? data.name : [data.name], // Ensure name is an array
       comments: data.comments,
       taskAssignment: data.taskAssignment,
       hours: data.hours,
@@ -313,15 +316,7 @@ class Sessions extends Component {
                 inputProps={{
                   name: 'name',
                 }}
-                renderValue={(selected) => {
-                  // To properly show students separated by comma
-                  const isArrayString = /^\[.*\]$/.test(selected);
-                  if (isArrayString) {
-                    let parsedSelected = JSON.parse(selected);
-                    return parsedSelected.join(', ');
-                  }
-                  return selected;
-                }}
+                renderValue={(selected) => selected.join(', ')}
               >
                 {this.state.students.map((student, index) => (
                   <MenuItem key={index} value={student}>
@@ -425,6 +420,16 @@ class Sessions extends Component {
 
               <div style={{ marginLeft: '20px' }}></div> {/* Adds a horizontal space of 10px */}
 
+              <TextField
+                id="standard-basic"
+                type="searchByTutor"
+                autoComplete="off"
+                name="searchByTutor"
+                value={this.state.searchByTutor}
+                onChange={this.onChange}
+                placeholder="Search by tutor name"
+                required
+              />
             </div>
 
             <TableContainer component={Paper} elevation={0} square>
@@ -476,7 +481,7 @@ class Sessions extends Component {
                         align="center"
                         style={{ maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                       >
-                        {row.name.replace(/[\[\]"\s]/g, ' ').split(' ').join(' ')}
+                        {row.name.join(', ')}
                       </TableCell>
 
 
