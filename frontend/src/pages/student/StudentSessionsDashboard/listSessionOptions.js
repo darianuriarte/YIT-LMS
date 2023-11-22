@@ -16,12 +16,12 @@ export const mainListItems = (onClickSessions, onClickResources, onClickAnnounce
       <ListItemText primary="Sessions" />
     </ListItemButton>
     
-    <ListItemButton onClick={onClickAnnouncements}>
+    {/* <ListItemButton onClick={onClickAnnouncements}>
       <ListItemIcon>
         <NotifIcon />
       </ListItemIcon>
       <ListItemText primary="Chat" />
-    </ListItemButton>
+    </ListItemButton> */}
 
     <ListItemButton onClick={onClickResources}>
       <ListItemIcon>

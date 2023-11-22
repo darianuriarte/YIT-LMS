@@ -38,12 +38,12 @@ export const mainListItems = (onClickSessions, onClickAdd, onClickStudent, onCli
       <ListItemText primary="Payroll" />
     </ListItemButton>
 
-    <ListItemButton onClick={onClickChat}>
+    {/* <ListItemButton onClick={onClickChat}>
       <ListItemIcon>
       <ChatIcon />
       </ListItemIcon>
       <ListItemText primary="Chat" />
-    </ListItemButton>
+    </ListItemButton> */}
 
   </React.Fragment>
 );

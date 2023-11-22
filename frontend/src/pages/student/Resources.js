@@ -70,19 +70,13 @@ function ResourcesPage() {
       >
         <Typography className={classes.title} variant="h1">Student Resources</Typography>
         <Typography variant="subtitle1" align="center">
-          Here are some resources to help you in your studies.
+          {/* Here are some resources to help you in your studies. */}
         </Typography>
-        <iframe 
-          src="YOUR_RESOURCE_LINK_HERE" 
-          width="100%" 
-          height="500px" 
-          frameborder="0" 
-          marginheight="0" 
-          marginwidth="0" 
-          className={classes.form}
-        >
-          Loading…
-        </iframe>
+        
+        {/* Display "DEV" instead of an iframe */}
+        <Typography className={classes.devMessage}>
+          DEV. This should be updated with a google drive folder of textbooks.
+        </Typography>
       </Card>
     </Grid>
   );
