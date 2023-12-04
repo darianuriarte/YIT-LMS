@@ -69,6 +69,8 @@ class TutorPayroll extends Component {
               >
                 <Typography variant="h6">Weekly Pay</Typography>
                 <Typography variant="body1">Amount: ${this.state.weeklyPay.amount || 0}</Typography>
+                <Typography variant="body1">DEV</Typography>
+
                 {/* Add more fields related to weeklyPay if needed */}
               </Paper>
             </Grid>
@@ -85,6 +87,8 @@ class TutorPayroll extends Component {
               >
                 <Typography variant="h6">Monthly Pay</Typography>
                 <Typography variant="body1">Amount: ${this.state.monthlyPay.amount || 0}</Typography>
+                <Typography variant="body1">DEV</Typography>
+
                 {/* Add more fields related to monthlyPay if needed */}
               </Paper>
             </Grid>
@@ -99,11 +103,15 @@ class TutorPayroll extends Component {
                 }}
               >
                 <Typography variant="h6">Weekly Breakdown</Typography>
+                <Typography variant="body1">DEV</Typography>
                 {this.state.weeklyBreakdown.map((week, index) => (
                   <Box key={index} sx={{ mt: 2 }}>
+                    
                     <Typography variant="body1">Week: {week.startDate} - {week.endDate}</Typography>
                     <Typography variant="body1">Hours Worked: {week.hoursWorked}</Typography>
                     <Typography variant="body1">Amount Owed: ${week.amountOwed}</Typography>
+                    
+
                   </Box>
                 ))}
               </Paper>
